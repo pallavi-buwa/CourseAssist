@@ -105,10 +105,7 @@ export default function LoginPage() {
             <p className="text-sm text-claro-muted"><span className="text-claro-text">Professors:</span>{' '}
               {listDemoPersonaHints().professors.join(', ')}
             </p>
-            <p className="text-sm text-claro-muted mt-3 leading-relaxed">
-              Optional: set <code className="text-claro-text/90 bg-claro-slate/80 px-1.5 py-0.5 rounded text-[0.9em]">VITE_OPENAI_API_KEY</code> to personalize graphs once; results stay in this browser.
-            </p>
-          </div>
+            </div>
         </div>
       </div>
     </LeafBackdrop>

@@ -24,6 +24,7 @@ export default {
           amber: 'rgb(var(--tw-claro-amber) / <alpha-value>)',
           sage: 'rgb(var(--tw-claro-sage) / <alpha-value>)',
           coral: 'rgb(var(--tw-claro-coral) / <alpha-value>)',
+          teal: 'rgb(var(--tw-claro-teal) / <alpha-value>)',
           midnight: 'rgb(var(--tw-claro-canvas) / <alpha-value>)',
           cream: 'rgb(var(--tw-claro-canvas) / <alpha-value>)',
         },
@@ -31,9 +32,9 @@ export default {
         panel: 'rgb(var(--tw-panel) / <alpha-value>)',
         border: 'rgb(var(--tw-border) / <alpha-value>)',
         accent: {
-          python: '#22c55e',
-          dsa: '#16a34a',
-          cn: '#15803d',
+          python: '#3E5641',
+          dsa: '#004D61',
+          cn: '#822659',
         },
       },
       fontFamily: {

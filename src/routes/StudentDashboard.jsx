@@ -165,9 +165,7 @@ export default function StudentDashboard() {
               <p className="hidden text-[10px] text-claro-muted text-right max-w-full leading-snug sm:block">
                 <span className="font-medium uppercase tracking-wide text-claro-muted/90">Courses</span>
                 {' — '}
-                <span title="Each pill toggles on/off; more than one can stay selected">
-                  click several pills to highlight them together; click again to remove one. All shows every course.
-                </span>
+                <span>Select one or more to filter the graph.</span>
               </p>
               <div className="flex flex-wrap items-center justify-end gap-2">
                 <button
@@ -224,7 +222,7 @@ export default function StudentDashboard() {
                 </button>
               </div>
               <p className="hidden text-[10px] text-claro-muted/90 text-right max-w-full leading-snug md:block">
-                Map: +/− zoom, Fit, full screen, PNG download (top-left on the graph).
+                Zoom, fit, fullscreen, and export in the graph toolbar.
               </p>
             </div>
 
@@ -278,9 +276,6 @@ export default function StudentDashboard() {
             {view === 'content' ? (
               <div className="h-full overflow-y-auto px-5 py-8 max-w-4xl mx-auto">
                 <PersonaContentHub persona={persona} subjects={subjects} />
-                <p className="text-sm text-claro-muted mt-4">
-                  Subject tabs match your graph. Readings use the same subject titles.
-                </p>
               </div>
             ) : (
               <div className="flex-1 flex flex-col min-h-0 w-full">

@@ -16,13 +16,9 @@ const DEFAULT_STUDENT = {
   graphFocus: 'Balanced coverage across AI for Business, Strategy, and Entrepreneurship.',
   /** Dynamic panels merge with subjects from the graph when `focusPanels` is empty. */
   contentHub: {
-    title: 'Content workspace',
-    lead: 'Readings and generators follow the subjects on your graph. Open any course below, or use Notes → Content for mind maps.',
-    bullets: [
-      'Course list below updates automatically from your knowledge graph.',
-      'Click a graph node → use “How well you know this” to change its color (saved on this device).',
-      'Linked concepts sit closer together in the 3D view.',
-    ],
+    title: 'Content',
+    lead: 'Open a subject below to start reading.',
+    bullets: [],
     focusPanels: [],
   },
 }
@@ -61,7 +57,7 @@ export const STUDENT_PERSONA_BY_EMAIL = {
       'Strong in quantitative reasoning. Weight nodes toward predictive analytics, data-driven strategy, marketing analytics, measurement, and risk modeling across the three MBA courses.',
     contentHub: {
       title: 'Analyst track — labs & readings',
-      lead: 'Your persona uses three lab-style subjects (see Home and graph tabs). Drill the ones where you want sharper quantitative intuition.',
+      lead: 'Three lab-style subjects focused on quantitative reasoning.',
       bullets: [
         'Forecasting & KPI Lab — experiments, forecasting, and KPI guardrails.',
         'Decision Analytics Core — competitive views, scorecards, and quant risk.',
@@ -95,7 +91,7 @@ export const STUDENT_PERSONA_BY_EMAIL = {
       'Creative and brand-oriented learner. Emphasize positioning, value proposition, growth, culture, pitching, and narrative-heavy concepts across courses; fewer pure-technical nodes.',
     contentHub: {
       title: 'Creative track — story & brand',
-      lead: 'Subjects emphasize narrative, positioning, and venture storytelling. Use readings to rehearse how you explain each arc.',
+      lead: 'Narrative, positioning, and venture storytelling.',
       bullets: [
         'Brand & AI Signals — ethical AI stories and customer language.',
         'Culture & Positioning Studio — culture, stakeholders, and change comms.',
@@ -129,7 +125,7 @@ export const STUDENT_PERSONA_BY_EMAIL = {
       'Operations- and implementation-minded. Emphasize process automation, AI implementation, change management, stakeholder management, MVP, fundraising mechanics, and execution bridges between strategy and delivery.',
     contentHub: {
       title: 'Operator track — ship & scale',
-      lead: 'Your subjects stress deployment, change, and delivery. Pair readings with the graph to see how execution topics connect.',
+      lead: 'Deployment, change management, and delivery.',
       bullets: [
         'Systems & Responsible AI — automation, rollout, ROI, ethics.',
         'Change & Execution — stakeholders, M&A integration, global execution.',

@@ -72,13 +72,13 @@ export default function NodeDetailPanel({
     if (cached?.length) {
       setLearningResources(cached)
       setResourceStatus('ai')
-      setResourceNote('AI-generated from this node and your preferences.')
+      setResourceNote('Matched to your preferences.')
       return
     }
 
     setLearningResources(fallbackResources)
     setResourceStatus('loading')
-    setResourceNote('Generating direct links from this topic and your preferences...')
+    setResourceNote('Finding resources...')
 
     getResourceRecommendations(node, preferences, fallbackResources)
       .then(resources => {
@@ -86,23 +86,19 @@ export default function NodeDetailPanel({
         if (resources.length) {
           setLearningResources(resources)
           setResourceStatus('ai')
-          setResourceNote('AI-generated from this node and your preferences.')
+          setResourceNote('Matched to your preferences.')
           writeCache(cacheKey, resources)
         } else {
           setLearningResources(fallbackResources)
           setResourceStatus('fallback')
-          setResourceNote('Using verified backup links because the AI did not return usable direct URLs.')
+          setResourceNote('Showing curated resources.')
         }
       })
-      .catch(error => {
+      .catch(() => {
         if (cancelled) return
         setLearningResources(fallbackResources)
         setResourceStatus('fallback')
-        setResourceNote(
-          error.message.includes('VITE_OPENAI_API_KEY')
-            ? 'Using verified backup links. Add VITE_OPENAI_API_KEY to .env to enable AI-generated links.'
-            : 'Using verified backup links because AI link generation failed.'
-        )
+        setResourceNote('Showing curated resources.')
       })
 
     return () => {
@@ -164,7 +160,7 @@ export default function NodeDetailPanel({
         {mode === 'student' && onMasteryChange && (
           <Section title="How well you know this">
             <p className="text-sm text-claro-muted mb-4 leading-relaxed">
-              Drag to set how well you know this concept (saved in this browser). Reset uses the graph default ({Math.round(defaultAcc * 100)}%).
+              Adjust to reflect your understanding. Resets to {Math.round(defaultAcc * 100)}% default.
             </p>
             <input
               type="range"
@@ -217,17 +213,17 @@ export default function NodeDetailPanel({
         )}
 
         {mode === 'student' && (
-          <Section title="AI Learning Links">
+          <Section title="Resources">
             <div className="flex items-center justify-between gap-3 mb-3">
-              <p className="text-sm text-claro-muted">Prioritizing {summary}</p>
+              <p className="text-sm text-claro-muted">{summary}</p>
               <span className={`text-xs rounded px-2 py-1 border flex-shrink-0 ${
                 resourceStatus === 'ai'
-                  ? 'text-emerald-300 bg-emerald-400/10 border-emerald-400/20'
+                  ? 'text-claro-sage bg-claro-sage/10 border-claro-sage/20'
                   : resourceStatus === 'loading'
-                    ? 'text-cyan-300 bg-cyan-400/10 border-cyan-400/20'
-                    : 'text-amber-300 bg-amber-400/10 border-amber-400/20'
+                    ? 'text-claro-muted bg-claro-slate/50 border-claro-slate'
+                    : 'text-claro-muted bg-claro-slate/50 border-claro-slate'
               }`}>
-                {resourceStatus === 'ai' ? 'AI' : resourceStatus === 'loading' ? 'Generating' : 'Backup'}
+                {resourceStatus === 'loading' ? 'Loading' : 'Live'}
               </span>
             </div>
 
@@ -254,7 +250,7 @@ export default function NodeDetailPanel({
                       <div className="text-sm text-claro-muted leading-snug mt-1">{resource.description}</div>
                       {resource.why && <div className="text-xs text-claro-muted leading-relaxed mt-2">{resource.why}</div>}
                     </div>
-                    <span className="text-xs text-emerald-300 bg-emerald-400/10 border border-emerald-400/20 rounded px-2 py-1 flex-shrink-0">
+                    <span className="text-xs text-claro-sage bg-claro-sage/10 border border-claro-sage/20 rounded px-2 py-1 flex-shrink-0">
                       {RESOURCE_LABELS[resource.type] || resource.type}
                     </span>
                   </div>

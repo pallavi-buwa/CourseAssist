@@ -63,11 +63,11 @@ export default function StudentHome() {
 
           {/* Courses */}
           <h2 className="text-lg font-semibold text-claro-text mb-2">Your courses</h2>
-          <p className="text-sm text-claro-muted mb-5">Course titles follow your knowledge graph.</p>
+          <p className="text-sm text-claro-muted mb-5">Based on your knowledge graph.</p>
           <div className="grid grid-cols-1 gap-4 mb-8">
             {courseCards.length === 0 && (
               <p className="text-sm text-claro-muted border border-claro-indigo/12 rounded-2xl px-5 py-6 bg-claro-panel/50">
-                No subjects found on your knowledge graph yet. Open <span className="text-claro-text">My Graph</span> and add concepts (or sign in again) to populate courses here.
+                No subjects yet. Open <span className="text-claro-text">My Graph</span> to add concepts.
               </p>
             )}
             {courseCards.map(c => (
