@@ -12,6 +12,7 @@ const StudentNotes       = lazy(() => import('./routes/StudentNotes.jsx'))
 const ProfessorHome      = lazy(() => import('./routes/ProfessorHome.jsx'))
 const ProfessorDashboard = lazy(() => import('./routes/ProfessorDashboard.jsx'))
 const MaterialAnalyzer   = lazy(() => import('./routes/MaterialAnalyzer.jsx'))
+const LoginPage = lazy(() => import('./routes/LoginPage.jsx'))
 
 function Loading() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/professor/dashboard/:courseId" element={<ProfessorDashboard />} />
               <Route path="/professor/analyzer" element={<MaterialAnalyzer />} />
               <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/login" element={<LoginPage />} />
             </Routes>
           </Suspense>
         </AuthProvider>
