@@ -89,11 +89,51 @@ html {
   background-color: rgb(var(--tw-claro-canvas));
 }
 
-html, body, #root {
-  width: 100%; height: 100%;
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
   font-family: var(--font-brand);
-  background: rgb(var(--tw-claro-canvas));
   color: rgb(var(--tw-claro-text));
+}
+
+/* Keep body transparent so backdrop layers remain visible. */
+body {
+  background-color: transparent;
+}
+
+/* Gray aurora + subtle star specks (fixed behind app). */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--bg-aurora), var(--bg-stars);
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* Pattern mesh on top of gradient wash. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.38;
+  background-image: var(--bg-pattern-cross), var(--bg-pattern-diagonal), var(--bg-pattern-dots);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    28px 28px;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+}
+
+/* Route shells remain transparent so global backdrop is visible everywhere. */
+.bg-space-page {
+  background: transparent;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -150,4 +190,5 @@ html, body, #root {
 @media (prefers-reduced-motion: reduce) {
   .tree-sway-left,
   .tree-sway-right { animation: none !important; }
+  body::after { opacity: 0.28; }
 }
