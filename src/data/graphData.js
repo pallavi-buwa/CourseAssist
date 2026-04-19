@@ -5,9 +5,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SUBJECTS = {
-  PYTHON: { id: 'python', label: 'Python Programming', color: '#C4B5FF', darkColor: '#9B88E8' },
-  DSA:    { id: 'dsa',    label: 'Data Structures & Algorithms', color: '#D4B8FF', darkColor: '#B894F0' },
-  CN:     { id: 'cn',     label: 'Computer Networks', color: '#8EE4D2', darkColor: '#5BC4AD' },
+  PYTHON: { id: 'python', label: 'Python Programming', color: '#22c55e', darkColor: '#15803d' },
+  DSA:    { id: 'dsa',    label: 'Data Structures & Algorithms', color: '#16a34a', darkColor: '#166534' },
+  CN:     { id: 'cn',     label: 'Computer Networks', color: '#15803d', darkColor: '#14532d' },
 }
 
 // ── Resource stubs (mock) ─────────────────────────────────────────────────────

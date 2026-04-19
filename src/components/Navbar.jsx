@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-
+import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
 const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
@@ -30,7 +30,7 @@ export default function Navbar() {
   const breadcrumb = location.pathname
     .split('/').filter(Boolean)
     .map(s => s.charAt(0).toUpperCase() + s.slice(1))
-    .join(' › ')
+    .join(' / ')
 
   const handleLogout = () => {
     logout()
@@ -38,12 +38,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-claro-slate border-b border-white/8 flex items-center px-5 gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center gap-6 border-b border-claro-indigo/15 bg-claro-panel/95 px-5 backdrop-blur-sm dark:border-claro-sage/20">
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-claro-indigo flex items-center justify-center text-white text-xs font-semibold">C</div>
-          <span className="font-medium text-claro-text text-sm">Claro</span>
+        <div className="flex min-w-0 items-center gap-2" title="Claro">
+          <div className="flex h-8 shrink-0 items-center">
+            <ClaroLogoMark size={28} />
+          </div>
         </div>
         <span className="text-claro-muted text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>
       </div>
@@ -56,8 +57,8 @@ export default function Navbar() {
             to={l.to}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               location.pathname.startsWith(l.to.split('/').slice(0, 3).join('/'))
-                ? 'bg-claro-indigo/20 text-claro-indigo'
-                : 'text-claro-muted hover:text-claro-text hover:bg-white/5'
+                ? 'bg-claro-indigo/15 text-claro-indigo dark:bg-claro-indigo/25'
+                : 'text-claro-muted hover:bg-claro-indigo/10 hover:text-claro-text'
             }`}
           >
             {l.label}
@@ -69,25 +70,30 @@ export default function Navbar() {
       <div className="relative">
         <button
           onClick={() => setDropOpen(v => !v)}
-          className="w-8 h-8 rounded-full bg-claro-indigo flex items-center justify-center text-white text-xs font-medium hover:brightness-110 transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-claro-indigo text-xs font-medium text-white transition-colors hover:brightness-110"
         >
           {initials}
         </button>
         {dropOpen && (
-          <div className="absolute right-0 top-10 w-44 bg-claro-slate border border-white/10 rounded-xl shadow-xl py-1 z-50">
-            <div className="px-3 py-2 border-b border-white/8">
+          <div className="absolute right-0 top-10 z-50 w-44 rounded-xl border border-claro-indigo/20 bg-claro-panel py-1 shadow-xl dark:border-claro-sage/25">
+            <div className="border-b border-claro-indigo/10 px-3 py-2 dark:border-claro-sage/15">
               <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
               <div className="text-xs text-claro-muted capitalize">{user.role}</div>
             </div>
             {user.role === 'student' && (
               <button
                 onClick={() => { setDropOpen(false); navigate('/student/preferences') }}
-                className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-white/5 transition-colors"
+                className="w-full px-3 py-2 text-left text-sm text-claro-text/90 transition-colors hover:bg-claro-indigo/10"
               >
                 Preferences
               </button>
             )}
-            <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-claro-coral hover:bg-white/5 transition-colors">Logout</button>
+            <button
+              onClick={handleLogout}
+              className="w-full px-3 py-2 text-left text-sm text-claro-coral transition-colors hover:bg-claro-coral/10"
+            >
+              Logout
+            </button>
           </div>
         )}
       </div>

@@ -121,7 +121,7 @@ export default function StudentPreferences() {
                 {isFirstRun ? 'First-time setup' : 'Preferences'}
               </p>
               <h1 className="text-3xl font-semibold text-white mb-3">
-                Shape EduGraph around how you learn.
+                Shape Claro around how you learn.
               </h1>
               <p className="text-sm text-gray-400 max-w-2xl leading-6">
                 Choose the languages and formats that make new concepts easier to absorb. Every topic node will use these choices to surface relevant learning links.
@@ -188,7 +188,7 @@ export default function StudentPreferences() {
                 <section>
                   <h2 className="text-lg font-medium text-white mb-1">Learning format</h2>
                   <p className="text-sm text-gray-500 mb-4">
-                    Pick every format you want EduGraph to prioritize.
+                    Pick every format you want Claro to prioritize.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-3">

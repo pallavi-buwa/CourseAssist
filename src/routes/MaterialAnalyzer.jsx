@@ -88,7 +88,7 @@ export default function MaterialAnalyzer() {
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       Analyzing…
                     </>
-                  ) : 'Analyze for inclusivity →'}
+                  ) : 'Analyze for inclusivity'}
                 </button>
 
                 {text.trim() && (
@@ -101,15 +101,15 @@ export default function MaterialAnalyzer() {
                 <h3 className="text-xs font-medium text-gray-400 mb-3">What we check for</h3>
                 <ul className="space-y-2">
                   {[
-                    { icon: '📖', label: 'Jargon & unexplained acronyms' },
-                    { icon: '🌍', label: 'Cultural assumptions & Western bias' },
-                    { icon: '♿', label: 'Accessibility & readability' },
-                    { icon: '⚖️', label: 'Gender bias in language' },
-                    { icon: '🔎', label: 'Prerequisite assumptions' },
-                  ].map(t => (
-                    <li key={t.label} className="flex items-start gap-2 text-xs text-gray-500">
-                      <span>{t.icon}</span>
-                      {t.label}
+                    'Jargon & unexplained acronyms',
+                    'Cultural assumptions & Western bias',
+                    'Accessibility & readability',
+                    'Gender bias in language',
+                    'Prerequisite assumptions',
+                  ].map(label => (
+                    <li key={label} className="flex items-start gap-2 text-xs text-gray-500">
+                      <span className="text-claro-muted">–</span>
+                      {label}
                     </li>
                   ))}
                 </ul>
@@ -121,7 +121,6 @@ export default function MaterialAnalyzer() {
               {!flags && !loading && (
                 <div className="h-full flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-4xl mb-3">🔍</div>
                     <p className="text-gray-500 text-sm">Results will appear here after analysis</p>
                   </div>
                 </div>
@@ -151,7 +150,7 @@ export default function MaterialAnalyzer() {
                     )}
                     <div className="ml-auto">
                       {totalFlags === 0 ? (
-                        <span className="text-green-400 text-sm font-medium">✓ No issues found</span>
+                        <span className="text-green-400 text-sm font-medium">No issues found</span>
                       ) : (
                         <span className="text-claro-amber text-sm">{totalFlags} issue{totalFlags !== 1 ? 's' : ''} to review</span>
                       )}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getResourceRecommendations } from '../api/openai.js'
 import { comprehensionColor } from '../data/mockGraphMarketing.js'
+import { studentAccuracyColor } from '../data/mockStudentGraph.js'
 import { mockStudents } from '../data/mockStudents.js'
 import { buildLearningResources, preferenceSummary } from '../utils/resourceRecommendations.js'
 
@@ -109,7 +110,10 @@ export default function NodeDetailPanel({ node, mode, onClose, preferences }) {
     : []
 
   const score = node.comprehension ?? node.accuracy ?? 0.5
-  const scoreColor = comprehensionColor(score)
+  const scoreColor =
+    mode === 'student' && node?.accuracy != null
+      ? studentAccuracyColor(node)
+      : comprehensionColor(node)
 
   return (
     <div className="fixed right-0 top-14 h-[calc(100vh-56px)] w-[360px] bg-gray-900 border-l border-gray-800 flex flex-col z-40"

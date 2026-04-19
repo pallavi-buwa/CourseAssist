@@ -3,14 +3,15 @@ import {
 } from 'react'
 import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from 'three'
+import { useTheme } from '../context/ThemeContext.jsx'
 import { resolveNodeColor, getLinkColor } from '../utils/graphHelpers.js'
 import { nodeRadius } from '../utils/clusterUtils.js'
 
 // ─── Label sprite factory ─────────────────────────────────────────────────────
 // Canvas-texture sprite that always faces the camera (billboards).
 const labelCache = new Map()
-function makeLabelSprite(text, hexColor, opacity = 0.92) {
-  const key = `${text}_${hexColor}_${opacity}`
+function makeLabelSprite(text, hexColor, opacity = 0.92, isDark = false) {
+  const key = `${text}_${hexColor}_${opacity}_${isDark}`
   if (labelCache.has(key)) return labelCache.get(key).clone()
 
   const canvas = document.createElement('canvas')
@@ -26,8 +27,8 @@ function makeLabelSprite(text, hexColor, opacity = 0.92) {
   ctx.fill()
 
   // Text
-  ctx.font = '500 15px Inter, system-ui, sans-serif'
-  ctx.fillStyle = hexColor || '#ffffff'
+  ctx.font = '500 15px "Brandon Grotesque", system-ui, sans-serif'
+  ctx.fillStyle = isDark ? '#e8f0eb' : (hexColor || '#1B4332')
   ctx.globalAlpha = opacity
   ctx.fillText(text, 8, 26)
 
@@ -133,11 +134,11 @@ function createParticleField() {
   const geo = new THREE.BufferGeometry()
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   const mat = new THREE.PointsMaterial({
-    color: 0xffffff,
+    color: 0x22c55e,
     size:  2.2,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.16,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   })
@@ -146,9 +147,9 @@ function createParticleField() {
 
 // ─── Status colors ────────────────────────────────────────────────────────────
 const STATUS_EMISSIVE = {
-  active:     '#FFD6A8',
-  mastered:   '#9EE4D4',
-  struggling: '#FFB8C8',
+  active:     '#eab308',
+  mastered:   '#22c55e',
+  struggling: '#ef4444',
   default:    null,
 }
 
@@ -169,6 +170,7 @@ const Graph3D = memo(({
   height,
   introComplete,
 }) => {
+  const { canvasHex, isDark } = useTheme()
   const sceneInitRef   = useRef(false)
   const fogRef         = useRef(null)
 
@@ -181,10 +183,11 @@ const Graph3D = memo(({
 
     sceneInitRef.current = true
 
-    // Dark fog for depth
-    const fog = new THREE.FogExp2(0x110e1a, 0.0018)
+    const fog = new THREE.FogExp2(0x000000, 0.0012)
     scene.fog = fog
     fogRef.current = fog
+    fog.color.setHex(isDark ? 0x000000 : 0x000000)
+    renderer.setClearColor(fog.color, 1)
 
     // Ambient + colored point lights
     if (!scene.getObjectByName('_ca_ambient')) {
@@ -192,15 +195,15 @@ const Graph3D = memo(({
       ambient.name = '_ca_ambient'
       scene.add(ambient)
 
-      const pt1 = new THREE.PointLight(0xc4b5ff, 3.5, 900)
+      const pt1 = new THREE.PointLight(0x22c55e, 2.4, 900)
       pt1.name = '_ca_pt1'; pt1.position.set(300, 250, 200)
       scene.add(pt1)
 
-      const pt2 = new THREE.PointLight(0x9ee4d4, 2.5, 700)
+      const pt2 = new THREE.PointLight(0xeab308, 1.8, 700)
       pt2.name = '_ca_pt2'; pt2.position.set(-250, -150, -300)
       scene.add(pt2)
 
-      const pt3 = new THREE.PointLight(0xd4b8ff, 2, 600)
+      const pt3 = new THREE.PointLight(0xef4444, 1.2, 600)
       pt3.name = '_ca_pt3'; pt3.position.set(0, -300, 300)
       scene.add(pt3)
 
@@ -212,14 +215,17 @@ const Graph3D = memo(({
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.1
-  }, [fgRef])
+  }, [fgRef, isDark])
 
-  // ── Fog density changes with exploration level ────────────────────────────
+  // Fog color + density (runs after initScene sets fogRef)
   useEffect(() => {
-    if (!fogRef.current) return
+    if (!fogRef.current || !fgRef?.current) return
+    const col = isDark ? 0x000000 : 0x000000
+    fogRef.current.color.setHex(col)
+    fgRef.current.renderer()?.setClearColor(col, 1)
     const densities = { 0: 0.0022, 1: 0.0012, 2: 0.0008, 3: 0.0005 }
     fogRef.current.density = densities[level] ?? 0.001
-  }, [level])
+  }, [level, isDark, fgRef])
 
   // ── Physics settle → start float loop ────────────────────────────────────
   const onEngineStop = useCallback(() => {
@@ -315,7 +321,7 @@ const Graph3D = memo(({
     const showLabel = isHovered || isSelected || isAnchor || isNeighbor || (level === 0 && node.weight >= 2.0)
     if (showLabel && opacity > 0.25) {
       const labelOpacity = isHovered || isAnchor ? 1.0 : isNeighbor ? 0.8 : 0.55
-      const sprite = makeLabelSprite(node.label, baseColor, labelOpacity)
+      const sprite = makeLabelSprite(node.label, baseColor, labelOpacity, isDark)
       // Position label to the right of the sphere
       const offset = r * 1.3 + 8
       sprite.position.set(offset, r * 0.4, 0)
@@ -326,12 +332,12 @@ const Graph3D = memo(({
     }
 
     return group
-  }, [hoveredNode, selectedNode, anchorId, neighborIds, focusNeighborIds, level, nodeOpacity])
+  }, [hoveredNode, selectedNode, anchorId, neighborIds, focusNeighborIds, level, nodeOpacity, isDark])
 
   // ── Link visuals ──────────────────────────────────────────────────────────
   const linkColor = useCallback((link) => {
-    return getLinkColor(link, hoveredNode?.id, neighborIds)
-  }, [hoveredNode, neighborIds])
+    return getLinkColor(link, hoveredNode?.id, neighborIds, isDark)
+  }, [hoveredNode, neighborIds, isDark])
 
   const linkWidth = useCallback((link) => {
     if (!hoveredNode && !anchorId) return 0.4
@@ -374,7 +380,7 @@ const Graph3D = memo(({
         graphData={filteredData}
         width={width}
         height={height}
-        backgroundColor="#110E1A"
+        backgroundColor={canvasHex}
         // Node
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}

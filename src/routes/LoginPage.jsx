@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-
+import { ClaroLogoMark } from '../components/brand/ClaroLogoMark.jsx'
+import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
 export default function LoginPage() {
   const { login, user } = useAuth()
   const navigate = useNavigate()
@@ -30,78 +31,72 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+    <LeafBackdrop className="relative flex min-h-screen w-full items-center justify-center bg-claro-canvas p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-claro-indigo/20 border border-claro-indigo/30 mb-4">
-            <svg viewBox="0 0 24 24" className="w-8 h-8 text-claro-indigo" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="5" r="2" />
-              <circle cx="5" cy="19" r="2" />
-              <circle cx="19" cy="19" r="2" />
-              <line x1="12" y1="7" x2="5" y2="17" strokeOpacity="0.5" />
-              <line x1="12" y1="7" x2="19" y2="17" strokeOpacity="0.5" />
-              <line x1="5" y1="19" x2="19" y2="19" strokeOpacity="0.5" />
-            </svg>
+          <h1 className="sr-only">Claro</h1>
+          <div className="mx-auto mb-5 flex justify-center px-2">
+            <ClaroLogoMark size={52} />
           </div>
-          <h1 className="text-2xl font-semibold text-white mb-1">EduGraph</h1>
-          <p className="text-gray-500 text-sm">Knowledge that connects</p>
+          <p className="text-claro-muted text-sm max-w-sm mx-auto leading-relaxed">
+            Canvas gives you the grade. We give you the why.
+          </p>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
-          <h2 className="text-white font-medium text-lg mb-6">Sign in</h2>
+        <div className="bg-claro-panel border border-claro-indigo/15 rounded-2xl p-8 shadow-sm">
+          <h2 className="text-claro-text font-medium text-lg mb-6">Sign in</h2>
 
           <form onSubmit={handleLogin} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">Email</label>
+              <label className="text-xs text-claro-muted mb-1.5 block">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@university.edu"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-claro-indigo transition-colors"
+                className="w-full bg-claro-panel border border-claro-indigo/18 rounded-xl px-4 py-2.5 text-sm text-claro-text placeholder-claro-muted/60 focus:outline-none focus:border-claro-indigo transition-colors dark:bg-claro-slate/50"
               />
             </div>
 
             {/* Role */}
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">I am a</label>
+              <label className="text-xs text-claro-muted mb-1.5 block">I am a</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: 'student', icon: '🎓', label: 'Student' },
-                  { value: 'professor', icon: '👨‍🏫', label: 'Professor' },
+                  { value: 'student', label: 'Student' },
+                  { value: 'professor', label: 'Professor' },
                 ].map(r => (
                   <button
                     key={r.value}
                     type="button"
                     onClick={() => setRole(r.value)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
+                    className={`flex items-center justify-center px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
                       role === r.value
-                        ? 'bg-claro-indigo/20 border-claro-indigo text-claro-indigo/90'
-                        : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600'
+                        ? 'bg-claro-indigo/12 border-claro-indigo text-claro-indigo'
+                        : 'bg-claro-canvas border-claro-indigo/15 text-claro-muted hover:border-claro-indigo/30'
                     }`}
                   >
-                    <span className="text-base">{r.icon}</span>
                     {r.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {error && <p className="text-red-400 text-xs">{error}</p>}
+            {error && <p className="text-claro-coral text-xs">{error}</p>}
 
             <button
               type="submit"
-              className="w-full bg-claro-indigo hover:brightness-110 text-white rounded-xl py-2.5 text-sm font-medium transition-colors"
+              className="w-full rounded-xl bg-claro-indigo py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
             >
-              Continue →
+              Continue
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-600 mt-5">Demo — no real authentication required</p>
+          <p className="text-center text-xs text-claro-muted/80 mt-5">Demo — no real authentication required</p>
         </div>
       </div>
-    </div>
+    </LeafBackdrop>
   )
 }

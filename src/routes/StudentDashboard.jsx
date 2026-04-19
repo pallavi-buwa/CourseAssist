@@ -6,6 +6,7 @@ import KnowledgeGraph3D from '../components/KnowledgeGraph3D.jsx'
 import NodeDetailPanel from '../components/NodeDetailPanel.jsx'
 import GraphGenerator from '../components/GraphGenerator.jsx'
 import { studentGraph } from '../data/mockStudentGraph.js'
+import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 const COURSE_FILTERS = [
   { id: 'all', label: 'All Courses' },
@@ -35,15 +36,15 @@ export default function StudentDashboard() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-claro-midnight flex flex-col">
+      <div className="flex min-h-screen flex-col bg-claro-midnight">
         <Navbar />
-        <div className="pt-14 flex flex-col flex-1">
+        <div className="flex min-h-0 flex-1 flex-col pt-14">
 
           {/* Sub-header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800 bg-gray-900/50">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-claro-indigo/15 bg-claro-panel/95">
             <div>
-              <h1 className="text-sm font-medium text-white">My Knowledge Graph</h1>
-              <p className="text-xs text-gray-500">{graphData.nodes.length} concepts · {graphData.links.length} connections</p>
+              <h1 className="text-sm font-medium text-claro-text">My Knowledge Graph</h1>
+              <p className="text-xs text-claro-muted">{graphData.nodes.length} concepts · {graphData.links.length} connections</p>
             </div>
 
             {/* Course filter pills */}
@@ -55,7 +56,7 @@ export default function StudentDashboard() {
                   className={`text-xs px-3 py-1 rounded-full border transition-all ${
                     activeCourse === f.id
                       ? 'bg-claro-indigo border-claro-indigo text-white'
-                      : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600'
+                      : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
                   }`}
                 >
                   {f.label}
@@ -67,13 +68,13 @@ export default function StudentDashboard() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate('/student/notes')}
-                className="border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg px-3 py-1.5 text-xs transition-colors"
+                className="rounded-lg border border-claro-indigo/25 bg-claro-panel px-3 py-1.5 text-xs text-claro-muted transition-colors hover:border-claro-indigo/40 hover:text-claro-text"
               >
-                ✎ Notes
+                Notes
               </button>
               <button
                 onClick={() => setShowGenerator(true)}
-                className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                className="rounded-lg bg-claro-indigo px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
               >
                 + Add from syllabus
               </button>
@@ -81,32 +82,29 @@ export default function StudentDashboard() {
           </div>
 
           {/* Legend + stats */}
-          <div className="flex items-center gap-6 px-5 py-2 border-b border-gray-800">
-            <div className="flex items-center gap-4">
-              {[
-                { color: '#9EE4D4', label: 'Strong (≥70%)' },
-                { color: '#FFD6A8', label: 'Developing (50–69%)' },
-                { color: '#FFB8C8', label: 'Needs work (<50%)' },
-              ].map(l => (
-                <div key={l.label} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
-                  <span className="text-[11px] text-gray-500">{l.label}</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-2 border-b border-claro-indigo/12 bg-claro-canvas/80">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="text-[10px] font-medium uppercase tracking-wide text-claro-muted">Accuracy</span>
+              {SCORE_BANDS.map(b => (
+                <div key={b.range} className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+                  <span className="text-[10px] text-claro-muted">{b.range} {b.label}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-1.5 ml-2">
-                <div className="w-4 h-0.5" style={{ background: '#FFD6A8' }} />
-                <span className="text-[11px] text-gray-500">Cross-course link</span>
+              <div className="flex items-center gap-1.5 border-l border-claro-indigo/15 pl-3">
+                <div className="h-0.5 w-4" style={{ background: '#a16207' }} />
+                <span className="text-[10px] text-claro-muted">Cross-course link</span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-4">
               {[
-                { label: 'AI for Business', color: '#C4B5FF' },
-                { label: 'Strategic Mgmt', color: '#8EE4D2' },
-                { label: 'Entrepreneurship', color: '#FFD6A8' },
+                { label: 'AI for Business', color: '#22c55e' },
+                { label: 'Strategic Mgmt', color: '#16a34a' },
+                { label: 'Entrepreneurship', color: '#15803d' },
               ].map(c => (
                 <div key={c.label} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full opacity-70" style={{ background: c.color }} />
-                  <span className="text-[11px] text-gray-500">{c.label}</span>
+                  <div className="w-2.5 h-2.5 rounded-full opacity-85" style={{ background: c.color }} />
+                  <span className="text-[11px] text-claro-muted">{c.label}</span>
                 </div>
               ))}
             </div>

@@ -35,7 +35,7 @@ export default function FlagCard({ phrase, category, affected, suggestion }) {
 
       {/* Bottom: suggestion */}
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs text-green-400 flex-1">→ {suggestion}</p>
+        <p className="text-xs text-green-400 flex-1">{suggestion}</p>
         <button
           onClick={handleCopy}
           className="flex-shrink-0 text-gray-500 hover:text-gray-300 transition-colors text-xs border border-gray-700 rounded px-2 py-1"

@@ -1,27 +1,27 @@
 import { memo } from 'react'
 import { SUBJECTS } from '../data/graphData.js'
 
-const RESOURCE_ICONS = { video: '▶', article: '◈', podcast: '◉' }
+const RESOURCE_ICONS = { video: 'Video', article: 'Article', podcast: 'Podcast' }
 const RESOURCE_COLORS = {
-  video:   'text-claro-indigo bg-claro-indigo/12 border-claro-indigo/22',
-  article: 'text-[#EDE5FF] bg-[#D4B8FF]/14 border-[#D4B8FF]/24',
-  podcast: 'text-claro-sage bg-claro-sage/12 border-claro-sage/22',
+  video:   'text-claro-text bg-claro-indigo/10 border-claro-indigo/22',
+  article: 'text-claro-text bg-claro-coral/10 border-claro-coral/22',
+  podcast: 'text-claro-text bg-claro-sage/12 border-claro-sage/25',
 }
 const STATUS_META = {
-  active:     { label: 'In Progress', cls: 'bg-claro-amber/15 text-claro-amber border-claro-amber/28' },
-  mastered:   { label: 'Mastered',    cls: 'bg-claro-sage/15 text-claro-sage border-claro-sage/28' },
-  struggling: { label: 'Needs Help',  cls: 'bg-claro-coral/15 text-claro-coral border-claro-coral/28' },
-  default:    { label: 'Not Started', cls: 'bg-white/5 text-claro-muted border-white/10' },
+  active:     { label: 'In Progress', cls: 'bg-claro-amber/12 text-claro-amber border-claro-amber/28' },
+  mastered:   { label: 'Mastered',    cls: 'bg-claro-indigo/12 text-claro-indigo border-claro-indigo/28' },
+  struggling: { label: 'Needs Help',  cls: 'bg-claro-coral/12 text-claro-coral border-claro-coral/28' },
+  default:    { label: 'Not Started', cls: 'bg-claro-slate text-claro-muted border-claro-indigo/15' },
 }
 const SUBJECT_HEADER = {
-  python: 'from-[#C4B5FF]/38 to-claro-midnight/0 border-claro-indigo/28',
-  dsa:    'from-[#D4B8FF]/38 to-claro-midnight/0 border-[#D4B8FF]/28',
-  cn:     'from-claro-sage/35 to-claro-midnight/0 border-claro-sage/25',
+  python: 'from-claro-indigo/18 to-transparent border-claro-indigo/25',
+  dsa:    'from-claro-sage/18 to-transparent border-claro-sage/28',
+  cn:     'from-claro-muted/20 to-transparent border-claro-indigo/22',
 }
 const SUBJECT_DOT = {
   python: 'bg-claro-indigo',
-  dsa:    'bg-[#D4B8FF]',
-  cn:     'bg-claro-sage',
+  dsa:    'bg-accent-dsa',
+  cn:     'bg-accent-cn',
 }
 
 const SidePanel = memo(({ node, onClose }) => {
@@ -29,12 +29,11 @@ const SidePanel = memo(({ node, onClose }) => {
 
   const subjectInfo = Object.values(SUBJECTS).find(s => s.id === node.subject)
   const statusMeta  = STATUS_META[node.status] || STATUS_META.default
-  const headerCls   = SUBJECT_HEADER[node.subject] || 'from-claro-slate/80 to-claro-midnight/0 border-white/10'
+  const headerCls   = SUBJECT_HEADER[node.subject] || 'from-claro-slate/90 to-transparent border-claro-indigo/15'
   const dotCls      = SUBJECT_DOT[node.subject] || 'bg-claro-muted'
 
   return (
-    <aside className="panel-enter absolute top-0 right-0 h-full w-[340px] flex flex-col z-10"
-           style={{ background: '#1E1B2E', borderLeft: '1px solid rgba(180,171,201,0.2)' }}>
+    <aside className="panel-enter absolute right-0 top-0 z-10 flex h-full w-[340px] flex-col border-l border-claro-indigo/20 bg-claro-panel shadow-xl dark:border-claro-sage/25">
 
       {/* Header */}
       <div className={`bg-gradient-to-b ${headerCls} border-b p-5 pb-4`}>
@@ -43,21 +42,23 @@ const SidePanel = memo(({ node, onClose }) => {
             {/* Subject label */}
             <div className="flex items-center gap-1.5 mb-2">
               <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotCls}`} />
-              <span className="text-[11px] text-slate-400 font-medium truncate">
+              <span className="text-[11px] text-claro-muted font-medium truncate">
                 {subjectInfo?.label}
               </span>
             </div>
             {/* Concept name */}
-            <h2 className="text-white font-semibold text-lg leading-tight">
+            <h2 className="text-claro-text font-semibold text-lg leading-tight">
               {node.label}
             </h2>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="flex-shrink-0 w-7 h-7 rounded-full bg-white/5 hover:bg-white/10
-                       text-slate-400 hover:text-white text-sm transition-colors flex items-center justify-center"
+            aria-label="Close"
+            className="flex-shrink-0 rounded-full bg-claro-slate px-2 py-1 text-[11px] hover:bg-claro-indigo/12
+                       text-claro-muted hover:text-claro-text transition-colors"
           >
-            ✕
+            Close
           </button>
         </div>
 
@@ -73,10 +74,10 @@ const SidePanel = memo(({ node, onClose }) => {
 
         {/* Description */}
         <Section title="About">
-          <p className="text-slate-300 text-sm leading-relaxed">{node.desc}</p>
-          <div className="flex gap-4 mt-3 text-xs text-slate-500">
-            <span>Connections: <span className="text-slate-300 font-medium">{node.degree}</span></span>
-            <span>Importance: <span className="text-slate-300 font-medium">{node.weight.toFixed(1)}</span></span>
+          <p className="text-claro-muted text-sm leading-relaxed">{node.desc}</p>
+          <div className="flex gap-4 mt-3 text-xs text-claro-muted">
+            <span>Connections: <span className="text-claro-text font-medium">{node.degree}</span></span>
+            <span>Importance: <span className="text-claro-text font-medium">{node.weight.toFixed(1)}</span></span>
           </div>
         </Section>
 
@@ -92,7 +93,7 @@ const SidePanel = memo(({ node, onClose }) => {
                   className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border
                               text-xs transition-opacity hover:opacity-90 cursor-pointer ${RESOURCE_COLORS[r.type]}`}
                 >
-                  <span className="text-base">{RESOURCE_ICONS[r.type]}</span>
+                  <span className="text-[10px] font-medium uppercase text-claro-muted">{RESOURCE_ICONS[r.type]}</span>
                   <span className="flex-1 truncate font-medium">{r.label}</span>
                   <span className="text-[10px] uppercase tracking-wider opacity-60">{r.type}</span>
                 </a>
@@ -106,8 +107,8 @@ const SidePanel = memo(({ node, onClose }) => {
           <Section title="Common Misconceptions">
             <ul className="space-y-2">
               {node.misconceptions.map((m, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                  <span className="text-red-400 mt-0.5 flex-shrink-0">⚠</span>
+                <li key={i} className="flex items-start gap-2 text-sm text-claro-muted">
+                  <span className="mt-0.5 flex-shrink-0 font-medium text-claro-amber" aria-hidden>!</span>
                   <span>{m}</span>
                 </li>
               ))}
@@ -117,19 +118,19 @@ const SidePanel = memo(({ node, onClose }) => {
 
         {/* Intervention */}
         <Section title="Suggested Intervention">
-          <div className="bg-blue-500/8 border border-blue-500/15 rounded-lg p-3">
-            <p className="text-sm text-slate-300 leading-relaxed">{node.intervention}</p>
+          <div className="bg-claro-slate/80 border border-claro-indigo/18 rounded-lg p-3">
+            <p className="text-sm text-claro-muted leading-relaxed">{node.intervention}</p>
           </div>
         </Section>
 
         {/* Brain-link visual (mock neuron indicator) */}
         <Section title="Neuron Activation">
           <div className="space-y-2">
-            <NeuronBar label="Retention" value={Math.min(1, node.weight / 3)} color="#C4B5FF" />
-            <NeuronBar label="Connectivity" value={Math.min(1, node.degree / 12)} color="#D4B8FF" />
-            <NeuronBar label="Complexity" value={Math.min(1, (node.misconceptions?.length || 0) / 4 + 0.2)} color="#FFD6A8" />
+            <NeuronBar label="Retention" value={Math.min(1, node.weight / 3)} barClass="bg-claro-sage" />
+            <NeuronBar label="Connectivity" value={Math.min(1, node.degree / 12)} barClass="bg-claro-indigo" />
+            <NeuronBar label="Complexity" value={Math.min(1, (node.misconceptions?.length || 0) / 4 + 0.2)} barClass="bg-claro-coral" />
           </div>
-          <p className="text-[11px] text-slate-500 mt-3">
+          <p className="text-[11px] text-claro-muted mt-3">
             Based on concept weight, connections, and known difficulty patterns.
           </p>
         </Section>
@@ -141,8 +142,8 @@ const SidePanel = memo(({ node, onClose }) => {
 
 function Section({ title, children }) {
   return (
-    <div className="px-5 py-4 border-b border-white/5">
-      <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-3">
+    <div className="px-5 py-4 border-b border-claro-indigo/10">
+      <h3 className="text-[11px] font-semibold uppercase tracking-widest text-claro-muted mb-3">
         {title}
       </h3>
       {children}
@@ -150,18 +151,18 @@ function Section({ title, children }) {
   )
 }
 
-function NeuronBar({ label, value, color }) {
+function NeuronBar({ label, value, barClass = 'bg-claro-indigo' }) {
   const pct = Math.round(value * 100)
   return (
     <div>
-      <div className="flex justify-between text-xs text-slate-400 mb-1">
+      <div className="flex justify-between text-xs text-claro-muted mb-1">
         <span>{label}</span>
         <span>{pct}%</span>
       </div>
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-claro-slate rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${pct}%`, background: color }}
+          className={`h-full rounded-full transition-all duration-700 ${barClass}`}
+          style={{ width: `${pct}%` }}
         />
       </div>
     </div>

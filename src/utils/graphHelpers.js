@@ -1,17 +1,17 @@
 import { SUBJECTS } from '../data/graphData.js'
 
-// Status → color mapping
+// Status → color mapping (yellow · green · red)
 export const STATUS_COLORS = {
-  default:    null,   // falls back to subject color
-  active:     '#FFD6A8',
-  mastered:   '#9EE4D4',
-  struggling: '#FFB8C8',
+  default:    null,
+  active:     '#eab308',
+  mastered:   '#22c55e',
+  struggling: '#ef4444',
   highlight:  '#ffffff',
 }
 
 export function resolveNodeColor(node) {
   if (node.status && node.status !== 'default') return STATUS_COLORS[node.status]
-  return node.color || '#B4ABC9'
+  return node.color || '#737373'
 }
 
 export function resolveNodeOpacity(node, hoveredId, selectedId) {
@@ -21,12 +21,16 @@ export function resolveNodeOpacity(node, hoveredId, selectedId) {
   return 0.25
 }
 
-export function getLinkColor(link, hoveredId, neighborIds) {
-  if (!hoveredId) return 'rgba(180,171,201,0.16)'
+export function getLinkColor(link, hoveredId, neighborIds, isDark = false) {
+  if (!hoveredId) {
+    return isDark ? 'rgba(34,197,94,0.22)' : 'rgba(34,197,94,0.18)'
+  }
   const srcId = typeof link.source === 'object' ? link.source.id : link.source
   const tgtId = typeof link.target === 'object' ? link.target.id : link.target
-  if (srcId === hoveredId || tgtId === hoveredId) return 'rgba(246,242,255,0.62)'
-  return 'rgba(180,171,201,0.07)'
+  if (srcId === hoveredId || tgtId === hoveredId) {
+    return isDark ? 'rgba(74,222,128,0.5)' : 'rgba(34,197,94,0.45)'
+  }
+  return isDark ? 'rgba(34,197,94,0.1)' : 'rgba(34,197,94,0.08)'
 }
 
 export function getNeighborIds(nodeId, links) {

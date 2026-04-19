@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
+import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
 
 const COURSES = [
   {
@@ -11,9 +12,9 @@ const COURSES = [
     avgComprehension: 0.61,
     weakConcepts: ['Positioning', 'Consumer Behavior', 'Marketing Analytics'],
     trend: 'declining',
-    color: 'from-[#FFB8C8]/22 to-pink-400/10',
-    border: 'border-[#FFB8C8]/32',
-    accent: '#FFB8C8',
+    color: 'from-[#f4ebe3]/95 to-[#ead8c8]/40 dark:from-claro-slate/40 dark:to-claro-panel/25',
+    border: 'border-claro-amber/30',
+    accent: 'rgb(var(--tw-claro-amber))',
   },
   {
     id: 'strategy',
@@ -23,9 +24,9 @@ const COURSES = [
     avgComprehension: 0.74,
     weakConcepts: ['Porter\'s Five Forces'],
     trend: 'improving',
-    color: 'from-[#9EE4D4]/22 to-teal-300/10',
-    border: 'border-[#9EE4D4]/32',
-    accent: '#9EE4D4',
+    color: 'from-[#E8F0EB]/95 to-[#d4e8dc]/50 dark:from-claro-slate/50 dark:to-claro-panel/35',
+    border: 'border-claro-indigo/28',
+    accent: 'rgb(var(--tw-claro-indigo))',
   },
   {
     id: 'operations',
@@ -35,15 +36,15 @@ const COURSES = [
     avgComprehension: 0.68,
     weakConcepts: ['Supply Chain Optimization'],
     trend: 'stable',
-    color: 'from-[#C4B5FF]/20 to-[#D4B8FF]/14',
-    border: 'border-[#C4B5FF]/32',
-    accent: '#C4B5FF',
+    color: 'from-[#eef6f0]/95 to-[#e0ebe4]/50 dark:from-claro-slate/45 dark:to-claro-panel/30',
+    border: 'border-claro-indigo/28',
+    accent: 'rgb(var(--tw-claro-sage))',
   },
 ]
 
 function HealthBar({ value, accent }) {
   return (
-    <div className="w-full h-1.5 bg-claro-midnight rounded-full overflow-hidden border border-white/5">
+    <div className="w-full h-1.5 bg-claro-slate rounded-full overflow-hidden border border-claro-indigo/12">
       <div className="h-full rounded-full" style={{ width: `${value * 100}%`, background: accent, transition: 'width 1s ease' }} />
     </div>
   )
@@ -51,9 +52,9 @@ function HealthBar({ value, accent }) {
 
 function TrendBadge({ trend }) {
   const map = {
-    declining:  { text: '↓ Declining',  cls: 'text-claro-coral bg-claro-coral/12 border-claro-coral/25' },
-    improving:  { text: '↑ Improving',  cls: 'text-claro-sage bg-claro-sage/12 border-claro-sage/25' },
-    stable:     { text: '→ Stable',     cls: 'text-claro-muted bg-claro-slate border-white/10' },
+    declining:  { text: 'Declining',  cls: 'text-claro-coral bg-claro-coral/10 border-claro-coral/25' },
+    improving:  { text: 'Improving',  cls: 'text-claro-indigo bg-claro-indigo/10 border-claro-indigo/22' },
+    stable:     { text: 'Stable',     cls: 'text-claro-muted bg-claro-slate border-claro-indigo/15' },
   }
   const { text, cls } = map[trend] || map.stable
   return <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${cls}`}>{text}</span>
@@ -68,7 +69,7 @@ export default function ProfessorHome() {
 
   return (
     <RequireAuth role="professor">
-      <div className="min-h-screen bg-claro-midnight">
+      <LeafBackdrop className="min-h-screen bg-claro-midnight">
         <Navbar />
         <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
           {/* Greeting */}
@@ -87,7 +88,7 @@ export default function ProfessorHome() {
               { label: 'Avg Comprehension', value: `${avgHealth}%` },
               { label: 'Alerts', value: '5', alert: true },
             ].map(s => (
-              <div key={s.label} className="bg-claro-slate border border-white/8 rounded-2xl p-4">
+              <div key={s.label} className="bg-claro-panel border border-claro-indigo/12 rounded-2xl p-4 shadow-sm">
                 <p className={`text-2xl font-semibold mb-0.5 ${s.alert ? 'text-claro-coral' : 'text-claro-text'}`}>{s.value}</p>
                 <p className="text-xs text-claro-muted">{s.label}</p>
               </div>
@@ -102,7 +103,7 @@ export default function ProfessorHome() {
                 <div className="flex items-start justify-between gap-6">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-[10px] text-claro-muted bg-white/5 rounded px-1.5 py-0.5">{c.code}</span>
+                      <span className="text-[10px] text-claro-muted bg-claro-canvas/90 border border-claro-indigo/10 rounded px-1.5 py-0.5">{c.code}</span>
                       <TrendBadge trend={c.trend} />
                     </div>
                     <h3 className="text-claro-text font-medium text-base mb-1">{c.title}</h3>
@@ -129,13 +130,13 @@ export default function ProfessorHome() {
                   <div className="flex flex-col gap-2 flex-shrink-0">
                     <button
                       onClick={() => navigate(`/professor/dashboard/${c.id}`)}
-                      className="bg-white/10 hover:bg-white/20 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors border border-white/10 whitespace-nowrap"
+                      className="whitespace-nowrap rounded-xl border border-claro-indigo/35 bg-claro-indigo px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
                     >
-                      Open dashboard →
+                      Open dashboard
                     </button>
                     <button
                       onClick={() => navigate('/professor/analyzer')}
-                      className="border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-xl px-5 py-2 text-sm transition-colors text-center"
+                      className="border border-claro-indigo/25 text-claro-muted hover:text-claro-text hover:border-claro-indigo/45 rounded-xl px-5 py-2 text-sm transition-colors text-center bg-claro-panel"
                     >
                       Analyze material
                     </button>
@@ -145,7 +146,7 @@ export default function ProfessorHome() {
             ))}
           </div>
         </main>
-      </div>
+      </LeafBackdrop>
     </RequireAuth>
   )
 }
