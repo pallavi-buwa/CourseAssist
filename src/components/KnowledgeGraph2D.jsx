@@ -9,9 +9,11 @@ let ForceGraph2DModule = null
 const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   const { canvasHex, isDark } = useTheme()
   const fgRef = useRef()
+  const shellRef = useRef(null)
   const containerRef = useRef()
   const [FG, setFG] = useState(null)
   const [dims, setDims] = useState({ width: 800, height: 600 })
+  const [isFs, setIsFs] = useState(false)
 
   // Lazy-load the library
   useEffect(() => {
@@ -41,6 +43,47 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
     fgRef.current?.refresh?.()
   }, [liveUpdates])
 
+  useEffect(() => {
+    const onFs = () => setIsFs(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', onFs)
+    return () => document.removeEventListener('fullscreenchange', onFs)
+  }, [])
+
+  const toggleFullscreen = useCallback(() => {
+    const el = shellRef.current
+    if (!el) return
+    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
+    else document.exitFullscreen?.().catch(() => {})
+  }, [])
+
+  const zoomBy2d = useCallback((factor) => {
+    const fg = fgRef.current
+    if (!fg?.zoom) return
+    const cur = fg.zoom()
+    const next = factor > 1
+      ? Math.min(cur * factor, typeof fg.maxZoom === 'function' ? fg.maxZoom() : 16)
+      : Math.max(cur * factor, typeof fg.minZoom === 'function' ? fg.minZoom() : 0.02)
+    fg.zoom(next, 220)
+  }, [])
+
+  const handleFit = useCallback(() => {
+    fgRef.current?.zoomToFit?.(450, 24)
+  }, [])
+
+  const handleDownloadPng = useCallback(() => {
+    const canvas = containerRef.current?.querySelector('canvas')
+    if (!canvas) return
+    try {
+      const url = canvas.toDataURL('image/png')
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `class-graph-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`
+      a.click()
+    } catch {
+      /* ignore */
+    }
+  }, [])
+
   const nodeColor = useCallback((node) => comprehensionColor(node), [liveUpdates])
   const nodeVal   = useCallback(() => 6, [])
   const nodeLabel = useCallback((node) => `${node.label} — ${Math.round((node.comprehension ?? 0.5) * 100)}%`, [liveUpdates])
@@ -50,12 +93,68 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   )
   const linkWidth = useCallback(() => 1, [])
 
+  const zoomControlsReady = FG != null && FG !== 'fallback'
+
   return (
     <div
-      ref={containerRef}
-      className="relative bg-claro-canvas"
-      style={{ width: '100%', height: '100%' }}
+      ref={shellRef}
+      className="relative flex h-full min-h-[320px] w-full flex-col bg-claro-canvas"
     >
+      <div
+        className="pointer-events-auto absolute left-2 top-2 z-[60] flex flex-wrap items-center gap-1 rounded-lg border border-claro-indigo/20 bg-claro-panel/95 p-1 shadow-sm"
+        onMouseDown={e => e.stopPropagation()}
+        onWheel={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          title="Zoom in"
+          disabled={!zoomControlsReady}
+          onClick={() => zoomBy2d(1.22)}
+          className="rounded-md px-2 py-1 text-xs font-medium text-claro-text hover:bg-claro-indigo/15 disabled:opacity-35"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          title="Zoom out"
+          disabled={!zoomControlsReady}
+          onClick={() => zoomBy2d(1 / 1.22)}
+          className="rounded-md px-2 py-1 text-xs font-medium text-claro-text hover:bg-claro-indigo/15 disabled:opacity-35"
+        >
+          −
+        </button>
+        <button
+          type="button"
+          title="Fit graph in view"
+          disabled={!zoomControlsReady}
+          onClick={handleFit}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text disabled:opacity-35"
+        >
+          Fit
+        </button>
+        <span className="mx-0.5 h-4 w-px bg-claro-indigo/20" aria-hidden />
+        <button
+          type="button"
+          title={isFs ? 'Exit full screen' : 'Full screen'}
+          onClick={toggleFullscreen}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text"
+        >
+          {isFs ? 'Exit' : 'Full'}
+        </button>
+        <button
+          type="button"
+          title="Download snapshot (PNG)"
+          onClick={handleDownloadPng}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text"
+        >
+          PNG
+        </button>
+      </div>
+      <div
+        ref={containerRef}
+        className="relative min-h-0 flex-1 bg-claro-canvas"
+        style={{ width: '100%', height: '100%' }}
+      >
       {!FG && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-gray-500 text-sm">Loading graph…</div>
@@ -101,6 +200,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
             <span>{b.range} · {b.label}</span>
           </div>
         ))}
+      </div>
       </div>
     </div>
   )

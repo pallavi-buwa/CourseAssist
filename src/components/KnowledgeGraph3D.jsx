@@ -5,16 +5,24 @@ import { studentAccuracyColor } from '../data/mockStudentGraph.js'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 import { useTheme } from '../context/ThemeContext.jsx'
 
-const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height = 500, interactive = true }) => {
+/** `highlightCourses`: null/empty = no dimming; otherwise only nodes whose `course` is in the list stay vivid. */
+const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourses = null, height = 500, interactive = true }) => {
   const { canvasHex, isDark } = useTheme()
   const fgRef = useRef()
   const wrapRef = useRef(null)
+  const shellRef = useRef(null)
   const [dims, setDims] = useState({
     width: typeof window !== 'undefined' ? Math.min(1200, Math.max(320, window.innerWidth - 48)) : 800,
     height,
   })
   const [hovered, setHovered] = useState(null)
+  const [isFs, setIsFs] = useState(false)
   const hasInteracted = useRef(false)
+
+  const filterSet = useMemo(() => {
+    if (!highlightCourses?.length) return null
+    return new Set(highlightCourses)
+  }, [highlightCourses])
 
   // Auto-rotate on load, stop on interaction
   useEffect(() => {
@@ -84,11 +92,12 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   }, [graphSig])
 
   const nodeColor = useCallback((node) => {
-    if (highlightCourse && node.course !== highlightCourse) return 'rgba(100,100,100,0.15)'
+    if (filterSet && node.course && !filterSet.has(node.course)) return 'rgba(100,100,100,0.15)'
+    if (filterSet && !node.course) return 'rgba(100,100,100,0.12)'
     const col = studentAccuracyColor(node, { degree: degreeById[node.id] })
     if (hovered?.id === node.id) return canvasHex
     return col
-  }, [highlightCourse, hovered, degreeById, canvasHex])
+  }, [filterSet, hovered, degreeById, canvasHex])
 
   const nodeVal = useCallback((node) => {
     if (hovered?.id === node.id) return 10
@@ -96,7 +105,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   }, [hovered])
 
   const nodeThreeObject = useCallback((node) => {
-    const isHighlighted = highlightCourse && node.course !== highlightCourse
+    const isHighlighted = filterSet && (node.course ? !filterSet.has(node.course) : true)
     const r = hovered?.id === node.id ? 8 : 5.5
     const color = studentAccuracyColor(node, { degree: degreeById[node.id] })
 
@@ -121,7 +130,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
     }
 
     return group
-  }, [hovered, highlightCourse, degreeById])
+  }, [hovered, filterSet, degreeById])
 
   const linkColor = useCallback((link) => {
     if (link.crossCourse) return isDark ? '#eab308' : '#ca8a04'
@@ -141,20 +150,123 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
     onNodeClick?.(node)
   }, [onNodeClick, stopRotate])
 
+  useEffect(() => {
+    const onFs = () => setIsFs(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', onFs)
+    return () => document.removeEventListener('fullscreenchange', onFs)
+  }, [])
+
+  const toggleFullscreen = useCallback(() => {
+    const el = shellRef.current
+    if (!el) return
+    if (!document.fullscreenElement) {
+      el.requestFullscreen?.().catch(() => {})
+    } else {
+      document.exitFullscreen?.().catch(() => {})
+    }
+  }, [])
+
+  const zoomBy = useCallback((factor) => {
+    const fg = fgRef.current
+    if (!fg) return
+    const pos = fg.cameraPosition()
+    fg.cameraPosition(
+      { x: pos.x * factor, y: pos.y * factor, z: pos.z * factor },
+      { x: 0, y: 0, z: 0 },
+      280,
+    )
+  }, [])
+
+  const handleFit = useCallback(() => {
+    fgRef.current?.zoomToFit?.(500, 40)
+  }, [])
+
+  const handleDownloadPng = useCallback(() => {
+    const fg = fgRef.current
+    if (!fg) return
+    try {
+      fg.pauseAnimation?.()
+      const renderer = fg.renderer()
+      const scene = fg.scene()
+      const camera = fg.camera()
+      renderer.render(scene, camera)
+      const url = renderer.domElement.toDataURL('image/png')
+      fg.resumeAnimation?.()
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `knowledge-graph-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`
+      a.click()
+    } catch {
+      fg.resumeAnimation?.()
+    }
+  }, [])
+
   return (
     <div
-      ref={wrapRef}
-      onMouseDown={stopRotate}
-      onWheel={stopRotate}
-      className="w-full h-full min-h-[480px] flex-1 min-w-0"
-      style={{ position: 'relative' }}
+      ref={shellRef}
+      className={`relative flex min-h-[480px] w-full flex-1 flex-col min-w-0 bg-space-page/40 ${isFs ? 'rounded-none' : ''}`}
     >
+      <div
+        className="pointer-events-auto absolute left-2 top-2 z-[60] flex flex-wrap items-center gap-1 rounded-lg border border-claro-indigo/20 bg-claro-panel/95 p-1 shadow-sm"
+        onMouseDown={e => e.stopPropagation()}
+        onWheel={e => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          title="Zoom in"
+          onClick={() => zoomBy(0.82)}
+          className="rounded-md px-2 py-1 text-xs font-medium text-claro-text hover:bg-claro-indigo/15"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          title="Zoom out"
+          onClick={() => zoomBy(1.22)}
+          className="rounded-md px-2 py-1 text-xs font-medium text-claro-text hover:bg-claro-indigo/15"
+        >
+          −
+        </button>
+        <button
+          type="button"
+          title="Fit graph in view"
+          onClick={handleFit}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text"
+        >
+          Fit
+        </button>
+        <span className="mx-0.5 h-4 w-px bg-claro-indigo/20" aria-hidden />
+        <button
+          type="button"
+          title={isFs ? 'Exit full screen' : 'Full screen'}
+          onClick={toggleFullscreen}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text"
+        >
+          {isFs ? 'Exit' : 'Full'}
+        </button>
+        <button
+          type="button"
+          title="Download snapshot (PNG)"
+          onClick={handleDownloadPng}
+          className="rounded-md px-2 py-1 text-xs text-claro-muted hover:bg-claro-indigo/15 hover:text-claro-text"
+        >
+          PNG
+        </button>
+      </div>
+      <div
+        ref={wrapRef}
+        onMouseDown={stopRotate}
+        onWheel={stopRotate}
+        className="w-full h-full min-h-[480px] flex-1 min-w-0"
+        style={{ position: 'relative' }}
+      >
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
         width={dims.width}
         height={dims.height}
         backgroundColor="rgba(0,0,0,0)"
+        rendererConfig={{ preserveDrawingBuffer: true, alpha: true }}
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}
         nodeLabel={() => ''}
@@ -190,6 +302,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
             <span>{b.range}</span>
           </div>
         ))}
+      </div>
       </div>
     </div>
   )

@@ -200,7 +200,8 @@ export async function generateStudyGuide(content) {
     { "type": "chunking", "title": "short title", "content": "..." }
   ]
 }
-Generate 5-8 bullet points. Generate 3-5 branches with 2-4 children each. Use vivid, memorable language for memory aids. Use distinct hex colors for branches (e.g. #818cf8, #67e8f9, #fbbf24, #34d399, #f87171).`
+Generate 5-8 bullet points. Generate 3-5 branches with 2-4 children each. Use vivid, memorable language for memory aids. Use distinct hex colors for branches (e.g. #818cf8, #67e8f9, #fbbf24, #34d399, #f87171).
+Keep each mindmap "label" and each "children" string concise (aim under ~72 characters, use phrases not paragraphs) so the map stays legible in a fixed layout.`
   const raw = await callAI(instructions, content)
   return parseJSON(raw)
 }
