@@ -5,6 +5,11 @@ import { studentAccuracyColor } from '../data/mockStudentGraph.js'
 
 const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height = 500, interactive = true }) => {
   const fgRef = useRef()
+  const wrapRef = useRef(null)
+  const [dims, setDims] = useState({
+    width: typeof window !== 'undefined' ? Math.min(1200, Math.max(320, window.innerWidth - 48)) : 800,
+    height,
+  })
   const [hovered, setHovered] = useState(null)
   const hasInteracted = useRef(false)
 
@@ -25,7 +30,44 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
     return () => clearInterval(timer)
   }, [])
 
+  // ForceGraph defaults width to container — in flex layouts that can be 0 until measured.
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const ro = new ResizeObserver((entries) => {
+      const { width, height: h } = entries[0].contentRect
+      const w = Math.floor(width)
+      const hPx = Math.floor(h)
+      const nextH = Math.max(320, hPx > 80 ? hPx : height)
+      if (w >= 120) setDims({ width: w, height: nextH })
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [height])
+
   const stopRotate = useCallback(() => { hasInteracted.current = true }, [])
+
+  // Pull linked nodes closer (safe-guarded — bad d3 calls can break the canvas).
+  const graphSig = `${graphData?.nodes?.length ?? 0}-${graphData?.links?.length ?? 0}`
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      try {
+        const fg = fgRef.current
+        if (!fg) return
+        const link = fg.d3Force('link')
+        if (link) {
+          link.distance(l => (l.crossCourse ? 120 : 48))
+          link.strength(l => (l.crossCourse ? 0.45 : 0.75))
+        }
+        const charge = fg.d3Force('charge')
+        if (charge) charge.strength(-85)
+        fg.d3ReheatSimulation?.()
+      } catch {
+        /* keep default simulation */
+      }
+    })
+    return () => cancelAnimationFrame(id)
+  }, [graphSig])
 
   const nodeColor = useCallback((node) => {
     if (highlightCourse && node.course !== highlightCourse) return 'rgba(100,100,100,0.15)'
@@ -85,12 +127,18 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   }, [onNodeClick, stopRotate])
 
   return (
-    <div onMouseDown={stopRotate} onWheel={stopRotate} style={{ position: 'relative' }}>
+    <div
+      ref={wrapRef}
+      onMouseDown={stopRotate}
+      onWheel={stopRotate}
+      className="w-full h-full min-h-[480px] flex-1 min-w-0"
+      style={{ position: 'relative' }}
+    >
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
-        width={undefined}
-        height={height}
+        width={dims.width}
+        height={dims.height}
         backgroundColor="rgba(0,0,0,0)"
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { listDemoPersonaHints } from '../data/personas.js'
 
 export default function LoginPage() {
   const { login, user } = useAuth()
@@ -100,6 +101,19 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-xs text-gray-600 mt-5">Demo — no real authentication required</p>
+
+          <div className="mt-6 rounded-xl border border-gray-800 bg-gray-900/40 p-4 text-left">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500 mb-2">Demo personas (different graphs & UI)</p>
+            <p className="text-[11px] text-gray-400 mb-1.5"><span className="text-gray-500">Students:</span>{' '}
+              {listDemoPersonaHints().students.join(', ')}
+            </p>
+            <p className="text-[11px] text-gray-400"><span className="text-gray-500">Professors:</span>{' '}
+              {listDemoPersonaHints().professors.join(', ')}
+            </p>
+            <p className="text-[11px] text-gray-600 mt-2">
+              With <code className="text-gray-500">VITE_OPENAI_API_KEY</code> set, graphs personalize once via AI and are cached in this browser.
+            </p>
+          </div>
         </div>
       </div>
     </div>

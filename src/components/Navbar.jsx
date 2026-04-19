@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { resolvePersona } from '../data/personas.js'
 
 const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
-  { label: 'Courses',  to: '/student/reading/module-1' },
+  { label: 'Courses',  to: '/student/home' },
   { label: 'Notes',       to: '/student/notes' },
   { label: 'Preferences', to: '/student/preferences' },
 ]
@@ -26,6 +27,7 @@ export default function Navbar() {
 
   const links = user.role === 'professor' ? professorLinks : studentLinks
   const initials = (user.name || user.email || 'U').slice(0, 2).toUpperCase()
+  const persona = useMemo(() => resolvePersona(user.email, user.role), [user.email, user.role])
 
   const breadcrumb = location.pathname
     .split('/').filter(Boolean)
@@ -42,7 +44,12 @@ export default function Navbar() {
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-claro-indigo flex items-center justify-center text-white text-xs font-semibold">C</div>
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-semibold"
+            style={{ backgroundColor: persona.accentHex }}
+          >
+            C
+          </div>
           <span className="font-medium text-claro-text text-sm">Claro</span>
         </div>
         <span className="text-claro-muted text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>

@@ -135,6 +135,53 @@ Rules:
     .slice(0, 6)
 }
 
+export function isOpenAIConfigured() {
+  return Boolean(API_KEY && API_KEY !== 'your_key_here')
+}
+
+export async function generatePersonaStudentKnowledgeGraph(persona, displayName) {
+  const instructions = `You are a learning-science assistant building a personal knowledge graph for one MBA student.
+
+Return ONLY valid JSON (no markdown): { "nodes": [...], "links": [...] }.
+
+Each node must be:
+{ "id": string (kebab-case unique), "label": string, "course": string (a subject or module name; use 2–4 distinct course names repeated across nodes, e.g. department titles or module clusters), "accuracy": number between 0.35 and 0.9, "resources": [ { "type": "video"|"article"|"podcast", "title": string, "url": "#" } ] }.
+
+Each link: { "source": node id, "target": node id, "crossCourse": optional true when linking different courses }.
+
+Rules:
+- 14–20 nodes, 16–24 links.
+- Include at least 2 links with "crossCourse": true.
+- Reflect this learner focus in topic choices and accuracies: ${persona.graphFocus || 'balanced MBA learner'}.
+- Student name hint (for tone only): ${displayName || 'Student'}.
+
+Do not repeat generic labels; make the graph clearly tailored to the persona.`
+
+  const raw = await callAI(instructions, 'Generate the personalized student knowledge graph JSON now.')
+  const { normalizeStudentGraphFromAI } = await import('../utils/normalizeKnowledgeGraph.js')
+  return normalizeStudentGraphFromAI(parseJSON(raw))
+}
+
+export async function generatePersonaProfessorCohortGraph(persona, courseTitle) {
+  const instructions = `You are modeling class-wide comprehension on a single course knowledge graph.
+
+Return ONLY valid JSON (no markdown): { "nodes": [...], "links": [...] }.
+
+Each node: { "id": kebab-case unique, "label": string, "comprehension": number 0.25-0.92 (class average), "week": integer 1-8 }.
+Each link: { "source": id, "target": id }.
+
+Rules:
+- 18–22 nodes, 18–26 prerequisite-style directed links (foundational → applied).
+- Topic domain: ${courseTitle}.
+- Cohort characterization (vary strengths/weaknesses accordingly): ${persona.graphFocus || 'Typical MBA section'}.
+
+Make the pattern of high/low comprehension visibly reflect the cohort description.`
+
+  const raw = await callAI(instructions, 'Generate the professor cohort graph JSON now.')
+  const { normalizeProfessorGraphFromAI } = await import('../utils/normalizeKnowledgeGraph.js')
+  return normalizeProfessorGraphFromAI(parseJSON(raw))
+}
+
 export async function generateStudyGuide(content) {
   const instructions = `You are an expert learning coach. Analyze the provided course content and generate a comprehensive study guide. Return ONLY a JSON object (no markdown, no preamble):
 {
