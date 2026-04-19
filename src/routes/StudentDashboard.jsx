@@ -23,7 +23,7 @@ import { readNodeMasteryMap, writeNodeMastery } from '../utils/nodeMasteryStorag
 import PersonaContentHub from '../components/PersonaContentHub.jsx'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
-const SUBJECT_LEGEND_COLORS = ['#C4B5FF', '#8EE4D2', '#FFD6A8', '#FFB8C8', '#67e8f9', '#fbbf24']
+const SUBJECT_LEGEND_COLORS = ['#C4922A', '#2B4A6B', '#E8C97A', '#8B2035', '#5A7A9A', '#9B6B2F']
 
 export default function StudentDashboard() {
   const { user } = useAuth()
@@ -257,7 +257,7 @@ export default function StudentDashboard() {
                 </div>
               ))}
               <div className="flex items-center gap-2 border-l border-claro-indigo/15 pl-4">
-                <div className="h-0.5 w-5" style={{ background: '#a16207' }} />
+                <div className="h-0.5 w-5" style={{ background: '#E8C97A' }} />
                 <span className="text-sm text-claro-muted">Cross-course link</span>
               </div>
             </div>

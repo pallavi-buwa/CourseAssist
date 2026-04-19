@@ -1,13 +1,14 @@
 /**
- * Score → fill color. Brand ramp: green (strong) → yellow → red (critical).
+ * Score → fill color. Gold ramp: bright shining gold (mastered) → dark bronze (needs work).
+ * Brighter = higher understanding.
  */
 export const SCORE_BANDS = [
-  { min: 0.78, label: 'Strong', range: '≥78%', color: '#22c55e' },
-  { min: 0.62, label: 'Solid', range: '62–78%', color: '#84cc16' },
-  { min: 0.48, label: 'Fair', range: '48–62%', color: '#eab308' },
-  { min: 0.32, label: 'Low', range: '32–48%', color: '#f97316' },
-  { min: 0.18, label: 'At risk', range: '18–32%', color: '#ef4444' },
-  { min: 0, label: 'Critical', range: '<18%', color: '#991b1b' },
+  { min: 0.78, label: 'Strong',   range: '≥78%',   color: '#F0D060' },
+  { min: 0.62, label: 'Solid',    range: '62–78%',  color: '#D4A832' },
+  { min: 0.48, label: 'Fair',     range: '48–62%',  color: '#B8821A' },
+  { min: 0.32, label: 'Low',      range: '32–48%',  color: '#8B5620' },
+  { min: 0.18, label: 'At risk',  range: '18–32%',  color: '#5C3410' },
+  { min: 0,    label: 'Critical', range: '<18%',    color: '#2A1A05' },
 ]
 
 export function scoreToNodeColor(t) {
@@ -27,11 +28,11 @@ export function scoreBandLabel(t) {
   return SCORE_BANDS[SCORE_BANDS.length - 1].label
 }
 
-/** Distinct greens for subject chips (separate from score ramp) */
+/** Subject tints — pull from the 4-color palette for visual coherence */
 export const SUBJECT_TINT = {
-  python: '#22c55e',
-  dsa: '#16a34a',
-  cn: '#15803d',
+  python: '#C4922A',  /* gold */
+  dsa:    '#2B4A6B',  /* slate blue */
+  cn:     '#8B2035',  /* deep wine */
 }
 
 /**

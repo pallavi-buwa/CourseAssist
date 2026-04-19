@@ -32,9 +32,9 @@ export default {
         panel: 'rgb(var(--tw-panel) / <alpha-value>)',
         border: 'rgb(var(--tw-border) / <alpha-value>)',
         accent: {
-          python: '#C8890A',
-          dsa: '#DCA528',
-          cn: '#B84C2A',
+          python: '#C4922A',  /* gold */
+          dsa:    '#2B4A6B',  /* slate blue */
+          cn:     '#8B2035',  /* deep wine */
         },
       },
       fontFamily: {

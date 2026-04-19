@@ -17,63 +17,65 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 /*
- * Brand: warm charcoal · amber gold
- * Token mapping:
- *   claro-indigo  → amber gold (#C8890A) — CTAs, primary borders, active states
- *   claro-amber   → amber gold — warnings (same hue, consistent)
- *   claro-coral   → warm rust (#B84C2A) — alerts / errors
- *   claro-red     → warm rust (#B84C2A) — errors
- *   claro-green   → amber gold — non-button accents (single-hue palette)
- *   claro-sage    → light amber (#DCA528) — highlights
- *   claro-teal    → amber gold — kept for format tags
+ * Brand: warm black · gold · champagne · wine · slate blue
+ *
+ * Four-color system — each has a distinct role:
+ *   claro-indigo  → gold (#C4922A)      — CTAs, primary borders, active states
+ *   claro-sage    → champagne (#E8C97A) — hover, selected, lighter highlights
+ *   claro-coral   → deep wine (#8B2035) — alerts, errors, risk, declining
+ *   claro-red     → deep wine (#8B2035) — errors
+ *   claro-teal    → slate blue (#2B4A6B)— cool contrast accent, info states
+ *   claro-amber   → gold (#C4922A)      — warnings (contextual gold)
+ *   claro-green   → gold (#C4922A)      — non-button gold accents
  */
 :root {
-  --tw-claro-canvas: 28 24 22;       /* #1C1816 warm charcoal */
-  --tw-claro-panel: 39 32 25;        /* #272019 lifted warm panel */
-  --tw-claro-slate: 58 48 40;        /* #3A3028 mid-tone warm */
-  --tw-claro-text: 245 239 230;      /* #F5EFE6 warm cream */
-  --tw-claro-muted: 156 140 122;     /* #9C8C7A warm sand */
-  --tw-claro-green: 200 137 10;      /* #C8890A amber (single accent) */
-  --tw-claro-red: 184 76 42;         /* #B84C2A warm rust */
-  --tw-claro-yellow: 200 137 10;     /* #C8890A amber */
-  --tw-claro-sage: 220 165 40;       /* #DCA528 lighter amber */
-  /* Primary UI accent — #C8890A amber gold */
-  --tw-claro-indigo: 200 137 10;
-  --tw-claro-amber: 200 137 10;
-  --tw-claro-coral: 184 76 42;       /* #B84C2A warm rust for alerts */
-  --tw-claro-teal: 200 137 10;       /* mapped to amber for consistency */
-  --tw-surface: 28 24 22;
-  --tw-panel: 39 32 25;
-  --tw-border: 70 58 46;
+  --tw-claro-canvas: 12 10 7;        /* #0C0A07 warm near-black */
+  --tw-claro-panel: 22 19 16;        /* #161310 card / panel bg */
+  --tw-claro-slate: 35 29 21;        /* #231D15 input / element bg */
+  --tw-claro-text: 240 232 212;      /* #F0E8D4 ivory — warm primary text */
+  --tw-claro-muted: 122 110 92;      /* #7A6E5C warm stone */
+  --tw-claro-green: 196 146 42;      /* #C4922A gold */
+  --tw-claro-red: 139 32 53;         /* #8B2035 deep wine */
+  --tw-claro-yellow: 196 146 42;     /* #C4922A gold for warnings */
+  --tw-claro-sage: 232 201 122;      /* #E8C97A champagne */
+  /* Primary UI accent — #C4922A 18k gold */
+  --tw-claro-indigo: 196 146 42;
+  --tw-claro-amber: 196 146 42;
+  --tw-claro-coral: 139 32 53;       /* #8B2035 deep wine for alerts */
+  /* Cool contrast — #2B4A6B slate blue (makes gold pop) */
+  --tw-claro-teal: 43 74 107;
+  --tw-surface: 12 10 7;
+  --tw-panel: 22 19 16;
+  --tw-border: 46 37 24;             /* #2E2518 warm gold-toned border */
   --font-brand: 'Brandon Grotesque', system-ui, -apple-system, sans-serif;
 
-  /* Warm vignette depth — amber top glow, rust corner hint */
+  /* Gold top glow + wine corner + slate hint for depth */
   --bg-aurora:
-    radial-gradient(ellipse 110% 60% at 50% -10%, rgba(200, 137, 10, 0.06) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(184, 76, 42, 0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 45% 35% at 0% 85%, rgba(200, 137, 10, 0.03) 0%, transparent 50%);
-  /* Fine dot grid */
-  --bg-pattern-dots: radial-gradient(rgba(245, 239, 230, 0.035) 1px, transparent 1px);
+    radial-gradient(ellipse 110% 55% at 50% -8%, rgba(196, 146, 42, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(139, 32, 53, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 0% 80%, rgba(43, 74, 107, 0.05) 0%, transparent 50%);
+  /* Subtle warm dot grid */
+  --bg-pattern-dots: radial-gradient(rgba(240, 232, 212, 0.03) 1px, transparent 1px);
   --bg-pattern-diagonal: repeating-linear-gradient(
     125deg,
     transparent,
     transparent 14px,
-    rgba(200, 137, 10, 0.025) 14px,
-    rgba(200, 137, 10, 0.025) 15px
+    rgba(196, 146, 42, 0.02) 14px,
+    rgba(196, 146, 42, 0.02) 15px
   );
   --bg-pattern-cross: repeating-linear-gradient(
       0deg,
       transparent,
       transparent 35px,
-      rgba(200, 137, 10, 0.018) 35px,
-      rgba(200, 137, 10, 0.018) 36px
+      rgba(196, 146, 42, 0.015) 35px,
+      rgba(196, 146, 42, 0.015) 36px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 35px,
-      rgba(200, 137, 10, 0.015) 35px,
-      rgba(200, 137, 10, 0.015) 36px
+      rgba(196, 146, 42, 0.012) 35px,
+      rgba(196, 146, 42, 0.012) 36px
     );
 }
 
