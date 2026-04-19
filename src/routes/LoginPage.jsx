@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export default function LoginPage() {
@@ -9,17 +9,24 @@ export default function LoginPage() {
   const [role, setRole] = useState('student')
   const [error, setError] = useState('')
 
-  // Already logged in
-  if (user) {
-    navigate(user.role === 'professor' ? '/professor/home' : '/student/home', { replace: true })
-    return null
-  }
+  const signedInDestination = user?.role === 'professor'
+    ? '/professor/home'
+    : user?.preferencesComplete ? '/student/home' : '/student/preferences'
+
+  useEffect(() => {
+    if (user) navigate(signedInDestination, { replace: true })
+  }, [navigate, signedInDestination, user])
+
+  if (user) return <Navigate to={signedInDestination} replace />
 
   const handleLogin = (e) => {
     e.preventDefault()
     if (!email.trim()) { setError('Please enter an email.'); return }
     const u = login(email.trim(), role)
-    navigate(u.role === 'professor' ? '/professor/home' : '/student/home', { replace: true })
+    const destination = u.role === 'professor'
+      ? '/professor/home'
+      : u.preferencesComplete ? '/student/home' : '/student/preferences'
+    navigate(destination, { replace: true })
   }
 
   return (

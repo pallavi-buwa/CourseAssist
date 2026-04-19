@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { generateMicroChecks } from '../api/claude.js'
+import { generateMicroChecks } from '../api/openai.js'
 
 export default function MicroCheckGenerator({ onClose }) {
   const [text, setText]           = useState('')
@@ -15,7 +15,7 @@ export default function MicroCheckGenerator({ onClose }) {
       const qs = await generateMicroChecks(text)
       setQuestions(qs)
     } catch (e) {
-      setError(e.message.includes('API_KEY') ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI generation.' : e.message)
+      setError(e.message.includes('API_KEY') ? 'Add VITE_OPENAI_API_KEY to .env to use AI generation.' : e.message)
     } finally {
       setLoading(false)
     }

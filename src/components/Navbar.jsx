@@ -25,7 +25,7 @@ export default function Navbar() {
   if (!user) return null
 
   const links = user.role === 'professor' ? professorLinks : studentLinks
-  const initials = user.name.slice(0, 2).toUpperCase()
+  const initials = (user.name || user.email || 'U').slice(0, 2).toUpperCase()
 
   const breadcrumb = location.pathname
     .split('/').filter(Boolean)
@@ -79,7 +79,14 @@ export default function Navbar() {
               <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
               <div className="text-xs text-claro-muted capitalize">{user.role}</div>
             </div>
-            <button className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-white/5 transition-colors">Preferences</button>
+            {user.role === 'student' && (
+              <button
+                onClick={() => { setDropOpen(false); navigate('/student/preferences') }}
+                className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-white/5 transition-colors"
+              >
+                Preferences
+              </button>
+            )}
             <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-claro-coral hover:bg-white/5 transition-colors">Logout</button>
           </div>
         )}

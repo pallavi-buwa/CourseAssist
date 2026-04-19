@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { RequireAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
-import { generateStudyGuide } from '../api/claude.js'
+import { generateStudyGuide } from '../api/openai.js'
 import { studentGraph } from '../data/mockStudentGraph.js'
 
 // ─── Initial mock notes ───────────────────────────────────────────────────────

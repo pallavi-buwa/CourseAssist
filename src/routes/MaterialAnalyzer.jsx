@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { RequireAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import FlagCard from '../components/FlagCard.jsx'
-import { analyzeForInclusivity } from '../api/claude.js'
+import { analyzeForInclusivity } from '../api/openai.js'
 
 const PLACEHOLDER = `Example: Week 1 — Introduction to Marketing Strategy
 
@@ -27,7 +27,7 @@ export default function MaterialAnalyzer() {
       setFlags(result)
     } catch (e) {
       setError(e.message.includes('API_KEY')
-        ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI analysis.'
+        ? 'Add VITE_OPENAI_API_KEY to .env to use AI analysis.'
         : e.message)
     } finally {
       setLoading(false)

@@ -344,24 +344,28 @@ export default function BrainIntro({ onEnter }) {
       cancelAnimationFrame(s.rafId)
       window.removeEventListener('resize', onResize)
       renderer.dispose()
-      el.removeChild(renderer.domElement)
+      if (renderer.domElement.parentNode === el) {
+        el.removeChild(renderer.domElement)
+      }
     }
   }, [])
 
   const handleEnter = useCallback(() => {
+    if (!ready || exiting) return
     const s = stateRef.current
     s.phase = 'exit'
     setExiting(true)
-    setTimeout(() => onEnter?.(), 1100)
-  }, [onEnter])
+    setTimeout(() => onEnter?.(), 250)
+  }, [exiting, onEnter, ready])
 
   return (
     <div
       className={`absolute inset-0 z-50 transition-opacity duration-700 ${exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       style={{ background: '#110E1A' }}
+      onClick={handleEnter}
     >
       {/* Three.js canvas mount */}
-      <div ref={mountRef} className="absolute inset-0" />
+      <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
 
       {/* Overlay UI */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
@@ -401,7 +405,10 @@ export default function BrainIntro({ onEnter }) {
 
           {/* CTA */}
           <button
-            onClick={handleEnter}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleEnter()
+            }}
             disabled={!ready}
             className={`pointer-events-auto px-10 py-4 rounded-full text-sm font-medium
               transition-all duration-300 border

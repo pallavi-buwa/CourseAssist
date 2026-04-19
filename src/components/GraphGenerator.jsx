@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { generateKnowledgeGraph } from '../api/claude.js'
+import { generateKnowledgeGraph } from '../api/openai.js'
 
 export default function GraphGenerator({ onClose, onGenerated }) {
   const [text, setText]       = useState('')
@@ -22,7 +22,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
       }
       onGenerated?.(graph)
     } catch (e) {
-      setError(e.message.includes('API_KEY') ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI generation.' : e.message)
+      setError(e.message.includes('API_KEY') ? 'Add VITE_OPENAI_API_KEY to .env to use AI generation.' : e.message)
     } finally {
       setLoading(false)
     }

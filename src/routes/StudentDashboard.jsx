@@ -125,7 +125,7 @@ export default function StudentDashboard() {
                 node={selectedNode}
                 mode="student"
                 onClose={() => setSelectedNode(null)}
-                preferences={{ language: 'English', format: 'video' }}
+                preferences={user?.preferences}
               />
             )}
           </div>
