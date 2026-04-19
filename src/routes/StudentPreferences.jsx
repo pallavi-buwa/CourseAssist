@@ -112,31 +112,31 @@ export default function StudentPreferences() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-claro-midnight">
         <Navbar />
-        <main className="pt-14">
-          <section className="border-b border-gray-800 bg-gray-900">
-            <div className="max-w-5xl mx-auto px-5 py-10">
-              <p className="text-xs font-medium uppercase tracking-widest text-emerald-400 mb-3">
+        <main className="max-w-5xl mx-auto px-5 pt-20 pb-8">
+          <section className="border border-[#3A3550] bg-claro-slate/55 rounded-3xl">
+            <div className="px-6 py-8">
+              <p className="text-xs font-medium uppercase tracking-widest text-claro-sage mb-3">
                 {isFirstRun ? 'First-time setup' : 'Preferences'}
               </p>
-              <h1 className="text-3xl font-semibold text-white mb-3">
+              <h1 className="text-3xl font-semibold text-claro-text mb-3">
                 Shape EduGraph around how you learn.
               </h1>
-              <p className="text-sm text-gray-400 max-w-2xl leading-6">
+              <p className="text-sm text-claro-muted max-w-2xl leading-6">
                 Choose the languages and formats that make new concepts easier to absorb. Every topic node will use these choices to surface relevant learning links.
               </p>
             </div>
           </section>
 
-          <form onSubmit={handleSubmit} className="max-w-5xl mx-auto px-5 py-8">
+          <form onSubmit={handleSubmit} className="py-8">
             <div className="grid lg:grid-cols-[1fr_320px] gap-6">
               <div className="space-y-8">
                 <section>
                   <div className="flex items-end justify-between gap-4 mb-4">
                     <div>
                       <h2 className="text-lg font-medium text-white">Preferred languages</h2>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-claro-muted mt-1">
                         English stays available. Add any other languages you want learning resources in.
                       </p>
                     </div>
@@ -144,7 +144,7 @@ export default function StudentPreferences() {
                       <button
                         type="button"
                         onClick={() => setLanguages([])}
-                        className="text-xs text-gray-500 hover:text-white transition-colors"
+                        className="text-xs text-claro-muted hover:text-claro-text transition-colors"
                       >
                         Clear
                       </button>
@@ -162,11 +162,11 @@ export default function StudentPreferences() {
                           className={`min-h-20 rounded-lg border px-4 py-3 text-left transition-all ${
                             selected
                               ? 'border-emerald-400 bg-emerald-400/10 text-white'
-                              : 'border-gray-800 bg-gray-900 text-gray-400 hover:border-gray-600 hover:text-gray-200'
+                              : 'border-[#3A3550] bg-claro-slate text-claro-muted hover:border-[#4A4463] hover:text-claro-text'
                           }`}
                         >
                           <span className="block text-sm font-medium">{language}</span>
-                          <span className="block text-xs text-gray-500 mt-1">
+                          <span className="block text-xs text-claro-muted mt-1">
                             {selected ? 'Included in node links' : 'Tap to include'}
                           </span>
                         </button>
@@ -175,19 +175,19 @@ export default function StudentPreferences() {
                   </div>
 
                   <label className="block mt-4">
-                    <span className="text-xs text-gray-400 mb-1.5 block">Other languages</span>
+                    <span className="text-xs text-claro-muted mb-1.5 block">Other languages</span>
                     <input
                       value={customLanguages}
                       onChange={event => setCustomLanguages(event.target.value)}
                       placeholder="German, Japanese, Yoruba"
-                      className="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-emerald-400 transition-colors"
+                      className="w-full bg-transparent border border-[#4A4463] rounded-lg px-4 py-3 text-sm text-claro-text placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-sage transition-colors"
                     />
                   </label>
                 </section>
 
                 <section>
                   <h2 className="text-lg font-medium text-white mb-1">Learning format</h2>
-                  <p className="text-sm text-gray-500 mb-4">
+                  <p className="text-sm text-claro-muted mb-4">
                     Pick every format you want EduGraph to prioritize.
                   </p>
 
@@ -202,14 +202,14 @@ export default function StudentPreferences() {
                           className={`rounded-lg border p-4 text-left transition-all ${
                             selected
                               ? 'border-cyan-400 bg-cyan-400/10 text-white'
-                              : 'border-gray-800 bg-gray-900 text-gray-400 hover:border-gray-600 hover:text-gray-200'
+                              : 'border-[#3A3550] bg-claro-slate text-claro-muted hover:border-[#4A4463] hover:text-claro-text'
                           }`}
                         >
                           <div className="flex items-center justify-between gap-3">
                             <span className="text-sm font-medium">{format.title}</span>
-                            <span className={`h-3 w-3 rounded-full border ${selected ? 'bg-cyan-300 border-cyan-300' : 'border-gray-600'}`} />
+                            <span className={`h-3 w-3 rounded-full border ${selected ? 'bg-cyan-300 border-cyan-300' : 'border-[#4A4463]'}`} />
                           </div>
-                          <p className="text-xs text-gray-500 leading-5 mt-2">{format.description}</p>
+                          <p className="text-xs text-claro-muted leading-5 mt-2">{format.description}</p>
                         </button>
                       )
                     })}
@@ -217,11 +217,11 @@ export default function StudentPreferences() {
                 </section>
               </div>
 
-              <aside className="lg:sticky lg:top-20 h-fit rounded-lg border border-gray-800 bg-gray-900 p-5">
-                <h2 className="text-sm font-medium text-white mb-4">Your learning mix</h2>
+              <aside className="lg:sticky lg:top-24 h-fit rounded-2xl border border-[#3A3550] bg-claro-slate p-5">
+                <h2 className="text-sm font-medium text-claro-text mb-4">Your learning mix</h2>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">Languages</p>
+                    <p className="text-[11px] uppercase tracking-widest text-claro-muted mb-2">Languages</p>
                     <div className="flex flex-wrap gap-2">
                       {uniqueCleanList([...languages, ...customLanguages.split(',')]).length ? (
                         uniqueCleanList([...languages, ...customLanguages.split(',')]).map(language => (
@@ -230,13 +230,13 @@ export default function StudentPreferences() {
                           </span>
                         ))
                       ) : (
-                        <span className="text-xs text-gray-500">English only for now</span>
+                        <span className="text-xs text-claro-muted">English only for now</span>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-2">Formats</p>
+                    <p className="text-[11px] uppercase tracking-widest text-claro-muted mb-2">Formats</p>
                     <div className="flex flex-wrap gap-2">
                       {formats.map(format => (
                         <span key={format} className="rounded bg-cyan-400/10 border border-cyan-400/20 px-2 py-1 text-xs text-cyan-300">
@@ -251,7 +251,7 @@ export default function StudentPreferences() {
 
                 <button
                   type="submit"
-                  className="w-full mt-6 bg-emerald-500 hover:bg-emerald-400 text-gray-950 rounded-lg px-4 py-3 text-sm font-semibold transition-colors"
+                  className="w-full mt-6 bg-claro-sage hover:brightness-105 text-claro-midnight rounded-lg px-4 py-3 text-sm font-semibold transition-colors"
                 >
                   {isFirstRun ? 'Start learning' : 'Save preferences'}
                 </button>

@@ -32,6 +32,7 @@ export default function App() {
           <Routes>
             <Route path="/"                              element={<LoginPage />} />
             <Route path="/student/home"                  element={<StudentHome />} />
+            <Route path="/student/reading"               element={<StudentReadingView />} />
             <Route path="/student/reading/:moduleId"     element={<StudentReadingView />} />
             <Route path="/student/dashboard"             element={<StudentDashboard />} />
             <Route path="/student/preferences"           element={<StudentPreferences />} />

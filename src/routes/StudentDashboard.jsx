@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
@@ -37,51 +37,51 @@ export default function StudentDashboard() {
     <RequireAuth role="student">
       <div className="min-h-screen bg-claro-midnight flex flex-col">
         <Navbar />
-        <div className="pt-14 flex flex-col flex-1">
+        <div className="pt-20 flex flex-col flex-1">
 
           {/* Sub-header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800 bg-gray-900/50">
-            <div>
-              <h1 className="text-sm font-medium text-white">My Knowledge Graph</h1>
-              <p className="text-xs text-gray-500">{graphData.nodes.length} concepts · {graphData.links.length} connections</p>
-            </div>
+          <div className="max-w-6xl mx-auto w-full px-5">
+            <div className="flex items-center justify-between px-5 py-4 border border-[#3A3550] rounded-3xl bg-claro-slate/55">
+              <div>
+                <h1 className="text-sm font-medium text-claro-text">My Knowledge Graph</h1>
+                <p className="text-xs text-claro-muted">{graphData.nodes.length} concepts · {graphData.links.length} connections</p>
+              </div>
 
-            {/* Course filter pills */}
-            <div className="flex items-center gap-1.5">
-              {COURSE_FILTERS.map(f => (
+              <div className="flex items-center gap-1.5">
+                {COURSE_FILTERS.map(f => (
+                  <button
+                    key={f.id}
+                    onClick={() => setActiveCourse(f.id)}
+                    className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                      activeCourse === f.id
+                        ? 'bg-claro-indigo border-claro-indigo text-white'
+                        : 'bg-claro-midnight border-[#3A3550] text-claro-muted hover:border-[#4A4463] hover:text-claro-text'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2">
                 <button
-                  key={f.id}
-                  onClick={() => setActiveCourse(f.id)}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all ${
-                    activeCourse === f.id
-                      ? 'bg-claro-indigo border-claro-indigo text-white'
-                      : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600'
-                  }`}
+                  onClick={() => navigate('/student/notes')}
+                  className="border border-[#3A3550] text-claro-muted hover:text-claro-text hover:border-[#4A4463] rounded-lg px-3 py-1.5 text-xs transition-colors"
                 >
-                  {f.label}
+                  ✎ Notes
                 </button>
-              ))}
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => navigate('/student/notes')}
-                className="border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg px-3 py-1.5 text-xs transition-colors"
-              >
-                ✎ Notes
-              </button>
-              <button
-                onClick={() => setShowGenerator(true)}
-                className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
-              >
-                + Add from syllabus
-              </button>
+                <button
+                  onClick={() => setShowGenerator(true)}
+                  className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                >
+                  + Add from syllabus
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Legend + stats */}
-          <div className="flex items-center gap-6 px-5 py-2 border-b border-gray-800">
+          <div className="max-w-6xl mx-auto w-full px-10 py-3 flex items-center gap-6">
             <div className="flex items-center gap-4">
               {[
                 { color: '#9EE4D4', label: 'Strong (≥70%)' },
@@ -90,12 +90,12 @@ export default function StudentDashboard() {
               ].map(l => (
                 <div key={l.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
-                  <span className="text-[11px] text-gray-500">{l.label}</span>
+                  <span className="text-[11px] text-claro-muted">{l.label}</span>
                 </div>
               ))}
               <div className="flex items-center gap-1.5 ml-2">
                 <div className="w-4 h-0.5" style={{ background: '#FFD6A8' }} />
-                <span className="text-[11px] text-gray-500">Cross-course link</span>
+                <span className="text-[11px] text-claro-muted">Cross-course link</span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-4">
@@ -106,28 +106,31 @@ export default function StudentDashboard() {
               ].map(c => (
                 <div key={c.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full opacity-70" style={{ background: c.color }} />
-                  <span className="text-[11px] text-gray-500">{c.label}</span>
+                  <span className="text-[11px] text-claro-muted">{c.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Graph + detail panel */}
-          <div className="flex-1 relative overflow-hidden">
-            <KnowledgeGraph3D
-              graphData={graphData}
-              onNodeClick={handleNodeClick}
-              highlightCourse={activeCourse === 'all' ? null : activeCourse}
-            />
-
-            {selectedNode && (
-              <NodeDetailPanel
-                node={selectedNode}
-                mode="student"
-                onClose={() => setSelectedNode(null)}
-                preferences={user?.preferences}
+          <div className="flex-1 overflow-hidden px-5 py-4">
+            <div className="relative h-full w-full max-w-6xl mx-auto rounded-3xl border border-[#3A3550] bg-claro-slate/35">
+              <KnowledgeGraph3D
+                graphData={graphData}
+                onNodeClick={handleNodeClick}
+                highlightCourse={activeCourse === 'all' ? null : activeCourse}
+                height={620}
               />
-            )}
+
+              {selectedNode && (
+                <NodeDetailPanel
+                  node={selectedNode}
+                  mode="student"
+                  onClose={() => setSelectedNode(null)}
+                  preferences={user?.preferences}
+                />
+              )}
+            </div>
           </div>
 
         </div>

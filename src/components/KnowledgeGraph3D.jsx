@@ -5,7 +5,9 @@ import { studentAccuracyColor } from '../data/mockStudentGraph.js'
 
 const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height = 500, interactive = true }) => {
   const fgRef = useRef()
+  const containerRef = useRef()
   const [hovered, setHovered] = useState(null)
+  const [graphWidth, setGraphWidth] = useState(960)
   const hasInteracted = useRef(false)
 
   // Auto-rotate on load, stop on interaction
@@ -23,6 +25,21 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
       })
     }, 16)
     return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const updateWidth = () => {
+      setGraphWidth(containerRef.current?.clientWidth || 960)
+    }
+
+    updateWidth()
+
+    const observer = new ResizeObserver(updateWidth)
+    observer.observe(containerRef.current)
+
+    return () => observer.disconnect()
   }, [])
 
   const stopRotate = useCallback(() => { hasInteracted.current = true }, [])
@@ -84,12 +101,28 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
     onNodeClick?.(node)
   }, [onNodeClick, stopRotate])
 
+  useEffect(() => {
+    if (!fgRef.current || !graphData?.nodes?.length) return
+
+    const timer = setTimeout(() => {
+      fgRef.current?.zoomToFit(450, 80)
+      fgRef.current?.centerAt(0, 0, 600)
+    }, 250)
+
+    return () => clearTimeout(timer)
+  }, [graphData, graphWidth, highlightCourse])
+
   return (
-    <div onMouseDown={stopRotate} onWheel={stopRotate} style={{ position: 'relative' }}>
+    <div
+      ref={containerRef}
+      onMouseDown={stopRotate}
+      onWheel={stopRotate}
+      style={{ position: 'relative', width: '100%', height }}
+    >
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData}
-        width={undefined}
+        width={graphWidth}
         height={height}
         backgroundColor="rgba(0,0,0,0)"
         nodeThreeObject={nodeThreeObject}
@@ -110,7 +143,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         cooldownTime={3000}
       />
       {hovered && (
-        <div className="absolute bottom-4 left-4 bg-claro-slate/95 border border-white/10 rounded-lg px-3 py-2 text-xs pointer-events-none">
+        <div className="absolute bottom-4 left-4 bg-claro-slate/95 border border-[#3A3550] rounded-lg px-3 py-2 text-xs pointer-events-none">
           <div className="text-claro-text font-medium">{hovered.label}</div>
           <div className="text-claro-muted">{hovered.course}</div>
           <div style={{ color: studentAccuracyColor(hovered.accuracy) }}>

@@ -161,17 +161,17 @@ export default function StudentNotes() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-claro-midnight">
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
+        <main className="max-w-5xl mx-auto px-5 pt-20 pb-8">
 
-          <div className="mb-6">
-            <h1 className="text-xl font-semibold text-white mb-1">Notes</h1>
-            <p className="text-gray-500 text-sm">Log your notes and build mind maps to help remember concepts.</p>
+          <div className="mb-6 rounded-3xl border border-[#3A3550] bg-claro-slate/55 p-6">
+            <h1 className="text-xl font-semibold text-claro-text mb-1">Notes</h1>
+            <p className="text-claro-muted text-sm">Log your notes and build mind maps to help remember concepts.</p>
           </div>
 
           {/* Tab bar */}
-          <div className="flex gap-1 mb-6 border-b border-gray-800">
+          <div className="flex gap-1 mb-6 border-b border-[#322D46]">
             {[
               { id: 'notes',   label: `Notes${notes.length ? ` (${notes.length})` : ''}` },
               { id: 'mindmap', label: 'Mind Map' },
@@ -179,8 +179,8 @@ export default function StudentNotes() {
               <button key={t.id} onClick={() => setTab(t.id)}
                 className={`px-5 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
                   tab === t.id
-                    ? 'border-indigo-500 text-indigo-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
+                    ? 'border-claro-indigo text-claro-indigo'
+                    : 'border-transparent text-claro-muted hover:text-claro-text'
                 }`}>
                 {t.label}
               </button>
@@ -192,18 +192,18 @@ export default function StudentNotes() {
             <div className="grid grid-cols-5 gap-6">
 
               {/* Editor */}
-              <div className="col-span-2 bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3 h-fit">
+              <div className="col-span-2 bg-claro-slate border border-[#3A3550] rounded-2xl p-5 flex flex-col gap-3 h-fit">
                 <input
                   value={noteTitle}
                   onChange={e => setNoteTitle(e.target.value)}
                   placeholder="Title (optional)"
-                  className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                  className="bg-transparent border border-[#4A4463] rounded-xl px-3 py-2 text-sm text-claro-text placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-indigo"
                 />
                 <textarea
                   value={noteText}
                   onChange={e => setNoteText(e.target.value)}
                   placeholder="Write your note…"
-                  className="h-40 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-indigo-500 leading-relaxed"
+                  className="h-40 bg-transparent border border-[#4A4463] rounded-xl px-3 py-2.5 text-sm text-claro-text placeholder:text-claro-muted/60 resize-none focus:outline-none focus:border-claro-indigo leading-relaxed"
                 />
 
                 {/* Concept node autocomplete */}
@@ -212,25 +212,25 @@ export default function StudentNotes() {
                     value={nodeSearch}
                     onChange={e => { setNodeSearch(e.target.value); setAttachedNode('') }}
                     placeholder="Attach to a concept node…"
-                    className="w-full bg-gray-800 border border-gray-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-transparent border border-[#4A4463] rounded-xl px-3 py-1.5 text-xs text-claro-text placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-indigo"
                   />
                   {filteredNodes.length > 0 && !attachedNode && (
-                    <div className="absolute top-full mt-1 left-0 right-0 bg-gray-800 border border-gray-700 rounded-xl shadow-xl max-h-36 overflow-y-auto z-10">
+                    <div className="absolute top-full mt-1 left-0 right-0 bg-claro-slate border border-[#3A3550] rounded-xl shadow-xl max-h-36 overflow-y-auto z-10">
                       {filteredNodes.slice(0, 7).map(n => (
                         <button key={n} onClick={() => { setAttachedNode(n); setNodeSearch(n) }}
-                          className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-gray-700 transition-colors">
+                          className="w-full text-left px-3 py-2 text-xs text-claro-text/85 hover:bg-white/5 transition-colors">
                           {n}
                         </button>
                       ))}
                     </div>
                   )}
                   {attachedNode && (
-                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-indigo-400">✓</span>
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-claro-indigo">✓</span>
                   )}
                 </div>
 
                 <button onClick={saveNote} disabled={!noteText.trim()}
-                  className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
+                  className="bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
                   Save note
                 </button>
               </div>
@@ -238,37 +238,37 @@ export default function StudentNotes() {
               {/* Notes list */}
               <div className="col-span-3">
                 {openNote ? (
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+                  <div className="bg-claro-slate border border-[#3A3550] rounded-2xl p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full" style={{ background: openNote.color }} />
                         <h3 className="text-white font-medium">{openNote.title}</h3>
                       </div>
-                      <button onClick={() => setOpenNote(null)} className="text-gray-500 hover:text-white text-sm">✕ Close</button>
+                      <button onClick={() => setOpenNote(null)} className="text-claro-muted hover:text-claro-text text-sm">✕ Close</button>
                     </div>
-                    <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap mb-4">{openNote.text}</p>
+                    <p className="text-claro-text/85 text-sm leading-relaxed whitespace-pre-wrap mb-4">{openNote.text}</p>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-indigo-400 bg-indigo-600/10 border border-indigo-600/20 rounded-full px-2.5 py-0.5">{openNote.node}</span>
-                      <span className="text-xs text-gray-600">{openNote.timestamp}</span>
+                      <span className="text-xs text-claro-indigo bg-claro-indigo/10 border border-claro-indigo/20 rounded-full px-2.5 py-0.5">{openNote.node}</span>
+                      <span className="text-xs text-claro-muted">{openNote.timestamp}</span>
                     </div>
                   </div>
                 ) : notes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-48 text-center">
-                    <p className="text-gray-600 text-sm">No notes yet. Write your first one →</p>
+                    <p className="text-claro-muted text-sm">No notes yet. Write your first one →</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-3">
                     {notes.map(n => (
                       <button key={n.id} onClick={() => setOpenNote(n)}
-                        className="text-left bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 transition-colors">
+                        className="text-left bg-claro-slate border border-[#3A3550] hover:border-[#4A4463] rounded-2xl p-4 transition-colors">
                         <div className="flex items-center gap-2 mb-2">
                           <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: n.color }} />
                           <span className="text-sm font-medium text-white truncate">{n.title}</span>
                         </div>
-                        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-3">{n.text}</p>
+                        <p className="text-xs text-claro-muted leading-relaxed line-clamp-3 mb-3">{n.text}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-medium" style={{ color: n.color }}>{n.node}</span>
-                          <span className="text-[10px] text-gray-700">{n.timestamp}</span>
+                          <span className="text-[10px] text-claro-muted/70">{n.timestamp}</span>
                         </div>
                       </button>
                     ))}
@@ -286,7 +286,7 @@ export default function StudentNotes() {
               <div className="col-span-2 flex flex-col gap-4">
 
                 {/* Mode toggle */}
-                <div className="flex bg-gray-900 border border-gray-800 rounded-xl p-1">
+                <div className="flex bg-claro-slate border border-[#3A3550] rounded-xl p-1">
                   {[
                     { id: 'build', label: '✏️ Build your own' },
                     { id: 'paste', label: '✦ From content' },
@@ -294,8 +294,8 @@ export default function StudentNotes() {
                     <button key={m.id} onClick={() => setMapMode(m.id)}
                       className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                         mapMode === m.id
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-gray-500 hover:text-gray-300'
+                          ? 'bg-claro-indigo text-white'
+                          : 'text-claro-muted hover:text-claro-text'
                       }`}>
                       {m.label}
                     </button>
@@ -304,15 +304,15 @@ export default function StudentNotes() {
 
                 {/* Build mode */}
                 {mapMode === 'build' && (
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
+                  <div className="bg-claro-slate border border-[#3A3550] rounded-2xl p-5 flex flex-col gap-3">
                     <input
                       value={buildCenter}
                       onChange={e => setBuildCenter(e.target.value)}
                       placeholder="Central topic…"
-                      className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 font-medium"
+                      className="bg-transparent border border-[#4A4463] rounded-xl px-3 py-2 text-sm text-claro-text placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-indigo font-medium"
                     />
 
-                    <p className="text-[11px] text-gray-500">Branches — add sub-topics as comma-separated children</p>
+                    <p className="text-[11px] text-claro-muted">Branches — add sub-topics as comma-separated children</p>
 
                     <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                       {branches.map((b, i) => (
@@ -323,26 +323,26 @@ export default function StudentNotes() {
                               value={b.label}
                               onChange={e => updateBranch(i, 'label', e.target.value)}
                               placeholder={`Branch ${i + 1}`}
-                              className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                              className="bg-transparent border border-[#4A4463] rounded-lg px-2.5 py-1.5 text-xs text-claro-text placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-indigo"
                             />
                             <input
                               value={b.children}
                               onChange={e => updateBranch(i, 'children', e.target.value)}
                               placeholder="child1, child2, child3"
-                              className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                              className="bg-transparent border border-[#4A4463] rounded-lg px-2.5 py-1.5 text-xs text-claro-muted placeholder:text-claro-muted/60 focus:outline-none focus:border-claro-indigo"
                             />
                           </div>
-                          <button onClick={() => removeBranch(i)} className="text-gray-700 hover:text-red-400 text-xs mt-1 flex-shrink-0">✕</button>
+                          <button onClick={() => removeBranch(i)} className="text-claro-muted/70 hover:text-red-400 text-xs mt-1 flex-shrink-0">✕</button>
                         </div>
                       ))}
                     </div>
 
-                    <button onClick={addBranch} className="text-xs text-indigo-400 hover:text-indigo-300 text-left">
+                    <button onClick={addBranch} className="text-xs text-claro-indigo hover:text-white text-left">
                       + Add branch
                     </button>
 
                     <button onClick={buildMap} disabled={!buildCenter.trim()}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
+                      className="bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
                       Build map
                     </button>
                   </div>
@@ -350,19 +350,19 @@ export default function StudentNotes() {
 
                 {/* Paste mode */}
                 {mapMode === 'paste' && (
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
-                    <p className="text-xs text-gray-400">Paste any notes, passage, or topic list and we'll auto-generate a mind map.</p>
+                  <div className="bg-claro-slate border border-[#3A3550] rounded-2xl p-5 flex flex-col gap-3">
+                    <p className="text-xs text-claro-muted">Paste any notes, passage, or topic list and we'll auto-generate a mind map.</p>
                     <textarea
                       value={pasteText}
                       onChange={e => setPasteText(e.target.value)}
                       placeholder="Paste your content here…"
-                      className="h-44 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-indigo-500 leading-relaxed"
+                      className="h-44 bg-transparent border border-[#4A4463] rounded-xl px-3 py-2.5 text-sm text-claro-text placeholder:text-claro-muted/60 resize-none focus:outline-none focus:border-claro-indigo leading-relaxed"
                     />
                     {genError && (
                       <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 leading-relaxed">{genError}</p>
                     )}
                     <button onClick={generateFromPaste} disabled={generating || !pasteText.trim()}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                      className="bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2">
                       {generating
                         ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating…</>
                         : '✦ Generate mind map'}
@@ -372,19 +372,19 @@ export default function StudentNotes() {
               </div>
 
               {/* Map canvas */}
-              <div className="col-span-3 bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col min-h-96">
+              <div className="col-span-3 bg-claro-slate border border-[#3A3550] rounded-2xl p-5 flex flex-col min-h-96">
                 {mindmap ? (
                   <>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-sm font-medium text-white">{mindmap.center}</h3>
-                      <button onClick={() => setMindmap(null)} className="text-xs text-gray-600 hover:text-gray-400">Clear</button>
+                      <button onClick={() => setMindmap(null)} className="text-xs text-claro-muted hover:text-claro-text">Clear</button>
                     </div>
                     <MindMapSVG mindmap={mindmap} />
 
                     {/* Branch legend */}
-                    <div className="mt-4 flex flex-wrap gap-2 border-t border-gray-800 pt-4">
+                    <div className="mt-4 flex flex-wrap gap-2 border-t border-[#322D46] pt-4">
                       {mindmap.branches?.map((b, i) => (
-                        <div key={i} className="flex items-center gap-1.5 text-xs text-gray-400">
+                        <div key={i} className="flex items-center gap-1.5 text-xs text-claro-muted">
                           <div className="w-2 h-2 rounded-full" style={{ background: b.color || BRANCH_COLORS[i % BRANCH_COLORS.length] }} />
                           {b.label}
                         </div>
@@ -392,7 +392,7 @@ export default function StudentNotes() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 text-gray-600">
+                  <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 text-claro-muted">
                     <div className="text-4xl">🗺</div>
                     <p className="text-sm">
                       {mapMode === 'build'

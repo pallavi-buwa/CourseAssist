@@ -1,48 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useAuth, RequireAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
-
-const COURSES = [
-  {
-    id: 'ai-for-business',
-    title: 'AI for Business Decisions',
-    code: 'MBA 601',
-    progress: 72,
-    modules: 8,
-    nextModule: 'Module 5 — Predictive Analytics',
-    color: 'from-[#C4B5FF]/24 to-[#D4B8FF]/18',
-    border: 'border-claro-indigo/35',
-    accent: 'text-claro-indigo',
-    progressGradient: 'from-[#C4B5FF] to-[#D4B8FF]',
-    moduleId: 'module-ai-1',
-  },
-  {
-    id: 'strategic-management',
-    title: 'Strategic Management',
-    code: 'MBA 602',
-    progress: 58,
-    modules: 10,
-    nextModule: 'Module 7 — Competitive Strategy',
-    color: 'from-claro-sage/20 to-claro-indigo/15',
-    border: 'border-claro-sage/35',
-    accent: 'text-claro-sage',
-    progressGradient: 'from-claro-sage to-claro-indigo',
-    moduleId: 'module-strat-1',
-  },
-  {
-    id: 'entrepreneurship',
-    title: 'Entrepreneurship',
-    code: 'MBA 603',
-    progress: 41,
-    modules: 9,
-    nextModule: 'Module 4 — Pitching & Fundraising',
-    color: 'from-claro-amber/22 to-orange-600/15',
-    border: 'border-claro-amber/35',
-    accent: 'text-claro-amber',
-    progressGradient: 'from-claro-amber to-orange-600',
-    moduleId: 'module-ent-1',
-  },
-]
+import { studentCourses } from '../data/studentCourses.js'
 
 const RECENT = [
   { label: 'Read Module 3 — Decision Frameworks', time: '2h ago', icon: '◈' },
@@ -52,9 +11,15 @@ const RECENT = [
 
 function ProgressBar({ value, progressGradient }) {
   return (
-    <div className="w-full h-1.5 bg-claro-midnight rounded-full overflow-hidden border border-white/5">
-      <div className={`h-full rounded-full bg-gradient-to-r ${progressGradient}`}
-           style={{ width: `${value}%`, transition: 'width 1s ease' }} />
+    <div className="w-full h-1.5 bg-claro-midnight/70 rounded-full overflow-hidden border border-[#322D46]">
+      <div
+        className="h-full rounded-full"
+        style={{
+          width: `${value}%`,
+          backgroundImage: progressGradient,
+          transition: 'width 1s ease',
+        }}
+      />
     </div>
   )
 }
@@ -67,7 +32,7 @@ export default function StudentHome() {
     <RequireAuth role="student">
       <div className="min-h-screen bg-claro-midnight">
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
+        <main className="max-w-5xl mx-auto px-5 pt-20 pb-8">
           {/* Greeting */}
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-claro-text mb-1">
@@ -83,7 +48,7 @@ export default function StudentHome() {
               { label: 'Avg Accuracy', value: '73%', sub: 'across all courses' },
               { label: 'Streak', value: '6 days', sub: 'keep it up!' },
             ].map(s => (
-              <div key={s.label} className="bg-claro-slate border border-white/8 rounded-2xl p-5">
+              <div key={s.label} className="bg-claro-slate border border-[#3A3550] rounded-2xl p-5">
                 <p className="text-2xl font-semibold text-claro-text mb-0.5">{s.value}</p>
                 <p className="text-xs font-medium text-claro-text/85">{s.label}</p>
                 <p className="text-[11px] text-claro-muted mt-0.5">{s.sub}</p>
@@ -94,11 +59,11 @@ export default function StudentHome() {
           {/* Courses */}
           <h2 className="text-sm font-medium text-claro-muted uppercase tracking-wider mb-4">Your Courses</h2>
           <div className="grid grid-cols-1 gap-4 mb-8">
-            {COURSES.map(c => (
+            {studentCourses.map(c => (
               <div key={c.id} className={`bg-gradient-to-r ${c.color} border ${c.border} rounded-2xl p-5 flex items-center justify-between gap-6`}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[10px] font-medium ${c.accent} bg-white/5 rounded px-1.5 py-0.5`}>{c.code}</span>
+                    <span className={`text-[10px] font-medium ${c.accent} bg-black/10 rounded px-1.5 py-0.5`}>{c.code}</span>
                   </div>
                   <h3 className="text-claro-text font-medium text-base mb-1">{c.title}</h3>
                   <p className="text-xs text-claro-muted mb-3">Next: {c.nextModule}</p>
@@ -107,7 +72,7 @@ export default function StudentHome() {
                 </div>
                 <button
                   onClick={() => navigate(`/student/reading/${c.moduleId}`)}
-                  className="flex-shrink-0 bg-white/10 hover:bg-white/20 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors border border-white/10"
+                  className="flex-shrink-0 bg-white/10 hover:bg-white/20 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors border border-[#3A3550]"
                 >
                   Continue →
                 </button>
@@ -117,7 +82,7 @@ export default function StudentHome() {
 
           {/* Recent activity */}
           <h2 className="text-sm font-medium text-claro-muted uppercase tracking-wider mb-4">Recent Activity</h2>
-          <div className="bg-claro-slate border border-white/8 rounded-2xl divide-y divide-white/10">
+          <div className="bg-claro-slate border border-[#3A3550] rounded-2xl divide-y divide-[#322D46]">
             {RECENT.map((r, i) => (
               <div key={i} className="flex items-center gap-4 px-5 py-3.5">
                 <span className="text-claro-indigo text-base w-5 text-center">{r.icon}</span>

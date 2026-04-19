@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
-  { label: 'Courses',  to: '/student/reading/module-1' },
+  { label: 'Courses',  to: '/student/reading' },
   { label: 'Notes',       to: '/student/notes' },
   { label: 'Preferences', to: '/student/preferences' },
 ]
@@ -15,6 +15,14 @@ const professorLinks = [
   { label: 'Analyzer',  to: '/professor/analyzer' },
   { label: 'Settings',  to: '/professor/home' },
 ]
+
+function isActiveRoute(pathname, linkTo) {
+  if (linkTo === '/professor/dashboard/intro-marketing') {
+    return pathname.startsWith('/professor/dashboard/')
+  }
+
+  return pathname === linkTo || pathname.startsWith(`${linkTo}/`)
+}
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -38,7 +46,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-claro-slate border-b border-white/8 flex items-center px-5 gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-claro-slate border-b border-[#3A3550] flex items-center px-5 gap-6">
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
@@ -50,19 +58,31 @@ export default function Navbar() {
 
       {/* Nav links */}
       <div className="flex-1 flex items-center justify-center gap-1">
-        {links.map(l => (
-          <Link
-            key={l.label}
-            to={l.to}
-            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-              location.pathname.startsWith(l.to.split('/').slice(0, 3).join('/'))
-                ? 'bg-claro-indigo/20 text-claro-indigo'
-                : 'text-claro-muted hover:text-claro-text hover:bg-white/5'
-            }`}
-          >
-            {l.label}
-          </Link>
-        ))}
+        {links.map(l => {
+          const isActive = isActiveRoute(location.pathname, l.to)
+
+          return (
+            <Link
+              key={l.label}
+              to={l.to}
+              aria-current={isActive ? 'page' : undefined}
+              className={`group relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? 'bg-claro-indigo/18 text-white shadow-[inset_0_0_0_1px_rgba(196,181,255,0.5)]'
+                  : 'text-claro-muted hover:text-white hover:bg-white/8 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]'
+              }`}
+            >
+              <span>{l.label}</span>
+              <span
+                className={`absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full transition-opacity duration-200 ${
+                  isActive
+                    ? 'bg-claro-indigo opacity-100'
+                    : 'bg-white/60 opacity-0 group-hover:opacity-100'
+                }`}
+              />
+            </Link>
+          )
+        })}
       </div>
 
       {/* Avatar + dropdown */}
@@ -74,8 +94,8 @@ export default function Navbar() {
           {initials}
         </button>
         {dropOpen && (
-          <div className="absolute right-0 top-10 w-44 bg-claro-slate border border-white/10 rounded-xl shadow-xl py-1 z-50">
-            <div className="px-3 py-2 border-b border-white/8">
+          <div className="absolute right-0 top-10 w-44 bg-claro-slate border border-[#3A3550] rounded-xl shadow-xl py-1 z-50">
+            <div className="px-3 py-2 border-b border-[#3A3550]">
               <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
               <div className="text-xs text-claro-muted capitalize">{user.role}</div>
             </div>
