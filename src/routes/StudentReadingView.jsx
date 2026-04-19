@@ -1,24 +1,36 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { RequireAuth } from '../context/AuthContext.jsx'
+import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import MicroCheck from '../components/MicroCheck.jsx'
 import NotesWorkspace from '../components/NotesWorkspace.jsx'
-import { passage } from '../data/marketingPassage.js'
+import { getReadingPassageForRoute } from '../data/readingPassagesBySlug.js'
 import { writeStudentAnswer } from '../firebase/realtimeSync.js'
 
 export default function StudentReadingView() {
   const { moduleId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const { passage, displayTitle } = useMemo(
+    () => getReadingPassageForRoute(moduleId, user?.email),
+    [moduleId, user?.email],
+  )
+
   const [answered, setAnswered] = useState({})  // sectionId → { correct }
   const [showNotes, setShowNotes] = useState(false)
   const [checkVisible, setCheckVisible] = useState({})  // sectionId → bool
+
+  useEffect(() => {
+    setAnswered({})
+    setCheckVisible({})
+  }, [moduleId, passage.title])
 
   const handleAnswer = async (sectionId, { conceptId, correct }) => {
     setAnswered(prev => ({ ...prev, [sectionId]: { correct } }))
     try {
       await writeStudentAnswer({ studentId: 'demo-student', conceptId, correct })
-    } catch (_) {}
+    } catch (_) { }
   }
 
   const handleSectionRead = (sectionId) => {
@@ -29,9 +41,9 @@ export default function StudentReadingView() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-space-page">
         <Navbar />
-        <main className="pt-14 max-w-3xl mx-auto px-5 py-10">
+        <main className="pt-16 max-w-3xl mx-auto px-5 py-10">
           {/* Header */}
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
@@ -39,7 +51,7 @@ export default function StudentReadingView() {
                 Back to courses
               </button>
               <h1 className="text-xl font-semibold text-white">{passage.title}</h1>
-              <p className="text-gray-500 text-sm mt-1">MBA 601 · AI for Business Decisions · Week 3</p>
+              <p className="text-gray-500 text-sm mt-1">{displayTitle} · Week {passage.week ?? 3}</p>
             </div>
             <button
               onClick={() => setShowNotes(v => !v)}
@@ -53,14 +65,13 @@ export default function StudentReadingView() {
           <div className="flex items-center gap-2 mb-8">
             {passage.sections.map((s, i) => (
               <div key={s.id} className="flex items-center gap-2">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border transition-colors ${
-                  answered[s.id]?.correct
-                    ? 'bg-green-500/20 border-green-500/50 text-green-400'
-                    : answered[s.id]
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border transition-colors ${answered[s.id]?.correct
+                  ? 'bg-green-500/20 border-green-500/50 text-green-400'
+                  : answered[s.id]
                     ? 'bg-red-500/20 border-red-500/50 text-red-400'
                     : 'bg-gray-800 border-gray-700 text-gray-500'
-                }`}>
-                  {answered[s.id]?.correct ? 'OK' : answered[s.id] ? '–' : i + 1}
+                  }`}>
+                  {answered[s.id]?.correct ? 'OK' : answered[s.id] ? 'X' : i + 1}
                 </div>
                 {i < passage.sections.length - 1 && (
                   <div className="w-8 h-px bg-gray-800" />
@@ -94,7 +105,7 @@ export default function StudentReadingView() {
                     onClick={() => handleSectionRead(section.id)}
                     className="text-xs text-gray-600 hover:text-claro-indigo border border-gray-800 hover:border-claro-indigo/30 rounded-lg px-3 py-1.5 transition-colors"
                   >
-                    I&apos;ve read this section — check my understanding
+                    I&apos;ve read this section. Check my understanding.
                   </button>
                 )}
 
@@ -111,14 +122,13 @@ export default function StudentReadingView() {
                   />
                 )}
 
-                {/* Already answered — show result */}
+                {/* Already answered - show result */}
                 {answered[section.id] && (
-                  <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${
-                    answered[section.id].correct
-                      ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                      : 'bg-red-500/10 border-red-500/20 text-red-400'
-                  }`}>
-                    {answered[section.id].correct ? 'Correct — well done.' : 'Incorrect — review and re-read this section.'}
+                  <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${answered[section.id].correct
+                    ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                    : 'bg-red-500/10 border-red-500/20 text-red-400'
+                    }`}>
+                    {answered[section.id].correct ? 'Correct. Nice work.' : 'Not quite. Review this section and try again.'}
                   </div>
                 )}
               </div>

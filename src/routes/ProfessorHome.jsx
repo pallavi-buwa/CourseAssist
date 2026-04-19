@@ -1,7 +1,9 @@
+import { useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
+import { resolvePersona } from '../data/personas.js'
 
 const COURSES = [
   {
@@ -22,7 +24,7 @@ const COURSES = [
     code: 'MBA 605',
     students: 38,
     avgComprehension: 0.74,
-    weakConcepts: ['Porter\'s Five Forces'],
+    weakConcepts: ["Porter's Five Forces"],
     trend: 'improving',
     color: 'from-[#E8F0EB]/95 to-[#d4e8dc]/50 dark:from-claro-slate/50 dark:to-claro-panel/35',
     border: 'border-claro-indigo/28',
@@ -63,24 +65,29 @@ function TrendBadge({ trend }) {
 export default function ProfessorHome() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const persona = useMemo(() => resolvePersona(user?.email, 'professor'), [user?.email])
+
+  useEffect(() => {
+    // Prefetch graph bundle so dashboard opens faster.
+    import('react-force-graph').catch(() => {})
+  }, [])
 
   const totalStudents = COURSES.reduce((s, c) => s + c.students, 0)
-  const avgHealth = (COURSES.reduce((s, c) => s + c.avgComprehension, 0) / COURSES.length * 100).toFixed(0)
+  const avgHealth = Math.round(COURSES.reduce((s, c) => s + c.avgComprehension, 0) / COURSES.length * 100)
 
   return (
     <RequireAuth role="professor">
-      <LeafBackdrop className="min-h-screen bg-claro-midnight">
+      <LeafBackdrop className="min-h-screen bg-space-page">
+        <div className="h-0.5 w-full" style={{ backgroundColor: persona.accentHex, opacity: 0.65 }} aria-hidden />
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
-          {/* Greeting */}
+        <main className="pt-16 max-w-5xl mx-auto px-5 py-8">
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-claro-text mb-1">
               Welcome back, Prof. {user?.name}
             </h1>
-            <p className="text-claro-muted text-sm">Here's how your cohorts are performing today.</p>
+            <p className="text-claro-muted text-sm">{persona.tagline}</p>
           </div>
 
-          {/* Quick stats */}
           <div className="grid grid-cols-4 gap-4 mb-8">
             {[
               { label: 'Total Students', value: totalStudents },
@@ -95,7 +102,6 @@ export default function ProfessorHome() {
             ))}
           </div>
 
-          {/* Course cards */}
           <h2 className="text-sm font-medium text-claro-muted uppercase tracking-wider mb-4">Your Courses</h2>
           <div className="space-y-4">
             {COURSES.map(c => (
@@ -108,14 +114,8 @@ export default function ProfessorHome() {
                     </div>
                     <h3 className="text-claro-text font-medium text-base mb-1">{c.title}</h3>
                     <p className="text-xs text-claro-muted mb-3">{c.students} students enrolled</p>
-
-                    {/* Health bar */}
-                    <div className="mb-1.5">
-                      <HealthBar value={c.avgComprehension} accent={c.accent} />
-                    </div>
-                    <p className="text-xs text-claro-muted">{Math.round(c.avgComprehension * 100)}% avg comprehension</p>
-
-                    {/* Weak concepts */}
+                    <HealthBar value={c.avgComprehension} accent={c.accent} />
+                    <p className="text-xs text-claro-muted mt-1">{Math.round(c.avgComprehension * 100)}% avg comprehension</p>
                     {c.weakConcepts.length > 0 && (
                       <div className="flex items-center gap-1.5 mt-3 flex-wrap">
                         <span className="text-[10px] text-claro-muted/80">Struggling:</span>
@@ -125,12 +125,10 @@ export default function ProfessorHome() {
                       </div>
                     )}
                   </div>
-
-                  {/* Actions */}
                   <div className="flex flex-col gap-2 flex-shrink-0">
                     <button
                       onClick={() => navigate(`/professor/dashboard/${c.id}`)}
-                      className="whitespace-nowrap rounded-xl border border-claro-indigo/35 bg-claro-indigo px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
+                      className="whitespace-nowrap rounded-xl border border-claro-indigo/35 bg-claro-indigo px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95"
                     >
                       Open dashboard
                     </button>
@@ -138,7 +136,7 @@ export default function ProfessorHome() {
                       onClick={() => navigate('/professor/analyzer')}
                       className="border border-claro-indigo/25 text-claro-muted hover:text-claro-text hover:border-claro-indigo/45 rounded-xl px-5 py-2 text-sm transition-colors text-center bg-claro-panel"
                     >
-                      Analyze material
+                      Analyze materials
                     </button>
                   </div>
                 </div>

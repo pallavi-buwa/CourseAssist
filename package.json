@@ -9,14 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "aframe": "^1.7.1",
+    "d3": "^7.8.5",
+    "firebase": "^10.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.0",
     "react-force-graph": "^1.43.0",
     "react-force-graph-3d": "^1.24.2",
-    "three": "^0.168.0",
-    "d3": "^7.8.5",
-    "firebase": "^10.7.0"
+    "react-router-dom": "^6.20.0",
+    "three": "^0.168.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

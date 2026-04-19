@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
+import { SPACE_BACKGROUND_INT } from '../theme/spaceTheme.js'
 
 // ─── Brain geometry helpers ───────────────────────────────────────────────────
 
@@ -66,10 +67,10 @@ function makeTextTexture(text, opts = {}) {
 // ─── BrainIntro component ─────────────────────────────────────────────────────
 
 export default function BrainIntro({ onEnter }) {
-  const mountRef   = useRef(null)
-  const stateRef   = useRef({})      // mutable render state
-  const [ready, setReady]         = useState(false)
-  const [exiting, setExiting]     = useState(false)
+  const mountRef = useRef(null)
+  const stateRef = useRef({})      // mutable render state
+  const [ready, setReady] = useState(false)
+  const [exiting, setExiting] = useState(false)
 
   // Fallback: if rAF is throttled (background tab / headless), enable button after 2.5s
   useEffect(() => {
@@ -88,12 +89,12 @@ export default function BrainIntro({ onEnter }) {
     renderer.setSize(W, H)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.15
-    renderer.setClearColor(0x000000, 1)
+    renderer.setClearColor(SPACE_BACKGROUND_INT, 1)
     el.appendChild(renderer.domElement)
 
     // ── Scene / Camera ────────────────────────────────────────────────────
-    const scene  = new THREE.Scene()
-    scene.fog    = new THREE.FogExp2(0x050505, 0.0014)
+    const scene = new THREE.Scene()
+    scene.fog = new THREE.FogExp2(SPACE_BACKGROUND_INT, 0.00125)
     const camera = new THREE.PerspectiveCamera(55, W / H, 1, 3000)
     camera.position.set(0, 30, 480)
     camera.lookAt(0, 0, 0)
@@ -108,11 +109,11 @@ export default function BrainIntro({ onEnter }) {
     const NEURON_COUNT = 1200
     const neurons = generateNeurons(NEURON_COUNT)
     const nPositions = new Float32Array(NEURON_COUNT * 3)
-    const nSizes     = new Float32Array(NEURON_COUNT)
-    const nColors    = new Float32Array(NEURON_COUNT * 3)
+    const nSizes = new Float32Array(NEURON_COUNT)
+    const nColors = new Float32Array(NEURON_COUNT * 3)
 
     neurons.forEach((p, i) => {
-      nPositions[i * 3]     = p.x
+      nPositions[i * 3] = p.x
       nPositions[i * 3 + 1] = p.y
       nPositions[i * 3 + 2] = p.z
       nSizes[i] = 2.5 + Math.random() * 3.5
@@ -127,8 +128,8 @@ export default function BrainIntro({ onEnter }) {
 
     const nGeo = new THREE.BufferGeometry()
     nGeo.setAttribute('position', new THREE.BufferAttribute(nPositions, 3))
-    nGeo.setAttribute('color',    new THREE.BufferAttribute(nColors, 3))
-    nGeo.setAttribute('size',     new THREE.BufferAttribute(nSizes, 1))
+    nGeo.setAttribute('color', new THREE.BufferAttribute(nColors, 3))
+    nGeo.setAttribute('size', new THREE.BufferAttribute(nSizes, 1))
 
     const nMat = new THREE.PointsMaterial({
       size: 3.2,
@@ -147,7 +148,7 @@ export default function BrainIntro({ onEnter }) {
     const synLineGeo = new THREE.BufferGeometry()
     const synPositions = new Float32Array(synapses.length * 6)
     synapses.forEach(([a, b], i) => {
-      synPositions[i * 6]     = neurons[a].x; synPositions[i * 6 + 1] = neurons[a].y; synPositions[i * 6 + 2] = neurons[a].z
+      synPositions[i * 6] = neurons[a].x; synPositions[i * 6 + 1] = neurons[a].y; synPositions[i * 6 + 2] = neurons[a].z
       synPositions[i * 6 + 3] = neurons[b].x; synPositions[i * 6 + 4] = neurons[b].y; synPositions[i * 6 + 5] = neurons[b].z
     })
     synLineGeo.setAttribute('position', new THREE.BufferAttribute(synPositions, 3))
@@ -183,8 +184,8 @@ export default function BrainIntro({ onEnter }) {
     })
 
     // ── Brain outline sphere (faint) ──────────────────────────────────────
-    const brainOutlineGeo  = new THREE.SphereGeometry(148, 32, 24)
-    const brainOutlineMat  = new THREE.MeshBasicMaterial({
+    const brainOutlineGeo = new THREE.SphereGeometry(148, 32, 24)
+    const brainOutlineMat = new THREE.MeshBasicMaterial({
       color: 0x2d6a4f,
       transparent: true,
       opacity: 0,
@@ -198,9 +199,9 @@ export default function BrainIntro({ onEnter }) {
 
     // ── Background particle haze ──────────────────────────────────────────
     const bgCount = 500
-    const bgPos   = new Float32Array(bgCount * 3)
+    const bgPos = new Float32Array(bgCount * 3)
     for (let i = 0; i < bgCount; i++) {
-      bgPos[i * 3]     = (Math.random() - 0.5) * 1800
+      bgPos[i * 3] = (Math.random() - 0.5) * 1800
       bgPos[i * 3 + 1] = (Math.random() - 0.5) * 1200
       bgPos[i * 3 + 2] = (Math.random() - 0.5) * 800 - 200
     }
@@ -211,20 +212,20 @@ export default function BrainIntro({ onEnter }) {
 
     // ── State ─────────────────────────────────────────────────────────────
     const s = stateRef.current
-    s.renderer    = renderer
-    s.scene       = scene
-    s.camera      = camera
-    s.neurons     = neurons
-    s.neuronMat   = nMat
-    s.synMat      = synLines.material
+    s.renderer = renderer
+    s.scene = scene
+    s.camera = camera
+    s.neurons = neurons
+    s.neuronMat = nMat
+    s.synMat = synLines.material
     s.brainOutMat = brainOutlineMat
-    s.pulses      = pulses
-    s.synapses    = synapses
-    s.phase       = 'materialise'  // materialise → idle → exit
-    s.phaseT      = 0
-    s.lastPulse   = 0
-    s.exitT       = 0
-    s.disposed    = false
+    s.pulses = pulses
+    s.synapses = synapses
+    s.phase = 'materialise'  // materialise → idle → exit
+    s.phaseT = 0
+    s.lastPulse = 0
+    s.exitT = 0
+    s.disposed = false
     s.exitVelocities = neurons.map(() => new THREE.Vector3(
       (Math.random() - 0.5) * 3.5,
       (Math.random() - 0.5) * 3.5,
@@ -239,7 +240,7 @@ export default function BrainIntro({ onEnter }) {
       const [ai, bi] = synapses[Math.floor(Math.random() * synapses.length)]
       idle.from.copy(neurons[ai])
       idle.to.copy(neurons[bi])
-      idle.t     = 0
+      idle.t = 0
       idle.speed = 0.012 + Math.random() * 0.018
       idle.active = true
       idle.mesh.visible = true
@@ -270,9 +271,9 @@ export default function BrainIntro({ onEnter }) {
       // Phase: materialise (0 → 1 opacity over 1.8s)
       if (s.phase === 'materialise') {
         s.phaseT = Math.min(s.phaseT + dt / 1.8, 1)
-        nMat.opacity         = s.phaseT * 0.85
+        nMat.opacity = s.phaseT * 0.85
         synLines.material.opacity = s.phaseT * 0.18
-        brainOutlineMat.opacity   = s.phaseT * 0.06
+        brainOutlineMat.opacity = s.phaseT * 0.06
         if (s.phaseT >= 1) { s.phase = 'idle'; setReady(true) }
       }
 
@@ -280,14 +281,14 @@ export default function BrainIntro({ onEnter }) {
       if (s.phase === 'exit') {
         s.exitT = Math.min(s.exitT + dt / 1.2, 1)
         const eased = 1 - Math.pow(1 - s.exitT, 3)
-        nMat.opacity              = (1 - eased) * 0.85
+        nMat.opacity = (1 - eased) * 0.85
         synLines.material.opacity = (1 - eased) * 0.18
-        brainOutlineMat.opacity   = (1 - eased) * 0.06
+        brainOutlineMat.opacity = (1 - eased) * 0.06
 
         // Scatter neurons
         nBasePositions.forEach((base, i) => {
           const vel = s.exitVelocities[i]
-          nPositions[i * 3]     = base.x + vel.x * eased * 180
+          nPositions[i * 3] = base.x + vel.x * eased * 180
           nPositions[i * 3 + 1] = base.y + vel.y * eased * 180
           nPositions[i * 3 + 2] = base.z + vel.z * eased * 180
         })
@@ -319,7 +320,7 @@ export default function BrainIntro({ onEnter }) {
         const t = time * 0.001
         for (let i = 0; i < NEURON_COUNT; i += 4) {
           const base = nBasePositions[i]
-          nPositions[i * 3]     = base.x + Math.sin(t * 0.28 + i) * 1.2
+          nPositions[i * 3] = base.x + Math.sin(t * 0.28 + i) * 1.2
           nPositions[i * 3 + 1] = base.y + Math.cos(t * 0.22 + i * 1.3) * 1.2
           nPositions[i * 3 + 2] = base.z + Math.sin(t * 0.18 + i * 0.9) * 1.2
         }
@@ -345,30 +346,33 @@ export default function BrainIntro({ onEnter }) {
       cancelAnimationFrame(s.rafId)
       window.removeEventListener('resize', onResize)
       renderer.dispose()
-      el.removeChild(renderer.domElement)
+      if (renderer.domElement.parentNode === el) {
+        el.removeChild(renderer.domElement)
+      }
     }
   }, [])
 
   const handleEnter = useCallback(() => {
+    if (!ready || exiting) return
     const s = stateRef.current
     s.phase = 'exit'
     setExiting(true)
-    setTimeout(() => onEnter?.(), 1100)
-  }, [onEnter])
+    setTimeout(() => onEnter?.(), 250)
+  }, [exiting, onEnter, ready])
 
   return (
     <div
       className={`absolute inset-0 z-50 bg-claro-canvas transition-opacity duration-700 ${exiting ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
     >
       {/* Three.js canvas mount */}
-      <div ref={mountRef} className="absolute inset-0" />
+      <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
 
       {/* Darken center so title reads over the globe */}
       <div
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(10, 14, 12, 0.88) 0%, rgba(10, 14, 12, 0.5) 45%, transparent 72%)',
+            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(8, 8, 10, 0.88) 0%, rgba(8, 8, 10, 0.45) 45%, transparent 72%)',
         }}
       />
 
@@ -393,8 +397,7 @@ export default function BrainIntro({ onEnter }) {
             </div>
 
             <p className="mb-3 max-w-md px-1 text-center text-sm leading-relaxed text-claro-muted">
-              A score is a number. Claro turns it into a diagnosis—missing concepts, cohort patterns,
-              and how your next assessment lines up with who still needs support.
+              Turn scores into a diagnosis. Know what to focus on next.
             </p>
             <p className="mb-8 max-w-lg px-1 text-center text-sm font-medium text-claro-text/95">
               Canvas gives you the grade. We give you the why.
@@ -417,13 +420,15 @@ export default function BrainIntro({ onEnter }) {
 
             {/* CTA */}
             <button
-              onClick={handleEnter}
+              onClick={(event) => {
+                event.stopPropagation()
+                handleEnter()
+              }}
               disabled={!ready}
-              className={`pointer-events-auto rounded-full border px-10 py-4 text-sm font-medium transition-all duration-300 ${
-                ready
+              className={`pointer-events-auto rounded-full border px-10 py-4 text-sm font-medium transition-all duration-300 ${ready
                   ? 'cursor-pointer border-claro-indigo/40 text-claro-text hover:border-claro-indigo/60 hover:bg-claro-slate/90'
                   : 'cursor-not-allowed border-claro-indigo/15 text-claro-muted/50'
-              }`}
+                }`}
               style={{
                 background: ready ? 'rgb(26 36 31 / 0.92)' : 'transparent',
                 boxShadow: ready ? '0 4px 24px rgba(0,0,0,0.35)' : 'none',

@@ -27,12 +27,6 @@
   --tw-claro-indigo: 226 88 80;
   --tw-claro-amber: 234 179 8;
   --tw-claro-coral: 226 88 80;
-<<<<<<< HEAD
-  --tw-surface: 12 12 14;
-  --tw-panel: 20 20 22;
-  --tw-border: 55 55 60;
-  --font-brand: 'Brandon Grotesque', system-ui, -apple-system, sans-serif;
-=======
   --tw-surface: 14 14 16;
   --tw-panel: 24 24 26;
   --tw-border: 58 58 64;
@@ -93,7 +87,6 @@
 html {
   min-height: 100%;
   background-color: rgb(var(--tw-claro-canvas));
->>>>>>> ae7c8e6 (Switch global UI font stack to Poppins.)
 }
 
 html, body, #root {

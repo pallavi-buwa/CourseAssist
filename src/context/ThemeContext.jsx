@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo } from 'react'
+import { SPACE_BACKGROUND_HEX } from '../theme/spaceTheme.js'
 
 const ThemeContext = createContext(null)
 
@@ -12,7 +13,7 @@ export function ThemeProvider({ children }) {
     () => ({
       mode: 'dark',
       isDark: true,
-      canvasHex: '#000000',
+      canvasHex: SPACE_BACKGROUND_HEX,
     }),
     []
   )

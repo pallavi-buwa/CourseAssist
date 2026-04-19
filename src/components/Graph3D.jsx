@@ -4,6 +4,7 @@ import {
 import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from 'three'
 import { useTheme } from '../context/ThemeContext.jsx'
+import { SPACE_BACKGROUND_INT } from '../theme/spaceTheme.js'
 import { resolveNodeColor, getLinkColor } from '../utils/graphHelpers.js'
 import { nodeRadius } from '../utils/clusterUtils.js'
 
@@ -134,11 +135,11 @@ function createParticleField() {
   const geo = new THREE.BufferGeometry()
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   const mat = new THREE.PointsMaterial({
-    color: 0x22c55e,
-    size:  2.2,
+    color: 0xa5c8ff,
+    size:  2,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.16,
+    opacity: 0.22,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   })
@@ -183,10 +184,10 @@ const Graph3D = memo(({
 
     sceneInitRef.current = true
 
-    const fog = new THREE.FogExp2(0x000000, 0.0012)
+    const fog = new THREE.FogExp2(SPACE_BACKGROUND_INT, 0.0012)
     scene.fog = fog
     fogRef.current = fog
-    fog.color.setHex(isDark ? 0x000000 : 0x000000)
+    fog.color.setHex(SPACE_BACKGROUND_INT)
     renderer.setClearColor(fog.color, 1)
 
     // Ambient + colored point lights
@@ -215,17 +216,16 @@ const Graph3D = memo(({
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.1
-  }, [fgRef, isDark])
+  }, [fgRef])
 
   // Fog color + density (runs after initScene sets fogRef)
   useEffect(() => {
     if (!fogRef.current || !fgRef?.current) return
-    const col = isDark ? 0x000000 : 0x000000
-    fogRef.current.color.setHex(col)
-    fgRef.current.renderer()?.setClearColor(col, 1)
+    fogRef.current.color.setHex(SPACE_BACKGROUND_INT)
+    fgRef.current.renderer()?.setClearColor(SPACE_BACKGROUND_INT, 1)
     const densities = { 0: 0.0022, 1: 0.0012, 2: 0.0008, 3: 0.0005 }
     fogRef.current.density = densities[level] ?? 0.001
-  }, [level, isDark, fgRef])
+  }, [level, fgRef])
 
   // ── Physics settle → start float loop ────────────────────────────────────
   const onEngineStop = useCallback(() => {

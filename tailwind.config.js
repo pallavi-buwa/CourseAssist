@@ -4,18 +4,22 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      minHeight: {
+        touch: '2.75rem',
+      },
       colors: {
+        gray: {
+          950: '#080c1c',
+        },
         claro: {
           canvas: 'rgb(var(--tw-claro-canvas) / <alpha-value>)',
           panel: 'rgb(var(--tw-claro-panel) / <alpha-value>)',
           slate: 'rgb(var(--tw-claro-slate) / <alpha-value>)',
           text: 'rgb(var(--tw-claro-text) / <alpha-value>)',
           muted: 'rgb(var(--tw-claro-muted) / <alpha-value>)',
-          /** Brand */
           green: 'rgb(var(--tw-claro-green) / <alpha-value>)',
           red: 'rgb(var(--tw-claro-red) / <alpha-value>)',
           yellow: 'rgb(var(--tw-claro-yellow) / <alpha-value>)',
-          /** Legacy names (mapped in index.css to green / yellow / red) */
           indigo: 'rgb(var(--tw-claro-indigo) / <alpha-value>)',
           amber: 'rgb(var(--tw-claro-amber) / <alpha-value>)',
           sage: 'rgb(var(--tw-claro-sage) / <alpha-value>)',

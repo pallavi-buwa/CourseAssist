@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { generateKnowledgeGraph } from '../api/claude.js'
+import { generateKnowledgeGraph } from '../api/openai.js'
 
 export default function GraphGenerator({ onClose, onGenerated }) {
   const [text, setText]       = useState('')
@@ -22,7 +22,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
       }
       onGenerated?.(graph)
     } catch (e) {
-      setError(e.message.includes('API_KEY') ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI generation.' : e.message)
+      setError(e.message.includes('API_KEY') ? 'Add VITE_OPENAI_API_KEY to .env to use AI generation.' : e.message)
     } finally {
       setLoading(false)
     }
@@ -63,6 +63,11 @@ export default function GraphGenerator({ onClose, onGenerated }) {
                   <span key={i} className="text-xs bg-claro-indigo/20 text-claro-indigo border border-claro-indigo/30 rounded px-2 py-0.5 fade-in">{n.label}</span>
                 ))}
               </div>
+              <p className="mt-3 border-t border-gray-700/80 pt-3 text-[11px] leading-relaxed text-gray-400">
+                When you close this window, use the <span className="font-medium text-gray-300">graph toolbar (top-left)</span>
+                {' '}on your mind map: <span className="text-gray-300">+</span> / <span className="text-gray-300">−</span> zoom,
+                {' '}<span className="text-gray-300">Fit</span>, <span className="text-gray-300">Full</span> screen, and <span className="text-gray-300">PNG</span> to download a snapshot.
+              </p>
             </div>
           )}
         </div>
