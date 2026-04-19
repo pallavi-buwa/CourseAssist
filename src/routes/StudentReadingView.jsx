@@ -43,7 +43,7 @@ export default function StudentReadingView() {
             </div>
             <button
               onClick={() => setShowNotes(v => !v)}
-              className="flex-shrink-0 border border-indigo-600/40 text-indigo-400 hover:bg-indigo-600/10 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
+              className="flex-shrink-0 border border-claro-indigo/40 text-claro-indigo hover:bg-claro-indigo/10 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
             >
               ✎ Notes
             </button>
@@ -78,7 +78,7 @@ export default function StudentReadingView() {
               <div key={section.id}>
                 {/* Section number */}
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-medium text-indigo-400 bg-indigo-600/10 border border-indigo-600/20 rounded-full px-3 py-1">
+                  <span className="text-xs font-medium text-claro-indigo bg-claro-indigo/10 border border-claro-indigo/20 rounded-full px-3 py-1">
                     Section {i + 1}
                   </span>
                 </div>
@@ -92,7 +92,7 @@ export default function StudentReadingView() {
                 {!checkVisible[section.id] && !answered[section.id] && (
                   <button
                     onClick={() => handleSectionRead(section.id)}
-                    className="text-xs text-gray-600 hover:text-indigo-400 border border-gray-800 hover:border-indigo-600/30 rounded-lg px-3 py-1.5 transition-colors"
+                    className="text-xs text-gray-600 hover:text-claro-indigo border border-gray-800 hover:border-claro-indigo/30 rounded-lg px-3 py-1.5 transition-colors"
                   >
                     I've read this section → check my understanding
                   </button>
@@ -138,7 +138,7 @@ export default function StudentReadingView() {
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={() => navigate('/student/dashboard')}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors"
+                  className="bg-claro-indigo hover:brightness-110 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors"
                 >
                   View my knowledge graph →
                 </button>

@@ -1,122 +1,27 @@
-import { createContext, useContext, useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext(null)
-const USER_KEY = 'eg_user'
-const PREFERENCES_KEY = 'eg_student_preferences'
-
-export const DEFAULT_STUDENT_PREFERENCES = {
-  languages: [],
-  formats: ['video'],
-}
-
-function readJSON(key, fallback) {
-  try {
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) : fallback
-  } catch {
-    return fallback
-  }
-}
-
-function normalizeEmail(email) {
-  return String(email || '').trim().toLowerCase()
-}
-
-function normalizePreferences(preferences) {
-  const languages = Array.isArray(preferences?.languages)
-    ? preferences.languages
-    : preferences?.language && preferences.language !== 'English'
-      ? [preferences.language]
-      : []
-  const formats = Array.isArray(preferences?.formats)
-    ? preferences.formats
-    : preferences?.format
-      ? [preferences.format]
-      : DEFAULT_STUDENT_PREFERENCES.formats
-
-  return {
-    languages,
-    formats: formats.length ? formats : DEFAULT_STUDENT_PREFERENCES.formats,
-    updatedAt: preferences?.updatedAt,
-  }
-}
-
-function readPreferences(email) {
-  const allPreferences = readJSON(PREFERENCES_KEY, {})
-  return allPreferences[normalizeEmail(email)] || null
-}
-
-function writePreferences(email, preferences) {
-  const allPreferences = readJSON(PREFERENCES_KEY, {})
-  const cleanPreferences = {
-    ...normalizePreferences(preferences),
-    updatedAt: new Date().toISOString(),
-  }
-
-  allPreferences[normalizeEmail(email)] = cleanPreferences
-  localStorage.setItem(PREFERENCES_KEY, JSON.stringify(allPreferences))
-  return cleanPreferences
-}
-
-function hydrateUser(storedUser) {
-  if (!storedUser) return null
-  if (storedUser.role !== 'student') {
-    return {
-      ...storedUser,
-      preferencesComplete: true,
-    }
-  }
-
-  const savedPreferences = storedUser.email ? readPreferences(storedUser.email) : null
-  return {
-    ...storedUser,
-    preferences: normalizePreferences(savedPreferences || storedUser.preferences || DEFAULT_STUDENT_PREFERENCES),
-    preferencesComplete: Boolean(storedUser.preferencesComplete || savedPreferences),
-  }
-}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => hydrateUser(readJSON(USER_KEY, null)))
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('eg_user')) } catch { return null }
+  })
 
   const login = (email, role) => {
-    const normalizedEmail = normalizeEmail(email)
-    const savedPreferences = role === 'student' ? readPreferences(normalizedEmail) : null
-    const u = {
-      email: normalizedEmail,
-      name: normalizedEmail.split('@')[0],
-      role,
-      preferences: savedPreferences || DEFAULT_STUDENT_PREFERENCES,
-      preferencesComplete: role !== 'student' || Boolean(savedPreferences),
-    }
-
-    localStorage.setItem(USER_KEY, JSON.stringify(u))
+    const u = { email, name: email.split('@')[0], role }
+    localStorage.setItem('eg_user', JSON.stringify(u))
     setUser(u)
     return u
   }
 
-  const savePreferences = (preferences) => {
-    if (!user || user.role !== 'student') return null
-
-    const savedPreferences = writePreferences(user.email, preferences)
-    const nextUser = {
-      ...user,
-      preferences: savedPreferences,
-      preferencesComplete: true,
-    }
-
-    localStorage.setItem(USER_KEY, JSON.stringify(nextUser))
-    setUser(nextUser)
-    return savedPreferences
-  }
-
   const logout = () => {
-    localStorage.removeItem(USER_KEY)
+    localStorage.removeItem('eg_user')
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, savePreferences }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
@@ -126,23 +31,19 @@ export function useAuth() {
   return useContext(AuthContext)
 }
 
+// Route guard — redirect to / if not logged in (or wrong role)
 export function RequireAuth({ children, role }) {
   const { user } = useAuth()
-  const location = useLocation()
+  const navigate = useNavigate ? useNavigate() : null
 
-  if (!user) return <Navigate to="/" replace />
+  useEffect(() => {
+    if (!user) { window.location.replace('/'); return }
+    if (role && user.role !== role) {
+      window.location.replace(user.role === 'professor' ? '/professor/home' : '/student/home')
+    }
+  }, [user, role])
 
-  if (role && user.role !== role) {
-    return <Navigate to={user.role === 'professor' ? '/professor/home' : '/student/home'} replace />
-  }
-
-  if (
-    user.role === 'student' &&
-    !user.preferencesComplete &&
-    location.pathname !== '/student/preferences'
-  ) {
-    return <Navigate to="/student/preferences" replace state={{ from: location.pathname }} />
-  }
-
+  if (!user) return null
+  if (role && user.role !== role) return null
   return children
 }

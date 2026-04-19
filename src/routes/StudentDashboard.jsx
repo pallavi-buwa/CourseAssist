@@ -35,7 +35,7 @@ export default function StudentDashboard() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950 flex flex-col">
+      <div className="min-h-screen bg-claro-midnight flex flex-col">
         <Navbar />
         <div className="pt-14 flex flex-col flex-1">
 
@@ -54,7 +54,7 @@ export default function StudentDashboard() {
                   onClick={() => setActiveCourse(f.id)}
                   className={`text-xs px-3 py-1 rounded-full border transition-all ${
                     activeCourse === f.id
-                      ? 'bg-indigo-600 border-indigo-500 text-white'
+                      ? 'bg-claro-indigo border-claro-indigo text-white'
                       : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600'
                   }`}
                 >
@@ -73,7 +73,7 @@ export default function StudentDashboard() {
               </button>
               <button
                 onClick={() => setShowGenerator(true)}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
               >
                 + Add from syllabus
               </button>
@@ -84,9 +84,9 @@ export default function StudentDashboard() {
           <div className="flex items-center gap-6 px-5 py-2 border-b border-gray-800">
             <div className="flex items-center gap-4">
               {[
-                { color: '#22c55e', label: 'Strong (≥70%)' },
-                { color: '#eab308', label: 'Developing (50–69%)' },
-                { color: '#ef4444', label: 'Needs work (<50%)' },
+                { color: '#9EE4D4', label: 'Strong (≥70%)' },
+                { color: '#FFD6A8', label: 'Developing (50–69%)' },
+                { color: '#FFB8C8', label: 'Needs work (<50%)' },
               ].map(l => (
                 <div key={l.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
@@ -94,15 +94,15 @@ export default function StudentDashboard() {
                 </div>
               ))}
               <div className="flex items-center gap-1.5 ml-2">
-                <div className="w-4 h-0.5" style={{ background: '#f59e0b' }} />
+                <div className="w-4 h-0.5" style={{ background: '#FFD6A8' }} />
                 <span className="text-[11px] text-gray-500">Cross-course link</span>
               </div>
             </div>
             <div className="ml-auto flex items-center gap-4">
               {[
-                { label: 'AI for Business', color: '#818cf8' },
-                { label: 'Strategic Mgmt', color: '#67e8f9' },
-                { label: 'Entrepreneurship', color: '#fbbf24' },
+                { label: 'AI for Business', color: '#C4B5FF' },
+                { label: 'Strategic Mgmt', color: '#8EE4D2' },
+                { label: 'Entrepreneurship', color: '#FFD6A8' },
               ].map(c => (
                 <div key={c.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full opacity-70" style={{ background: c.color }} />
@@ -125,7 +125,7 @@ export default function StudentDashboard() {
                 node={selectedNode}
                 mode="student"
                 onClose={() => setSelectedNode(null)}
-                preferences={user?.preferences}
+                preferences={{ language: 'English', format: 'video' }}
               />
             )}
           </div>

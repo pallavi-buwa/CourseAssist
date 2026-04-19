@@ -6,7 +6,7 @@ const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
   { label: 'Courses',  to: '/student/reading/module-1' },
-  { label: 'Preferences', to: '/student/preferences' },
+  { label: 'Notes',    to: '/student/dashboard' },
 ]
 const professorLinks = [
   { label: 'Home',      to: '/professor/home' },
@@ -37,14 +37,14 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-gray-900 border-b border-gray-800 flex items-center px-5 gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-claro-slate border-b border-white/8 flex items-center px-5 gap-6">
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-semibold">EG</div>
-          <span className="font-medium text-white text-sm">EduGraph</span>
+          <div className="w-7 h-7 rounded-lg bg-claro-indigo flex items-center justify-center text-white text-xs font-semibold">C</div>
+          <span className="font-medium text-claro-text text-sm">Claro</span>
         </div>
-        <span className="text-gray-600 text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>
+        <span className="text-claro-muted text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>
       </div>
 
       {/* Nav links */}
@@ -55,8 +55,8 @@ export default function Navbar() {
             to={l.to}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               location.pathname.startsWith(l.to.split('/').slice(0, 3).join('/'))
-                ? 'bg-indigo-600/20 text-indigo-400'
-                : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                ? 'bg-claro-indigo/20 text-claro-indigo'
+                : 'text-claro-muted hover:text-claro-text hover:bg-white/5'
             }`}
           >
             {l.label}
@@ -68,25 +68,18 @@ export default function Navbar() {
       <div className="relative">
         <button
           onClick={() => setDropOpen(v => !v)}
-          className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-medium hover:bg-indigo-500 transition-colors"
+          className="w-8 h-8 rounded-full bg-claro-indigo flex items-center justify-center text-white text-xs font-medium hover:brightness-110 transition-colors"
         >
           {initials}
         </button>
         {dropOpen && (
-          <div className="absolute right-0 top-10 w-44 bg-gray-900 border border-gray-800 rounded-xl shadow-xl py-1 z-50">
-            <div className="px-3 py-2 border-b border-gray-800">
-              <div className="text-xs text-white font-medium truncate">{user.email}</div>
-              <div className="text-xs text-gray-500 capitalize">{user.role}</div>
+          <div className="absolute right-0 top-10 w-44 bg-claro-slate border border-white/10 rounded-xl shadow-xl py-1 z-50">
+            <div className="px-3 py-2 border-b border-white/8">
+              <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
+              <div className="text-xs text-claro-muted capitalize">{user.role}</div>
             </div>
-            {user.role === 'student' && (
-              <button
-                onClick={() => { setDropOpen(false); navigate('/student/preferences') }}
-                className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
-              >
-                Preferences
-              </button>
-            )}
-            <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-800 transition-colors">Logout</button>
+            <button className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-white/5 transition-colors">Preferences</button>
+            <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-claro-coral hover:bg-white/5 transition-colors">Logout</button>
           </div>
         )}
       </div>

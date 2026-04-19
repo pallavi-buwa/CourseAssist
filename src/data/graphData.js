@@ -1,13 +1,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// CourseAssist – Knowledge Graph Data Model
+// Claro – Knowledge Graph Data Model
 // 3 CS Subjects: Python Programming · Data Structures & Algorithms · Computer Networks
 // ~210 nodes, ~400+ edges
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SUBJECTS = {
-  PYTHON: { id: 'python', label: 'Python Programming', color: '#3b82f6', darkColor: '#1d4ed8' },
-  DSA:    { id: 'dsa',    label: 'Data Structures & Algorithms', color: '#8b5cf6', darkColor: '#6d28d9' },
-  CN:     { id: 'cn',     label: 'Computer Networks', color: '#10b981', darkColor: '#047857' },
+  PYTHON: { id: 'python', label: 'Python Programming', color: '#C4B5FF', darkColor: '#9B88E8' },
+  DSA:    { id: 'dsa',    label: 'Data Structures & Algorithms', color: '#D4B8FF', darkColor: '#B894F0' },
+  CN:     { id: 'cn',     label: 'Computer Networks', color: '#8EE4D2', darkColor: '#5BC4AD' },
 }
 
 // ── Resource stubs (mock) ─────────────────────────────────────────────────────

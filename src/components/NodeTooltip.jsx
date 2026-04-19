@@ -2,15 +2,15 @@ import { memo } from 'react'
 import { SUBJECTS } from '../data/graphData.js'
 
 const SUBJECT_BADGE = {
-  python: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  dsa:    'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  cn:     'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  python: 'bg-claro-indigo/20 text-claro-indigo border-claro-indigo/35',
+  dsa:    'bg-[#D4B8FF]/22 text-[#EDE5FF] border-[#D4B8FF]/38',
+  cn:     'bg-claro-sage/20 text-claro-sage border-claro-sage/35',
 }
 
 const STATUS_BADGE = {
-  active:     'text-yellow-300',
-  mastered:   'text-green-400',
-  struggling: 'text-red-400',
+  active:     'text-claro-amber',
+  mastered:   'text-claro-sage',
+  struggling: 'text-claro-coral',
 }
 
 const NodeTooltip = memo(({ node, position }) => {
