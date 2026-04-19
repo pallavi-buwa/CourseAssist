@@ -73,11 +73,10 @@ export default function LoginPage() {
                     key={r.value}
                     type="button"
                     onClick={() => setRole(r.value)}
-                    className={`min-h-touch flex items-center justify-center px-4 py-3 rounded-xl border text-base font-medium transition-all ${
-                      role === r.value
+                    className={`min-h-touch flex items-center justify-center px-4 py-3 rounded-xl border text-base font-medium transition-all ${role === r.value
                         ? 'bg-claro-indigo/12 border-claro-indigo text-claro-indigo'
                         : 'bg-claro-canvas border-claro-indigo/15 text-claro-muted hover:border-claro-indigo/30'
-                    }`}
+                      }`}
                   >
                     {r.label}
                   </button>
@@ -95,7 +94,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-claro-muted mt-6">Demo — no password required</p>
+          <p className="text-center text-sm text-claro-muted mt-6">Demo: no password required</p>
 
           <div className="mt-8 rounded-xl border border-claro-indigo/15 bg-claro-canvas/50 p-5 text-left">
             <p className="text-sm font-medium text-claro-text mb-3">Demo accounts</p>
@@ -106,7 +105,7 @@ export default function LoginPage() {
               {listDemoPersonaHints().professors.join(', ')}
             </p>
             <p className="text-sm text-claro-muted mt-3 leading-relaxed">
-              Optional: set <code className="text-claro-text/90 bg-claro-slate/80 px-1.5 py-0.5 rounded text-[0.9em]">VITE_OPENAI_API_KEY</code> to personalize graphs once; results stay in this browser.
+              Optional: set <code className="text-claro-text/90 bg-claro-slate/80 px-1.5 py-0.5 rounded text-[0.9em]">VITE_OPENAI_API_KEY</code> to enable AI features.
             </p>
           </div>
         </div>

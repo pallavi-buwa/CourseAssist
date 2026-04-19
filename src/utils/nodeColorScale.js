@@ -35,7 +35,7 @@ export const SUBJECT_TINT = {
 }
 
 /**
- * Marketing graph: comprehension + recency — low scores on recent weeks read as slightly more urgent.
+ * Marketing graph: comprehension + recency - low scores on recent weeks read as slightly more urgent.
  */
 export function marketingEffectiveScore(node) {
   const c = node.comprehension ?? 0.5
@@ -46,7 +46,7 @@ export function marketingEffectiveScore(node) {
 }
 
 /**
- * Student graph: accuracy + hub weakness — weak hubs read one band lower.
+ * Student graph: accuracy + hub weakness - weak hubs read one band lower.
  */
 export function smartStudentNodeColor(node, opts = {}) {
   const acc = node.accuracy ?? 0.5

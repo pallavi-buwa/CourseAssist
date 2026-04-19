@@ -30,7 +30,7 @@ export default function StudentReadingView() {
     setAnswered(prev => ({ ...prev, [sectionId]: { correct } }))
     try {
       await writeStudentAnswer({ studentId: 'demo-student', conceptId, correct })
-    } catch (_) {}
+    } catch (_) { }
   }
 
   const handleSectionRead = (sectionId) => {
@@ -65,14 +65,13 @@ export default function StudentReadingView() {
           <div className="flex items-center gap-2 mb-8">
             {passage.sections.map((s, i) => (
               <div key={s.id} className="flex items-center gap-2">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border transition-colors ${
-                  answered[s.id]?.correct
-                    ? 'bg-green-500/20 border-green-500/50 text-green-400'
-                    : answered[s.id]
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border transition-colors ${answered[s.id]?.correct
+                  ? 'bg-green-500/20 border-green-500/50 text-green-400'
+                  : answered[s.id]
                     ? 'bg-red-500/20 border-red-500/50 text-red-400'
                     : 'bg-gray-800 border-gray-700 text-gray-500'
-                }`}>
-                  {answered[s.id]?.correct ? 'OK' : answered[s.id] ? '–' : i + 1}
+                  }`}>
+                  {answered[s.id]?.correct ? 'OK' : answered[s.id] ? 'X' : i + 1}
                 </div>
                 {i < passage.sections.length - 1 && (
                   <div className="w-8 h-px bg-gray-800" />
@@ -106,7 +105,7 @@ export default function StudentReadingView() {
                     onClick={() => handleSectionRead(section.id)}
                     className="text-xs text-gray-600 hover:text-claro-indigo border border-gray-800 hover:border-claro-indigo/30 rounded-lg px-3 py-1.5 transition-colors"
                   >
-                    I&apos;ve read this section — check my understanding
+                    I&apos;ve read this section. Check my understanding.
                   </button>
                 )}
 
@@ -123,14 +122,13 @@ export default function StudentReadingView() {
                   />
                 )}
 
-                {/* Already answered — show result */}
+                {/* Already answered - show result */}
                 {answered[section.id] && (
-                  <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${
-                    answered[section.id].correct
-                      ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                      : 'bg-red-500/10 border-red-500/20 text-red-400'
-                  }`}>
-                    {answered[section.id].correct ? 'Correct — well done.' : 'Incorrect — review and re-read this section.'}
+                  <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${answered[section.id].correct
+                    ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                    : 'bg-red-500/10 border-red-500/20 text-red-400'
+                    }`}>
+                    {answered[section.id].correct ? 'Correct. Nice work.' : 'Not quite. Review this section and try again.'}
                   </div>
                 )}
               </div>

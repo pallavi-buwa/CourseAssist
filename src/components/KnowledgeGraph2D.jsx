@@ -52,8 +52,8 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   const toggleFullscreen = useCallback(() => {
     const el = shellRef.current
     if (!el) return
-    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
-    else document.exitFullscreen?.().catch(() => {})
+    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => { })
+    else document.exitFullscreen?.().catch(() => { })
   }, [])
 
   const zoomBy2d = useCallback((factor) => {
@@ -85,8 +85,8 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   }, [])
 
   const nodeColor = useCallback((node) => comprehensionColor(node), [liveUpdates])
-  const nodeVal   = useCallback(() => 6, [])
-  const nodeLabel = useCallback((node) => `${node.label} — ${Math.round((node.comprehension ?? 0.5) * 100)}%`, [liveUpdates])
+  const nodeVal = useCallback(() => 6, [])
+  const nodeLabel = useCallback((node) => `${node.label}: ${Math.round((node.comprehension ?? 0.5) * 100)}%`, [liveUpdates])
   const linkColor = useCallback(
     () => (isDark ? 'rgba(34,197,94,0.24)' : 'rgba(34,197,94,0.22)'),
     [isDark]
@@ -155,52 +155,52 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
         className="relative min-h-0 flex-1 bg-claro-canvas"
         style={{ width: '100%', height: '100%' }}
       >
-      {!FG && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-gray-500 text-sm">Loading graph…</div>
-        </div>
-      )}
-
-      {FG && FG !== 'fallback' && (
-        <FG
-          ref={fgRef}
-          graphData={graphData}
-          width={dims.width}
-          height={dims.height}
-          backgroundColor={canvasHex}
-          nodeColor={nodeColor}
-          nodeVal={nodeVal}
-          nodeLabel={nodeLabel}
-          linkColor={linkColor}
-          linkWidth={linkWidth}
-          onNodeClick={onNodeClick}
-          cooldownTime={3000}
-          d3AlphaDecay={0.025}
-          enableNodeDrag={true}
-        />
-      )}
-
-      {FG === 'fallback' && (
-        <FallbackGraph
-          graphData={graphData}
-          onNodeClick={onNodeClick}
-          dims={dims}
-          isDark={isDark}
-          canvasHex={canvasHex}
-        />
-      )}
-
-      {/* Legend */}
-      <div className="pointer-events-none absolute top-3 right-3 flex max-h-[min(70vh,320px)] max-w-[11rem] flex-col gap-0.5 overflow-y-auto rounded-lg border border-claro-indigo/18 bg-claro-panel/95 p-2 shadow-sm">
-        <div className="text-[10px] font-medium uppercase tracking-wider text-claro-muted">Score</div>
-        <p className="text-[9px] leading-tight text-claro-muted/90">Green = strong · yellow to red = risk</p>
-        {SCORE_BANDS.map(b => (
-          <div key={b.range} className="flex items-center gap-1.5 text-[9px] text-claro-text/90">
-            <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-white/10" style={{ background: b.color }} />
-            <span>{b.range} · {b.label}</span>
+        {!FG && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-gray-500 text-sm">Loading graph…</div>
           </div>
-        ))}
-      </div>
+        )}
+
+        {FG && FG !== 'fallback' && (
+          <FG
+            ref={fgRef}
+            graphData={graphData}
+            width={dims.width}
+            height={dims.height}
+            backgroundColor={canvasHex}
+            nodeColor={nodeColor}
+            nodeVal={nodeVal}
+            nodeLabel={nodeLabel}
+            linkColor={linkColor}
+            linkWidth={linkWidth}
+            onNodeClick={onNodeClick}
+            cooldownTime={3000}
+            d3AlphaDecay={0.025}
+            enableNodeDrag={true}
+          />
+        )}
+
+        {FG === 'fallback' && (
+          <FallbackGraph
+            graphData={graphData}
+            onNodeClick={onNodeClick}
+            dims={dims}
+            isDark={isDark}
+            canvasHex={canvasHex}
+          />
+        )}
+
+        {/* Legend */}
+        <div className="pointer-events-none absolute top-3 right-3 flex max-h-[min(70vh,320px)] max-w-[11rem] flex-col gap-0.5 overflow-y-auto rounded-lg border border-claro-indigo/18 bg-claro-panel/95 p-2 shadow-sm">
+          <div className="text-[10px] font-medium uppercase tracking-wider text-claro-muted">Score</div>
+          <p className="text-[9px] leading-tight text-claro-muted/90">Green = strong · yellow to red = risk</p>
+          {SCORE_BANDS.map(b => (
+            <div key={b.range} className="flex items-center gap-1.5 text-[9px] text-claro-text/90">
+              <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-white/10" style={{ background: b.color }} />
+              <span>{b.range} · {b.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

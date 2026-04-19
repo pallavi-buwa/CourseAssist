@@ -2,15 +2,15 @@ import { useState } from 'react'
 import { studentGraph } from '../data/mockStudentGraph.js'
 
 const MOCK_NOTES = [
-  { id: 1, text: 'Decision Frameworks are key for both AI and strategy courses — strong cross-course link!', node: 'Decision Frameworks', timestamp: '2 days ago' },
+  { id: 1, text: 'Decision Frameworks show up in both AI and strategy courses. Strong cross-course link.', node: 'Decision Frameworks', timestamp: '2 days ago' },
   { id: 2, text: 'Risk Assessment: review the difference between qualitative and quantitative methods.', node: 'Risk Assessment', timestamp: '1 week ago' },
 ]
 
 export default function NotesWorkspace({ onClose }) {
-  const [text, setText]         = useState('')
+  const [text, setText] = useState('')
   const [attachedNode, setAttachedNode] = useState('')
-  const [nodeSearch, setNodeSearch]     = useState('')
-  const [notes, setNotes]       = useState(MOCK_NOTES)
+  const [nodeSearch, setNodeSearch] = useState('')
+  const [notes, setNotes] = useState(MOCK_NOTES)
   const [uploading, setUploading] = useState(false)
   const [uploadedFile, setUploadedFile] = useState(null)
 
@@ -40,7 +40,7 @@ export default function NotesWorkspace({ onClose }) {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-[50vh] bg-gray-900 border-t border-gray-800 z-40 flex flex-col"
-         style={{ animation: 'slideInUp 0.3s ease-out' }}>
+      style={{ animation: 'slideInUp 0.3s ease-out' }}>
 
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800">
         <h3 className="text-sm font-medium text-white">Notes Workspace</h3>
@@ -52,7 +52,7 @@ export default function NotesWorkspace({ onClose }) {
         <div className="flex-1 flex flex-col p-4 gap-3 border-r border-gray-800">
           {/* Toolbar */}
           <div className="flex gap-1 border-b border-gray-800 pb-2">
-            {['B','I','•'].map(t => (
+            {['B', 'I', '•'].map(t => (
               <button key={t} className="w-7 h-7 border border-gray-700 rounded text-xs text-gray-400 hover:bg-gray-800 hover:text-white transition-colors font-medium">{t}</button>
             ))}
           </div>

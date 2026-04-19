@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar.jsx'
 import FlagCard from '../components/FlagCard.jsx'
 import { analyzeForInclusivity } from '../api/openai.js'
 
-const PLACEHOLDER = `Example: Week 1 — Introduction to Marketing Strategy
+const PLACEHOLDER = `Example: Week 1: Introduction to Marketing Strategy
 
 Marketing strategy is built on STP: Segmentation, Targeting, Positioning. Students are expected to have prior knowledge of Western consumer behavior models and standard business frameworks used in Fortune 500 companies. Case studies will draw heavily from American market contexts.
 
@@ -13,11 +13,11 @@ Prerequisites: familiarity with Nielsen data analysis and basic econometric mode
 const CATEGORY_ORDER = ['Jargon', 'Cultural assumption', 'Readability', 'Accessibility', 'Gender bias']
 
 export default function MaterialAnalyzer() {
-  const [text, setText]         = useState('')
-  const [loading, setLoading]   = useState(false)
-  const [flags, setFlags]       = useState(null)
-  const [error, setError]       = useState(null)
-  const [copied, setCopied]     = useState(null)
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [flags, setFlags] = useState(null)
+  const [error, setError] = useState(null)
+  const [copied, setCopied] = useState(null)
 
   const handleAnalyze = async () => {
     if (!text.trim()) return
@@ -59,7 +59,7 @@ export default function MaterialAnalyzer() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-xl font-semibold text-white mb-1">Material Inclusivity Analyzer</h1>
-            <p className="text-gray-500 text-sm">Paste course material to detect jargon, cultural assumptions, and accessibility barriers using Claude AI.</p>
+            <p className="text-gray-500 text-sm">Paste course material for quick clarity and accessibility feedback.</p>
           </div>
 
           <div className="grid grid-cols-5 gap-6">
@@ -98,17 +98,17 @@ export default function MaterialAnalyzer() {
 
               {/* Tips */}
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5">
-                <h3 className="text-xs font-medium text-gray-400 mb-3">What we check for</h3>
+                <h3 className="text-xs font-medium text-gray-400 mb-3">Checks</h3>
                 <ul className="space-y-2">
                   {[
-                    'Jargon & unexplained acronyms',
-                    'Cultural assumptions & Western bias',
-                    'Accessibility & readability',
-                    'Gender bias in language',
-                    'Prerequisite assumptions',
+                    'Jargon and acronyms',
+                    'Cultural assumptions',
+                    'Readability and accessibility',
+                    'Gendered language',
+                    'Hidden prerequisites',
                   ].map(label => (
                     <li key={label} className="flex items-start gap-2 text-xs text-gray-500">
-                      <span className="text-claro-muted">–</span>
+                      <span className="text-claro-muted">•</span>
                       {label}
                     </li>
                   ))}
