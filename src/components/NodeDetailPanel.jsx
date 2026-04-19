@@ -7,6 +7,7 @@ const RESOURCE_LABELS = {
   video: 'Video',
   text: 'Text',
   article: 'Text',
+  pdf: 'PDF',
   podcast: 'Audio',
   interactive: 'Practice',
 }
