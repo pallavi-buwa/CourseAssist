@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
@@ -66,6 +66,11 @@ export default function ProfessorHome() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const persona = useMemo(() => resolvePersona(user?.email, 'professor'), [user?.email])
+
+  useEffect(() => {
+    // Prefetch graph bundle so dashboard opens faster.
+    import('react-force-graph').catch(() => {})
+  }, [])
 
   const totalStudents = COURSES.reduce((s, c) => s + c.students, 0)
   const avgHealth = Math.round(COURSES.reduce((s, c) => s + c.avgComprehension, 0) / COURSES.length * 100)

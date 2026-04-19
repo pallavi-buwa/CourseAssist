@@ -8,7 +8,15 @@ const CATEGORY_COLORS = {
   'Biased framing':     'bg-red-500/20 text-red-400 border-red-500/30',
 }
 
-export default function FlagCard({ phrase, category, affected, suggestion }) {
+export default function FlagCard({
+  phrase,
+  category,
+  affected,
+  suggestion,
+  countryContext,
+  example,
+  referenceLinks = [],
+}) {
   const [copied, setCopied] = useState(false)
   const catCls = CATEGORY_COLORS[category] || 'bg-gray-700 text-gray-300 border-gray-600'
 
@@ -19,7 +27,7 @@ export default function FlagCard({ phrase, category, affected, suggestion }) {
   }
 
   return (
-    <div className="rounded-xl border border-gray-800 bg-gray-900 p-4 fade-in" style={{ minHeight: 120 }}>
+    <div className="rounded-xl border border-gray-800 bg-gray-900 p-4 fade-in" style={{ minHeight: 140 }}>
       {/* Top: flagged phrase + category badge */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <span className="bg-claro-amber/15 text-claro-amber border border-claro-amber/30 rounded px-2 py-0.5 text-xs font-medium">
@@ -43,6 +51,37 @@ export default function FlagCard({ phrase, category, affected, suggestion }) {
           {copied ? 'Copied!' : '⎘ Copy'}
         </button>
       </div>
+
+      {(countryContext || example) && (
+        <div className="mt-3 space-y-1.5 border-t border-gray-800 pt-2.5">
+          {countryContext && (
+            <p className="text-xs text-cyan-300">Context: <span className="text-cyan-200/90">{countryContext}</span></p>
+          )}
+          {example && (
+            <p className="text-xs text-violet-300">Relatable example: <span className="text-violet-200/90">{example}</span></p>
+          )}
+        </div>
+      )}
+
+      {referenceLinks.length > 0 && (
+        <div className="mt-2">
+          <p className="text-[11px] text-gray-500 mb-1">References</p>
+          <div className="space-y-1">
+            {referenceLinks.map((url, i) => (
+              <a
+                key={`${url}-${i}`}
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="block text-xs text-blue-300 hover:text-blue-200 underline underline-offset-2 truncate"
+                title={url}
+              >
+                {url}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

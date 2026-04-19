@@ -11,7 +11,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   const fgRef = useRef()
   const shellRef = useRef(null)
   const containerRef = useRef()
-  const [FG, setFG] = useState(null)
+  const [FG, setFG] = useState('fallback')
   const [dims, setDims] = useState({ width: 800, height: 600 })
   const [isFs, setIsFs] = useState(false)
 
@@ -19,8 +19,13 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   useEffect(() => {
     if (ForceGraph2DModule) { setFG(() => ForceGraph2DModule); return }
     import('react-force-graph').then(m => {
-      ForceGraph2DModule = m.ForceGraph2D
-      setFG(() => m.ForceGraph2D)
+      const Comp = m?.ForceGraph2D || m?.default?.ForceGraph2D || m?.default
+      if (typeof Comp === 'function') {
+        ForceGraph2DModule = Comp
+        setFG(() => Comp)
+      } else {
+        setFG('fallback')
+      }
     }).catch(() => {
       // Fallback: use canvas-based simple render
       setFG('fallback')
@@ -32,7 +37,9 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
     if (!containerRef.current) return
     const ro = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect
-      setDims({ width: Math.floor(width), height: Math.floor(height) })
+      const nextW = Math.max(320, Math.floor(width || 0))
+      const nextH = Math.max(320, Math.floor(height || 0))
+      setDims({ width: nextW, height: nextH })
     })
     ro.observe(containerRef.current)
     return () => ro.disconnect()
@@ -155,13 +162,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
         className="relative min-h-0 flex-1 bg-claro-canvas"
         style={{ width: '100%', height: '100%' }}
       >
-        {!FG && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-gray-500 text-sm">Loading graph…</div>
-          </div>
-        )}
-
-        {FG && FG !== 'fallback' && (
+        {typeof FG === 'function' && (
           <FG
             ref={fgRef}
             graphData={graphData}
@@ -174,13 +175,23 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
             linkColor={linkColor}
             linkWidth={linkWidth}
             onNodeClick={onNodeClick}
-            cooldownTime={3000}
-            d3AlphaDecay={0.025}
+            cooldownTime={1400}
+            d3AlphaDecay={0.05}
             enableNodeDrag={true}
           />
         )}
 
         {FG === 'fallback' && (
+          <FallbackGraph
+            graphData={graphData}
+            onNodeClick={onNodeClick}
+            dims={dims}
+            isDark={isDark}
+            canvasHex={canvasHex}
+          />
+        )}
+
+        {FG !== 'fallback' && typeof FG !== 'function' && (
           <FallbackGraph
             graphData={graphData}
             onNodeClick={onNodeClick}

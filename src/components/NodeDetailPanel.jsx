@@ -42,6 +42,39 @@ function getCacheKey(node, preferences) {
   })
 }
 
+function hashCode(s) {
+  let h = 0
+  for (let i = 0; i < s.length; i += 1) {
+    h = (h * 31 + s.charCodeAt(i)) | 0
+  }
+  return Math.abs(h)
+}
+
+function struggleReasonFor(node, student) {
+  const reasons = [
+    'Confuses the core definition with a related concept.',
+    'Can repeat terms but misses application in case scenarios.',
+    'Mixes sequence/order with the previous step in the framework.',
+    'Over-relies on memorized formulas without context fit.',
+    'Struggles to map this idea to local market examples.',
+    'Understands theory but misses common edge cases.',
+    'Interprets metrics correctly but chooses weak action from them.',
+    'Needs a concrete real-world analogy before abstract reasoning clicks.',
+  ]
+  const k = hashCode(`${node?.id || ''}:${student?.id || ''}`)
+  return reasons[k % reasons.length]
+}
+
+function studentStrugglesOnNode(student, nodeId, score) {
+  const explicit = student?.answeredChecks?.[nodeId]
+  if (explicit === false) return true
+  if (explicit === true) return false
+  // Fallback for AI/custom graph ids not present in mock checks.
+  const threshold = score < 0.45 ? 0.55 : score < 0.62 ? 0.35 : 0.18
+  const seed = (hashCode(`${student?.id || ''}:${nodeId || ''}`) % 1000) / 1000
+  return seed < threshold
+}
+
 export default function NodeDetailPanel({
   node,
   mode,
@@ -112,11 +145,10 @@ export default function NodeDetailPanel({
 
   if (!node) return null
 
-  const strugglingStudents = mode === 'professor'
-    ? mockStudents.filter(s => s.answeredChecks[node.id] === false).slice(0, 6)
-    : []
-
   const score = node.comprehension ?? node.accuracy ?? 0.5
+  const strugglingStudents = mode === 'professor'
+    ? mockStudents.filter(s => studentStrugglesOnNode(s, node.id, score)).slice(0, 6)
+    : []
   const scoreColor =
     mode === 'student' && node?.accuracy != null
       ? studentAccuracyColor(node)
@@ -195,7 +227,7 @@ export default function NodeDetailPanel({
               {strugglingStudents.map(s => (
                 <div key={s.id} className="flex items-center justify-between text-sm gap-2">
                   <span className="text-claro-text">{s.name}</span>
-                  <span className="text-red-400 text-xs text-right">{node.misconception || 'Common misconception'}</span>
+                  <span className="text-red-400 text-xs text-right max-w-[58%]">{struggleReasonFor(node, s)}</span>
                 </div>
               ))}
             </div>

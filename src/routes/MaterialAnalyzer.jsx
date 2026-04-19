@@ -10,21 +10,30 @@ Marketing strategy is built on STP: Segmentation, Targeting, Positioning. Studen
 
 Prerequisites: familiarity with Nielsen data analysis and basic econometric models.`
 
-const CATEGORY_ORDER = ['Jargon', 'Cultural assumption', 'Readability', 'Accessibility', 'Gender bias']
+const CATEGORY_ORDER = ['Jargon', 'Cultural assumption', 'Readability', 'Implicit knowledge', 'Biased framing']
 
 export default function MaterialAnalyzer() {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [flags, setFlags] = useState(null)
   const [error, setError] = useState(null)
-  const [copied, setCopied] = useState(null)
 
   const handleAnalyze = async () => {
     if (!text.trim()) return
     setLoading(true); setError(null); setFlags(null)
     try {
       const result = await analyzeForInclusivity(text)
-      setFlags(result)
+      const normalized = Array.isArray(result) ? result.map((f) => ({
+        phrase: String(f?.phrase || ''),
+        category: String(f?.category || 'Readability'),
+        affected: String(f?.affected || 'Learners with mixed prior context'),
+        suggestion: String(f?.suggestion || ''),
+        severity: String(f?.severity || 'medium').toLowerCase(),
+        countryContext: String(f?.countryContext || ''),
+        example: String(f?.example || ''),
+        referenceLinks: Array.isArray(f?.referenceLinks) ? f.referenceLinks.filter(Boolean).slice(0, 3) : [],
+      })) : []
+      setFlags(normalized)
     } catch (e) {
       setError(e.message.includes('API_KEY')
         ? 'Add VITE_OPENAI_API_KEY to .env to use AI analysis.'
@@ -34,22 +43,12 @@ export default function MaterialAnalyzer() {
     }
   }
 
-  const handleCopy = (suggestion, index) => {
-    navigator.clipboard.writeText(suggestion).then(() => {
-      setCopied(index)
-      setTimeout(() => setCopied(null), 1800)
-    })
-  }
-
   // Group flags by category
   const grouped = flags ? CATEGORY_ORDER.reduce((acc, cat) => {
     const catFlags = flags.filter(f => f.category === cat)
     if (catFlags.length) acc[cat] = catFlags
     return acc
   }, {}) : {}
-
-  const totalFlags = flags?.length ?? 0
-  const highSeverity = flags?.filter(f => f.severity === 'high').length ?? 0
 
   return (
     <RequireAuth role="professor">
@@ -66,7 +65,17 @@ export default function MaterialAnalyzer() {
             {/* Input panel */}
             <div className="col-span-2 flex flex-col gap-4">
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3 flex-1">
-                <label className="text-xs font-medium text-gray-400">Paste course material</label>
+                <div className="flex items-center justify-between gap-2">
+                  <label className="text-xs font-medium text-gray-400">Paste course material</label>
+                  <button
+                    type="button"
+                    onClick={() => setText(PLACEHOLDER)}
+                    className="text-[11px] text-claro-indigo hover:text-white border border-claro-indigo/30 hover:border-claro-indigo/60 rounded px-2 py-1 transition-colors"
+                    title="Load sample text to see how analyzer works"
+                  >
+                    Use sample
+                  </button>
+                </div>
                 <textarea
                   value={text}
                   onChange={e => setText(e.target.value)}
@@ -104,8 +113,8 @@ export default function MaterialAnalyzer() {
                     'Jargon and acronyms',
                     'Cultural assumptions',
                     'Readability and accessibility',
-                    'Gendered language',
-                    'Hidden prerequisites',
+                    'Implicit prerequisites',
+                    'Biased framing',
                   ].map(label => (
                     <li key={label} className="flex items-start gap-2 text-xs text-gray-500">
                       <span className="text-claro-muted">•</span>
@@ -136,27 +145,6 @@ export default function MaterialAnalyzer() {
 
               {flags && (
                 <div className="space-y-5">
-                  {/* Summary bar */}
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex items-center gap-6">
-                    <div>
-                      <p className="text-2xl font-semibold text-white">{totalFlags}</p>
-                      <p className="text-xs text-gray-500">Total flags</p>
-                    </div>
-                    {highSeverity > 0 && (
-                      <div>
-                        <p className="text-2xl font-semibold text-red-400">{highSeverity}</p>
-                        <p className="text-xs text-gray-500">High severity</p>
-                      </div>
-                    )}
-                    <div className="ml-auto">
-                      {totalFlags === 0 ? (
-                        <span className="text-green-400 text-sm font-medium">No issues found</span>
-                      ) : (
-                        <span className="text-claro-amber text-sm">{totalFlags} issue{totalFlags !== 1 ? 's' : ''} to review</span>
-                      )}
-                    </div>
-                  </div>
-
                   {/* Flags by category */}
                   {Object.entries(grouped).map(([category, catFlags]) => (
                     <div key={category}>
@@ -168,9 +156,7 @@ export default function MaterialAnalyzer() {
                         {catFlags.map((flag, i) => (
                           <FlagCard
                             key={i}
-                            flag={flag}
-                            onCopy={() => handleCopy(flag.suggestion, `${category}-${i}`)}
-                            copied={copied === `${category}-${i}`}
+                            {...flag}
                           />
                         ))}
                       </div>

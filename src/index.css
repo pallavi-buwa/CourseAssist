@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  /* ~18px root: readable body copy + scales rem-based spacing */
-  html {
-    font-size: 112.5%;
-  }
-  body {
-    @apply antialiased;
-    line-height: 1.65;
-    text-rendering: optimizeLegibility;
-  }
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 /*
@@ -26,10 +14,9 @@
  *   claro-green   → brand green (non-button accents, graphs, scrollbar)
  */
 :root {
-  /* Deep space (nebula + stars via body::before) — not flat black */
-  --tw-claro-canvas: 8 8 10;
-  --tw-claro-panel: 20 20 22;
-  --tw-claro-slate: 34 34 38;
+  --tw-claro-canvas: 0 0 0;
+  --tw-claro-panel: 18 18 20;
+  --tw-claro-slate: 32 32 36;
   --tw-claro-text: 255 255 255;
   --tw-claro-muted: 161 161 170;
   --tw-claro-green: 34 197 94;
@@ -103,52 +90,10 @@ html {
 }
 
 html, body, #root {
-  width: 100%;
-  min-height: 100%;
+  width: 100%; height: 100%;
   font-family: var(--font-brand);
+  background: rgb(var(--tw-claro-canvas));
   color: rgb(var(--tw-claro-text));
-}
-
-/* Body transparent so fixed ::before / ::after paint above base (space field + mesh) */
-body {
-  background-color: transparent;
-}
-
-/* Nebula + aurora + star specks (fixed, behind UI) */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background-image: var(--bg-aurora), var(--bg-stars);
-  background-repeat: no-repeat, no-repeat;
-}
-
-/* Dot grid + line mesh — sits above gradient wash */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.38;
-  /* 2 grid lines + diagonal hatch + dot tessellation */
-  background-image: var(--bg-pattern-cross), var(--bg-pattern-diagonal), var(--bg-pattern-dots);
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    28px 28px;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
-}
-
-/*
- * Route shells: transparent so fixed body::before (aurora + stars) and body::after
- * (grids + dots) stay visible — avoids duplicating 20+ background layers.
- */
-.bg-space-page {
-  background: transparent;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -205,5 +150,4 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .tree-sway-left,
   .tree-sway-right { animation: none !important; }
-  body::after { opacity: 0.4; }
 }
