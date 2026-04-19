@@ -37,8 +37,10 @@ export default function LoginPage() {
               <line x1="5" y1="19" x2="19" y2="19" strokeOpacity="0.5" />
             </svg>
           </div>
-          <h1 className="text-2xl font-semibold text-white mb-1">EduGraph</h1>
-          <p className="text-gray-500 text-sm">Knowledge that connects</p>
+          <h1 className="text-2xl font-semibold text-white mb-1">Claro</h1>
+          <p className="text-gray-500 text-sm max-w-sm mx-auto leading-relaxed">
+            Canvas gives you the grade. We give you the why.
+          </p>
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">

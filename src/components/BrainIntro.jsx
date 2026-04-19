@@ -371,7 +371,7 @@ export default function BrainIntro({ onEnter }) {
              style={{ textAlign: 'center' }}>
 
           <div className="text-[11px] tracking-[0.35em] text-[#B4ABC9] uppercase mb-4">
-            Cognitive Knowledge System
+            Comprehension intelligence
           </div>
 
           <h1 className="text-5xl font-light text-[#F6F2FF] mb-3 tracking-tight"
@@ -379,9 +379,12 @@ export default function BrainIntro({ onEnter }) {
             Claro
           </h1>
 
-          <p className="text-[#B4ABC9] text-sm max-w-xs text-center leading-relaxed mb-12">
-            Explore 210 concepts across 3 subjects —<br />
-            mapped as a living neural network
+          <p className="text-[#B4ABC9] text-sm max-w-md text-center leading-relaxed mb-3 px-2">
+            A score is a number. Claro turns it into a diagnosis—missing concepts, cohort patterns,
+            and how your next assessment lines up with who still needs support.
+          </p>
+          <p className="text-[#F6F2FF]/90 text-sm font-medium text-center mb-10 px-2 max-w-lg">
+            Canvas gives you the grade. We give you the why.
           </p>
 
           {/* Subject previews */}

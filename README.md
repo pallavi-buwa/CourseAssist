@@ -1,12 +1,10 @@
-\# Inclusive Learning Intelligence Platform
+# Claro — Inclusive learning intelligence
 
+**Canvas gives you the grade. We give you the why.**
 
+Professors already see quiz results—but usually as a number: *"Marcus got 45%."* Claro turns that into a **diagnosis**: which concept is missing, how many students share the **same root cause**, and how an upcoming assessment (e.g. midterm Question 4) intersects with that cohort. We don't make feedback faster—we make it **useful**. A score is a number; Claro maps it to *why* and *what to do next*.
 
-> Canvas tells you who logged in. We tell you who understood.
-
-
-
-\---
+---
 
 
 

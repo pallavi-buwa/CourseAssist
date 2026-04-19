@@ -41,7 +41,9 @@ const TopBar = memo(({
         </div>
         <div>
           <div className="text-claro-text font-semibold text-sm leading-none">Claro</div>
-          <div className="text-claro-muted text-[10px] mt-0.5">Knowledge Graph · CS</div>
+          <div className="text-claro-muted text-[10px] mt-0.5 max-w-[14rem] leading-tight">
+            Scores → diagnosis · Knowledge graph
+          </div>
         </div>
       </div>
 
