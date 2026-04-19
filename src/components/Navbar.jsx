@@ -6,7 +6,7 @@ const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
   { label: 'Courses',  to: '/student/reading/module-1' },
-  { label: 'Notes',    to: '/student/dashboard' },
+  { label: 'Preferences', to: '/student/preferences' },
 ]
 const professorLinks = [
   { label: 'Home',      to: '/professor/home' },
@@ -78,7 +78,14 @@ export default function Navbar() {
               <div className="text-xs text-white font-medium truncate">{user.email}</div>
               <div className="text-xs text-gray-500 capitalize">{user.role}</div>
             </div>
-            <button className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 transition-colors">Preferences</button>
+            {user.role === 'student' && (
+              <button
+                onClick={() => { setDropOpen(false); navigate('/student/preferences') }}
+                className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 transition-colors"
+              >
+                Preferences
+              </button>
+            )}
             <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-800 transition-colors">Logout</button>
           </div>
         )}
