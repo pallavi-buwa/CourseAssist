@@ -33,7 +33,7 @@ export const passage = {
     },
     {
       id: 's3',
-      content: "Positioning is the act of designing the company's offering and image to occupy a distinctive place in the mind of the target market. The goal is to locate the brand in the minds of consumers to maximize the potential benefit to the firm. Effective positioning creates a customer-focused value proposition—a compelling reason why the target market should buy the product.",
+      content: "Positioning is the act of designing the company's offering and image to occupy a distinctive place in the mind of the target market. The goal is to locate the brand in the minds of consumers to maximize the potential benefit to the firm. Effective positioning creates a customer-focused value proposition: a compelling reason why the target market should buy the product.",
       microCheck: {
         question: 'Positioning is primarily concerned with:',
         options: [

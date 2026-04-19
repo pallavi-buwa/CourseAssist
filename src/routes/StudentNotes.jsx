@@ -19,14 +19,14 @@ function courseForNodeLabel(graphData, label) {
 
 // ─── Initial mock notes (course used for subject-tab filtering) ───────────────
 const INITIAL_NOTES = [
-  { id: 1, title: 'Decision Frameworks', text: 'Decision Frameworks are key for both AI and strategy courses — strong cross-course link!', node: 'Decision Frameworks', course: 'AI for Business Decisions', timestamp: '2 days ago', color: '#818cf8' },
+  { id: 1, title: 'Decision Frameworks', text: 'Decision Frameworks show up in both AI and strategy courses. Strong cross-course link.', node: 'Decision Frameworks', course: 'AI for Business Decisions', timestamp: '2 days ago', color: '#818cf8' },
   { id: 2, title: 'Risk Assessment', text: 'Review the difference between qualitative and quantitative risk methods. Qualitative = likelihood × impact matrix. Quantitative = Monte Carlo, expected value.', node: 'Risk Assessment', course: 'Strategic Management', timestamp: '1 week ago', color: '#67e8f9' },
   { id: 3, title: 'Market Segmentation', text: 'STP: Segment → Target → Position. Geographic, demographic, psychographic, behavioral.', node: 'Market Segmentation', course: 'Entrepreneurship', timestamp: '3 days ago', color: '#fbbf24' },
 ]
 
 const BRANCH_COLORS = ['#818cf8', '#67e8f9', '#fbbf24', '#34d399', '#f87171', '#fb923c', '#e879f9']
 
-/** Split only tokens that exceed maxLen (URLs / long compounds) — never slice normal words */
+/** Split only tokens that exceed maxLen (URLs / long compounds) - never slice normal words */
 function chunkLongToken(token, maxLen) {
   if (token.length <= maxLen) return [token]
   const out = []
@@ -42,7 +42,7 @@ function chunkLongToken(token, maxLen) {
 
 /** Word-wrap at spaces; only then break oversized single tokens */
 function splitSvgLines(str, maxLen) {
-  const s = String(str || '').trim() || '—'
+  const s = String(str || '').trim() || 'Untitled'
   const words = s.split(/\s+/).flatMap(w => (w.length > maxLen ? chunkLongToken(w, maxLen) : [w]))
   const lines = []
   let cur = ''
@@ -258,8 +258,8 @@ function NotesMindMapFrame({ mindmap, onClear, branchColors }) {
   const toggleFullscreen = useCallback(() => {
     const el = shellRef.current
     if (!el) return
-    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
-    else document.exitFullscreen?.().catch(() => {})
+    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => { })
+    else document.exitFullscreen?.().catch(() => { })
   }, [])
 
   const handleDownload = useCallback(() => {
@@ -370,22 +370,22 @@ export default function StudentNotes() {
   }, [subjects])
 
   // ── Notes state ──
-  const [notes, setNotes]           = useState(INITIAL_NOTES)
-  const [noteTitle, setNoteTitle]   = useState('')
-  const [noteText, setNoteText]     = useState('')
+  const [notes, setNotes] = useState(INITIAL_NOTES)
+  const [noteTitle, setNoteTitle] = useState('')
+  const [noteText, setNoteText] = useState('')
   const [nodeSearch, setNodeSearch] = useState('')
   const [attachedNode, setAttachedNode] = useState('')
-  const [openNote, setOpenNote]     = useState(null)
+  const [openNote, setOpenNote] = useState(null)
 
   // ── Mind map state ──
-  const [mapMode, setMapMode]       = useState('build')   // 'build' | 'paste'
-  const [pasteText, setPasteText]   = useState('')
+  const [mapMode, setMapMode] = useState('build')   // 'build' | 'paste'
+  const [pasteText, setPasteText] = useState('')
   const [generating, setGenerating] = useState(false)
-  const [genError, setGenError]     = useState(null)
-  const [mindmap, setMindmap]       = useState(null)
+  const [genError, setGenError] = useState(null)
+  const [mindmap, setMindmap] = useState(null)
   // Build-your-own
   const [buildCenter, setBuildCenter] = useState('')
-  const [branches, setBranches]       = useState([
+  const [branches, setBranches] = useState([
     { label: '', children: '' },
     { label: '', children: '' },
   ])
@@ -487,11 +487,10 @@ export default function StudentNotes() {
                 key={title}
                 type="button"
                 onClick={() => setMainTab(title)}
-                className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors max-w-[11rem] truncate ${
-                  mainTab === title
-                    ? 'border-indigo-500 text-indigo-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300'
-                }`}
+                className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors max-w-[11rem] truncate ${mainTab === title
+                  ? 'border-indigo-500 text-indigo-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300'
+                  }`}
                 title={title}
               >
                 {compactSubjectLabel(title, 22)}
@@ -503,11 +502,10 @@ export default function StudentNotes() {
             <button
               type="button"
               onClick={() => setMainTab(CONTENT_TAB_ID)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-                mainTab === CONTENT_TAB_ID
-                  ? 'border-white/50 text-white'
-                  : 'border-transparent text-gray-400 hover:text-gray-200'
-              }`}
+              className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${mainTab === CONTENT_TAB_ID
+                ? 'border-white/50 text-white'
+                : 'border-transparent text-gray-400 hover:text-gray-200'
+                }`}
             >
               Content
             </button>
@@ -610,115 +608,114 @@ export default function StudentNotes() {
               <PersonaContentHub persona={persona} subjects={subjects} />
               <div className="grid grid-cols-5 gap-6">
 
-              {/* Left controls */}
-              <div className="col-span-2 flex flex-col gap-4">
+                {/* Left controls */}
+                <div className="col-span-2 flex flex-col gap-4">
 
-                {/* Mode toggle */}
-                <div className="flex bg-gray-900 border border-gray-800 rounded-xl p-1">
-                  {[
-                    { id: 'build', label: '✏️ Build your own' },
-                    { id: 'paste', label: '✦ From content' },
-                  ].map(m => (
-                    <button key={m.id} onClick={() => setMapMode(m.id)}
-                      className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                        mapMode === m.id
+                  {/* Mode toggle */}
+                  <div className="flex bg-gray-900 border border-gray-800 rounded-xl p-1">
+                    {[
+                      { id: 'build', label: '✏️ Build your own' },
+                      { id: 'paste', label: '✦ From content' },
+                    ].map(m => (
+                      <button key={m.id} onClick={() => setMapMode(m.id)}
+                        className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-colors ${mapMode === m.id
                           ? 'bg-indigo-600 text-white'
                           : 'text-gray-500 hover:text-gray-300'
-                      }`}>
-                      {m.label}
-                    </button>
-                  ))}
+                          }`}>
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Build mode */}
+                  {mapMode === 'build' && (
+                    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
+                      <input
+                        value={buildCenter}
+                        onChange={e => setBuildCenter(e.target.value)}
+                        placeholder="Central topic…"
+                        className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 font-medium"
+                      />
+
+                      <p className="text-[11px] text-gray-500">Branches: add sub-topics as comma-separated children</p>
+
+                      <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        {branches.map((b, i) => (
+                          <div key={i} className="flex gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full mt-2.5 flex-shrink-0" style={{ background: BRANCH_COLORS[i % BRANCH_COLORS.length] }} />
+                            <div className="flex-1 flex flex-col gap-1">
+                              <input
+                                value={b.label}
+                                onChange={e => updateBranch(i, 'label', e.target.value)}
+                                placeholder={`Branch ${i + 1}`}
+                                className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                              />
+                              <input
+                                value={b.children}
+                                onChange={e => updateBranch(i, 'children', e.target.value)}
+                                placeholder="child1, child2, child3"
+                                className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                              />
+                            </div>
+                            <button onClick={() => removeBranch(i)} className="text-gray-700 hover:text-red-400 text-xs mt-1 flex-shrink-0">✕</button>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button onClick={addBranch} className="text-xs text-indigo-400 hover:text-indigo-300 text-left">
+                        + Add branch
+                      </button>
+
+                      <button onClick={buildMap} disabled={!buildCenter.trim()}
+                        className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
+                        Build map
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Paste mode */}
+                  {mapMode === 'paste' && (
+                    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
+                      <p className="text-xs text-gray-400">Paste notes to generate a mind map.</p>
+                      <textarea
+                        value={pasteText}
+                        onChange={e => setPasteText(e.target.value)}
+                        placeholder="Paste your content here…"
+                        className="h-44 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-indigo-500 leading-relaxed"
+                      />
+                      {genError && (
+                        <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 leading-relaxed">{genError}</p>
+                      )}
+                      <button onClick={generateFromPaste} disabled={generating || !pasteText.trim()}
+                        className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                        {generating
+                          ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating…</>
+                          : '✦ Generate mind map'}
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                {/* Build mode */}
-                {mapMode === 'build' && (
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
-                    <input
-                      value={buildCenter}
-                      onChange={e => setBuildCenter(e.target.value)}
-                      placeholder="Central topic…"
-                      className="bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 font-medium"
+                {/* Map canvas */}
+                <div className="col-span-3 flex min-h-96 flex-col rounded-2xl border border-gray-800 bg-gray-900 p-3">
+                  {mindmap ? (
+                    <NotesMindMapFrame
+                      mindmap={mindmap}
+                      onClear={() => setMindmap(null)}
+                      branchColors={BRANCH_COLORS}
                     />
-
-                    <p className="text-[11px] text-gray-500">Branches — add sub-topics as comma-separated children</p>
-
-                    <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                      {branches.map((b, i) => (
-                        <div key={i} className="flex gap-2">
-                          <div className="w-2.5 h-2.5 rounded-full mt-2.5 flex-shrink-0" style={{ background: BRANCH_COLORS[i % BRANCH_COLORS.length] }} />
-                          <div className="flex-1 flex flex-col gap-1">
-                            <input
-                              value={b.label}
-                              onChange={e => updateBranch(i, 'label', e.target.value)}
-                              placeholder={`Branch ${i + 1}`}
-                              className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500"
-                            />
-                            <input
-                              value={b.children}
-                              onChange={e => updateBranch(i, 'children', e.target.value)}
-                              placeholder="child1, child2, child3"
-                              className="bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-400 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
-                            />
-                          </div>
-                          <button onClick={() => removeBranch(i)} className="text-gray-700 hover:text-red-400 text-xs mt-1 flex-shrink-0">✕</button>
-                        </div>
-                      ))}
+                  ) : (
+                    <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 text-gray-600">
+                      <div className="text-4xl">🗺</div>
+                      <p className="text-sm">
+                        {mapMode === 'build'
+                          ? 'Fill in the center topic and branches, then click Build map.'
+                          : 'Paste any content and click Generate mind map.'}
+                      </p>
                     </div>
-
-                    <button onClick={addBranch} className="text-xs text-indigo-400 hover:text-indigo-300 text-left">
-                      + Add branch
-                    </button>
-
-                    <button onClick={buildMap} disabled={!buildCenter.trim()}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors">
-                      Build map
-                    </button>
-                  </div>
-                )}
-
-                {/* Paste mode */}
-                {mapMode === 'paste' && (
-                  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col gap-3">
-                    <p className="text-xs text-gray-400">Paste any notes, passage, or topic list and we'll auto-generate a mind map.</p>
-                    <textarea
-                      value={pasteText}
-                      onChange={e => setPasteText(e.target.value)}
-                      placeholder="Paste your content here…"
-                      className="h-44 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-indigo-500 leading-relaxed"
-                    />
-                    {genError && (
-                      <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3 leading-relaxed">{genError}</p>
-                    )}
-                    <button onClick={generateFromPaste} disabled={generating || !pasteText.trim()}
-                      className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2">
-                      {generating
-                        ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating…</>
-                        : '✦ Generate mind map'}
-                    </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-
-              {/* Map canvas */}
-              <div className="col-span-3 flex min-h-96 flex-col rounded-2xl border border-gray-800 bg-gray-900 p-3">
-                {mindmap ? (
-                  <NotesMindMapFrame
-                    mindmap={mindmap}
-                    onClear={() => setMindmap(null)}
-                    branchColors={BRANCH_COLORS}
-                  />
-                ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 text-gray-600">
-                    <div className="text-4xl">🗺</div>
-                    <p className="text-sm">
-                      {mapMode === 'build'
-                        ? 'Fill in the center topic and branches, then click Build map.'
-                        : 'Paste any content and click Generate mind map.'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
             </div>
           )}
 

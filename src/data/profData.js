@@ -1,5 +1,5 @@
 export const courseInfo = {
-  name: 'MKT 201 — Introduction to Marketing',
+  name: 'MKT 201: Introduction to Marketing',
   semester: 'Fall 2026',
   professor: 'Prof. David Chen',
   students: 52,
@@ -9,17 +9,19 @@ export const courseNodes = [
   { id: 'n01', label: 'Customer analysis', week: 1, accuracy: 0.88, status: 'green' },
   { id: 'n02', label: 'Consumer behavior', week: 1, accuracy: 0.82, status: 'green' },
   { id: 'n03', label: 'Market research', week: 2, accuracy: 0.79, status: 'green' },
-  { id: 'n04', label: 'Market segmentation', week: 3, accuracy: 0.61, status: 'yellow',
+  {
+    id: 'n04', label: 'Market segmentation', week: 3, accuracy: 0.61, status: 'yellow',
     detail: {
       studentsStruggling: 15,
       misconception: 'Students understand demographic segmentation but struggle with psychographic and behavioral. They default to age/gender/income when asked to segment.',
-      prerequisiteTrace: 'This is a root node — no upstream prerequisites. The gap starts here.',
+      prerequisiteTrace: 'This is a root node. No upstream prerequisites. The gap starts here.',
       intervention: 'Revisit with a concrete example. Show how Nike segments by athletic identity (runner vs basketball vs yoga), not demographics.',
     }
   },
   { id: 'n05', label: 'Target market selection', week: 3, accuracy: 0.72, status: 'green' },
   { id: 'n06', label: 'Value proposition', week: 4, accuracy: 0.75, status: 'green' },
-  { id: 'n07', label: 'Brand positioning', week: 4, accuracy: 0.58, status: 'yellow',
+  {
+    id: 'n07', label: 'Brand positioning', week: 4, accuracy: 0.58, status: 'yellow',
     detail: {
       studentsStruggling: 19,
       misconception: 'Students conflate brand positioning (customer perception) with competitive advantage (firm capabilities).',
@@ -28,7 +30,8 @@ export const courseNodes = [
     }
   },
   { id: 'n08', label: 'Competitive advantage', week: 5, accuracy: 0.70, status: 'green' },
-  { id: 'n09', label: 'Competitive strategy', week: 5, accuracy: 0.54, status: 'red',
+  {
+    id: 'n09', label: 'Competitive strategy', week: 5, accuracy: 0.54, status: 'red',
     detail: {
       studentsStruggling: 18,
       misconception: "Students can name Porter's strategies but can't apply them. They default to 'differentiation' for everything.",
@@ -40,7 +43,8 @@ export const courseNodes = [
   { id: 'n11', label: 'Distribution channels', week: 6, accuracy: 0.80, status: 'green' },
   { id: 'n12', label: 'Promotion mix', week: 6, accuracy: 0.77, status: 'green' },
   { id: 'n13', label: 'Digital marketing', week: 7, accuracy: 0.73, status: 'green' },
-  { id: 'n14', label: 'Positioning strategy', week: 7, accuracy: 0.45, status: 'red',
+  {
+    id: 'n14', label: 'Positioning strategy', week: 7, accuracy: 0.45, status: 'red',
     detail: {
       studentsStruggling: 23,
       misconception: '42% confused positioning strategy with competitive advantage. Positioning is about customer perception, competitive advantage is about firm capabilities.',
@@ -49,7 +53,7 @@ export const courseNodes = [
         detail: "Quiz Q3: 'critically evaluate the positioning strategy' (avg 45%). Quiz Q7: 'compare and explain the positioning approach' (avg 81%). Same concept. 36-point gap.",
         affectedGroup: 'Non-native English speakers scored 38% lower on Q3. No gap on Q7.',
       },
-      prerequisiteTrace: 'Root cause is Week 3 Market segmentation (61%) — the earliest weak node in the chain.',
+      prerequisiteTrace: 'Root cause is Week 3 Market segmentation (61%). It is the earliest weak node in the chain.',
       intervention: 'Define positioning vs competitive advantage with one concrete example each. Show a strong vs weak response to Q3.',
       prediction: {
         questionRef: 'Midterm Q4',
@@ -59,7 +63,8 @@ export const courseNodes = [
       },
     }
   },
-  { id: 'n15', label: 'Marketing plan', week: 7, accuracy: 0.52, status: 'red',
+  {
+    id: 'n15', label: 'Marketing plan', week: 7, accuracy: 0.52, status: 'red',
     detail: {
       studentsStruggling: 20,
       misconception: "Students treat the marketing plan as a list of tactics rather than a strategic document. They jump to 'run Instagram ads' without connecting to positioning.",

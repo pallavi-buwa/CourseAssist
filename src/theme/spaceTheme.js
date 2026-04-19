@@ -1,5 +1,5 @@
 /**
- * Cosmic “neural universe” backdrop — keep in sync with `:root` in `index.css`
+ * Cosmic “neural universe” backdrop - keep in sync with `:root` in `index.css`
  * and WebGL clear colors / fog (BrainIntro, Graph3D).
  */
 export const SPACE_BACKGROUND_HEX = '#08080a'

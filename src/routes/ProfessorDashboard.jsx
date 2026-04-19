@@ -28,11 +28,11 @@ export default function ProfessorDashboard() {
   const persona = useMemo(() => resolvePersona(user?.email, 'professor'), [user?.email])
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [selectedNode, setSelectedNode]         = useState(null)
-  const [liveUpdates, setLiveUpdates]           = useState(false)
-  const [graphData, setGraphData]               = useState(marketingGraph)
-  const [showMicroCheck, setShowMicroCheck]     = useState(false)
-  const [showGenerator, setShowGenerator]       = useState(false)
+  const [selectedNode, setSelectedNode] = useState(null)
+  const [liveUpdates, setLiveUpdates] = useState(false)
+  const [graphData, setGraphData] = useState(marketingGraph)
+  const [showMicroCheck, setShowMicroCheck] = useState(false)
+  const [showGenerator, setShowGenerator] = useState(false)
 
   useEffect(() => {
     if (!user?.email) return
@@ -49,16 +49,16 @@ export default function ProfessorDashboard() {
     if (readCachedProfessorAIGraph(user.email, 'marketing')) return
 
     let cancelled = false
-    ;(async () => {
-      try {
-        const g = await generatePersonaProfessorCohortGraph(p, 'Marketing Management')
-        if (cancelled || !g?.nodes?.length) return
-        writeCachedProfessorAIGraph(user.email, 'marketing', g)
-        setGraphData(g)
-      } catch {
-        /* keep static persona / default graph */
-      }
-    })()
+      ; (async () => {
+        try {
+          const g = await generatePersonaProfessorCohortGraph(p, 'Marketing Management')
+          if (cancelled || !g?.nodes?.length) return
+          writeCachedProfessorAIGraph(user.email, 'marketing', g)
+          setGraphData(g)
+        } catch {
+          /* keep static persona / default graph */
+        }
+      })()
     return () => { cancelled = true }
   }, [user?.email, persona.id])
 
@@ -89,8 +89,8 @@ export default function ProfessorDashboard() {
   }
 
   const courseTitle = courseId === 'marketing' ? 'Marketing Management' :
-                      courseId === 'strategy'  ? 'Business Strategy' :
-                      'Operations Management'
+    courseId === 'strategy' ? 'Business Strategy' :
+      'Operations Management'
 
   return (
     <RequireAuth role="professor">
@@ -112,7 +112,7 @@ export default function ProfessorDashboard() {
               <div className="flex items-center gap-3">
                 <button type="button" onClick={() => navigate('/professor/home')} className="min-h-touch text-claro-muted hover:text-claro-text text-base transition-colors px-1">Back</button>
                 <div>
-                  <h1 className="text-lg font-semibold text-claro-text tracking-tight">{courseTitle} — Class Overview</h1>
+                  <h1 className="text-lg font-semibold text-claro-text tracking-tight">{courseTitle}: Class Overview</h1>
                   <p className="text-sm text-claro-muted mt-1">
                     {graphData.nodes.length} concepts · {graphData.links.length} connections · 50 students
                     {persona.matched && (
