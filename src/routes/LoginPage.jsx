@@ -66,8 +66,8 @@ export default function LoginPage() {
               <label className="text-sm text-claro-muted mb-2 block font-medium">I am a</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: 'student', label: 'Student' },
                   { value: 'professor', label: 'Professor' },
+                  { value: 'student', label: 'Student' },
                 ].map(r => (
                   <button
                     key={r.value}

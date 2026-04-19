@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import { marketingGraph, comprehensionColor } from '../data/mockGraphMarketing.js'
 
-const DRIFT_ALERTS = [
-  { id: 'positioning',          label: 'Positioning',          delta: -0.14 },
-  { id: 'consumer-behavior',    label: 'Consumer Behavior',    delta: -0.11 },
-  { id: 'marketing-analytics',  label: 'Marketing Analytics',  delta: -0.18 },
-]
 const PATTERN_ALERTS = [
   { id: 'integrated-marketing', label: 'Integrated Marketing Comms', pct: 42, misconception: 'Confusing IMC with social media only' },
   { id: 'value-proposition',    label: 'Value Proposition',          pct: 38, misconception: 'Equating value prop with product features' },
@@ -70,17 +65,6 @@ export default function AlertsSidebar({ collapsed, onToggle }) {
             <button onClick={onToggle} className="text-claro-muted hover:text-claro-text text-xs" type="button" aria-label="Collapse sidebar">Back</button>
           </div>
 
-          {/* Drift alerts */}
-          <Accordion title="Drift Alerts" badge={DRIFT_ALERTS.length} badgeColor="bg-claro-coral">
-            <div className="space-y-2">
-              {DRIFT_ALERTS.map(a => (
-                <div key={a.id} className="flex items-center justify-between">
-                  <span className="text-xs text-claro-muted">{a.label}</span>
-                  <span className="text-xs font-medium text-claro-coral bg-claro-coral/10 border border-claro-coral/22 rounded px-1.5 py-0.5">{a.delta > 0 ? '+' : ''}{Math.round(a.delta * 100)}%</span>
-                </div>
-              ))}
-            </div>
-          </Accordion>
 
           {/* Pattern alerts */}
           <Accordion title="Cohort Patterns" badge={PATTERN_ALERTS.length} badgeColor="bg-claro-amber">
