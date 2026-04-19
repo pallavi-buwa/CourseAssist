@@ -31,7 +31,7 @@ export default function LoginPage() {
   }
 
   return (
-    <LeafBackdrop className="relative flex min-h-screen w-full items-center justify-center bg-claro-canvas p-4">
+    <LeafBackdrop className="relative flex min-h-screen w-full items-center justify-center bg-space-page p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-10">

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
+import { SPACE_BACKGROUND_INT } from '../theme/spaceTheme.js'
 
 // ─── Brain geometry helpers ───────────────────────────────────────────────────
 
@@ -88,12 +89,12 @@ export default function BrainIntro({ onEnter }) {
     renderer.setSize(W, H)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.15
-    renderer.setClearColor(0x000000, 1)
+    renderer.setClearColor(SPACE_BACKGROUND_INT, 1)
     el.appendChild(renderer.domElement)
 
     // ── Scene / Camera ────────────────────────────────────────────────────
     const scene  = new THREE.Scene()
-    scene.fog    = new THREE.FogExp2(0x050505, 0.0014)
+    scene.fog    = new THREE.FogExp2(SPACE_BACKGROUND_INT, 0.00125)
     const camera = new THREE.PerspectiveCamera(55, W / H, 1, 3000)
     camera.position.set(0, 30, 480)
     camera.lookAt(0, 0, 0)
@@ -371,7 +372,7 @@ export default function BrainIntro({ onEnter }) {
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(10, 14, 12, 0.88) 0%, rgba(10, 14, 12, 0.5) 45%, transparent 72%)',
+            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(10, 16, 40, 0.88) 0%, rgba(10, 16, 40, 0.45) 45%, transparent 72%)',
         }}
       />
 

@@ -66,7 +66,7 @@ export default function StudentHome() {
 
   return (
     <RequireAuth role="student">
-      <LeafBackdrop className="min-h-screen bg-claro-midnight">
+      <LeafBackdrop className="min-h-screen bg-space-page">
         <Navbar />
         <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
           {/* Greeting */}

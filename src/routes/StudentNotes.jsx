@@ -161,7 +161,7 @@ export default function StudentNotes() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-space-page">
         <Navbar />
         <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
 

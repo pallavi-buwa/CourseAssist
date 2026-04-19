@@ -112,7 +112,7 @@ export default function StudentPreferences() {
 
   return (
     <RequireAuth role="student">
-      <div className="min-h-screen bg-gray-950">
+      <div className="min-h-screen bg-space-page">
         <Navbar />
         <main className="pt-14">
           <section className="border-b border-gray-800 bg-gray-900">

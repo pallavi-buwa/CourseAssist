@@ -6,7 +6,7 @@ export default {
     extend: {
       colors: {
         gray: {
-          950: '#0a0a0f',
+          950: '#080c1c',
         },
         claro: {
           canvas: 'rgb(var(--tw-claro-canvas) / <alpha-value>)',

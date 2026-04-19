@@ -53,7 +53,7 @@ export default function ProfessorDashboard() {
 
   return (
     <RequireAuth role="professor">
-      <div className="flex min-h-screen flex-col bg-claro-midnight">
+      <div className="flex min-h-screen flex-col bg-space-page">
         <Navbar />
         <div className="flex flex-1 overflow-hidden pt-14">
 
