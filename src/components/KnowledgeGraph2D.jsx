@@ -45,7 +45,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   const linkWidth = useCallback(() => 1, [])
 
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', background: '#111827' }}>
+    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', background: '#110E1A' }}>
       {!FG && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-gray-500 text-sm">Loading graph…</div>
@@ -58,7 +58,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
           graphData={graphData}
           width={dims.width}
           height={dims.height}
-          backgroundColor="#111827"
+          backgroundColor="#110E1A"
           nodeColor={nodeColor}
           nodeVal={nodeVal}
           nodeLabel={nodeLabel}
@@ -76,7 +76,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
       {/* Legend */}
       <div className="absolute top-3 right-3 bg-gray-900/80 border border-gray-700 rounded-lg p-2 flex flex-col gap-1 pointer-events-none">
         <div className="text-[10px] text-gray-500 mb-0.5 uppercase tracking-wider">Comprehension</div>
-        {[['#22c55e', '>70%'], ['#f59e0b', '50–70%'], ['#ef4444', '<50%']].map(([c, l]) => (
+        {[['#9EE4D4', '>70%'], ['#FFD6A8', '50–70%'], ['#FFB8C8', '<50%']].map(([c, l]) => (
           <div key={l} className="flex items-center gap-1.5 text-[10px] text-gray-300">
             <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: c }} />{l}
           </div>

@@ -38,7 +38,7 @@ export default function MicroCheckGenerator({ onClose }) {
           <textarea
             value={text}
             onChange={e => setText(e.target.value)}
-            className="w-full h-32 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-indigo-500"
+            className="w-full h-32 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-claro-indigo"
             placeholder="Paste course content here…"
           />
 
@@ -65,7 +65,7 @@ export default function MicroCheckGenerator({ onClose }) {
                         {j === q.correct && <span>✓</span>}
                         {opt}
                         {j !== q.correct && q.misconceptions?.[j] && (
-                          <span className="ml-auto text-amber-500/70 italic">{q.misconceptions[j]}</span>
+                          <span className="ml-auto text-claro-amber/70 italic">{q.misconceptions[j]}</span>
                         )}
                       </div>
                     ))}
@@ -78,7 +78,7 @@ export default function MicroCheckGenerator({ onClose }) {
 
         <div className="px-6 py-4 border-t border-gray-800 flex gap-3">
           <button onClick={handleGenerate} disabled={loading || !text.trim()}
-            className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+            className="flex-1 bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors">
             {loading ? 'Generating…' : 'Generate questions'}
           </button>
           {questions && !published && (

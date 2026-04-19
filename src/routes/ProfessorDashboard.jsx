@@ -52,7 +52,7 @@ export default function ProfessorDashboard() {
 
   return (
     <RequireAuth role="professor">
-      <div className="min-h-screen bg-gray-950 flex flex-col">
+      <div className="min-h-screen bg-claro-midnight flex flex-col">
         <Navbar />
         <div className="pt-14 flex flex-1 overflow-hidden">
 
@@ -78,7 +78,7 @@ export default function ProfessorDashboard() {
               <div className="flex items-center gap-2">
                 {/* Live indicator */}
                 <div className="flex items-center gap-1.5 text-xs text-gray-500 mr-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-claro-sage animate-pulse" />
                   Live sync
                 </div>
 
@@ -90,7 +90,7 @@ export default function ProfessorDashboard() {
                 </button>
                 <button
                   onClick={() => setShowGenerator(true)}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                  className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
                 >
                   + From syllabus
                 </button>
@@ -100,9 +100,9 @@ export default function ProfessorDashboard() {
             {/* Legend */}
             <div className="flex items-center gap-5 px-5 py-2 border-b border-gray-800">
               {[
-                { color: '#22c55e', label: 'Strong (≥70%)' },
-                { color: '#eab308', label: 'Developing (50–69%)' },
-                { color: '#ef4444', label: 'Needs work (<50%)' },
+                { color: '#9EE4D4', label: 'Strong (≥70%)' },
+                { color: '#FFD6A8', label: 'Developing (50–69%)' },
+                { color: '#FFB8C8', label: 'Needs work (<50%)' },
               ].map(l => (
                 <div key={l.label} className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />

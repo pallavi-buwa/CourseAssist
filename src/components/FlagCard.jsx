@@ -22,7 +22,7 @@ export default function FlagCard({ phrase, category, affected, suggestion }) {
     <div className="rounded-xl border border-gray-800 bg-gray-900 p-4 fade-in" style={{ minHeight: 120 }}>
       {/* Top: flagged phrase + category badge */}
       <div className="flex items-start justify-between gap-2 mb-2">
-        <span className="bg-amber-500/15 text-amber-400 border border-amber-500/30 rounded px-2 py-0.5 text-xs font-medium">
+        <span className="bg-claro-amber/15 text-claro-amber border border-claro-amber/30 rounded px-2 py-0.5 text-xs font-medium">
           "{phrase}"
         </span>
         <span className={`border rounded px-2 py-0.5 text-[10px] font-medium flex-shrink-0 ${catCls}`}>

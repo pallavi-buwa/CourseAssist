@@ -69,7 +69,7 @@ export default function NotesWorkspace({ onClose }) {
                 value={nodeSearch}
                 onChange={e => setNodeSearch(e.target.value)}
                 placeholder="Attach to node…"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-claro-indigo"
               />
               {nodeSearch && (
                 <div className="absolute bottom-full mb-1 left-0 right-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl max-h-32 overflow-y-auto z-10">
@@ -89,7 +89,7 @@ export default function NotesWorkspace({ onClose }) {
               <input type="file" accept=".pdf,image/*" className="hidden" onChange={handleFile} />
             </label>
 
-            <button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors">Save</button>
+            <button onClick={handleSave} className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors">Save</button>
           </div>
           {uploadedFile && <p className="text-xs text-green-400">{uploadedFile}</p>}
         </div>
@@ -101,7 +101,7 @@ export default function NotesWorkspace({ onClose }) {
             <div key={n.id} className="bg-gray-800 rounded-lg p-3 border border-gray-700">
               <p className="text-xs text-gray-300 leading-relaxed mb-1 line-clamp-3">{n.text}</p>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] text-indigo-400">{n.node}</span>
+                <span className="text-[10px] text-claro-indigo">{n.node}</span>
                 <span className="text-[10px] text-gray-600">{n.timestamp}</span>
               </div>
             </div>
