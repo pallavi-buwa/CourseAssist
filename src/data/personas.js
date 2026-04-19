@@ -1,4 +1,4 @@
-/** Demo personas: sign in with these emails (any password flow — email + role) for distinct graphs and UI accents. */
+/** Demo personas: sign in with these emails (any password flow: email + role) for distinct graphs and UI accents. */
 
 function norm(email) {
   return String(email || '').trim().toLowerCase()
@@ -17,12 +17,8 @@ const DEFAULT_STUDENT = {
   /** Dynamic panels merge with subjects from the graph when `focusPanels` is empty. */
   contentHub: {
     title: 'Content workspace',
-    lead: 'Readings and generators follow the subjects on your graph. Open any course below, or use Notes → Content for mind maps.',
-    bullets: [
-      'Course list below updates automatically from your knowledge graph.',
-      'Click a graph node → use “How well you know this” to change its color (saved on this device).',
-      'Linked concepts sit closer together in the 3D view.',
-    ],
+    lead: 'Choose a course to start.',
+    bullets: [],
     focusPanels: [],
   },
 }
@@ -42,7 +38,7 @@ const DEFAULT_PROFESSOR = {
 export const STUDENT_PERSONA_BY_EMAIL = {
   'alex.analyst@claro.demo': {
     id: 'analyst',
-    label: 'Alex — Analyst track',
+    label: 'Alex (Analyst track)',
     accentHex: '#9EE4D4',
     tagline: 'Your graph emphasizes analytics, forecasting, and evidence-based decisions.',
     studentGraphKey: 'analyst',
@@ -60,23 +56,23 @@ export const STUDENT_PERSONA_BY_EMAIL = {
     graphFocus:
       'Strong in quantitative reasoning. Weight nodes toward predictive analytics, data-driven strategy, marketing analytics, measurement, and risk modeling across the three MBA courses.',
     contentHub: {
-      title: 'Analyst track — labs & readings',
-      lead: 'Your persona uses three lab-style subjects (see Home and graph tabs). Drill the ones where you want sharper quantitative intuition.',
+      title: 'Analyst track',
+      lead: 'Labs and readings.',
       bullets: [
-        'Forecasting & KPI Lab — experiments, forecasting, and KPI guardrails.',
-        'Decision Analytics Core — competitive views, scorecards, and quant risk.',
-        'Venture Metrics Studio — unit economics, PMF metrics, and cohort growth.',
+        'Forecasting & KPI Lab',
+        'Decision Analytics Core',
+        'Venture Metrics Studio',
       ],
       focusPanels: [
-        { heading: 'Forecasting & KPI Lab', body: 'Regression, demand curves, A/B tests, and predictive workflows.', courseTitle: 'Forecasting & KPI Lab' },
-        { heading: 'Decision Analytics Core', body: 'Competitive sets, balanced scorecards, and quantified risk.', courseTitle: 'Decision Analytics Core' },
-        { heading: 'Venture Metrics Studio', body: 'Unit economics, PMF signals, and funnel math.', courseTitle: 'Venture Metrics Studio' },
+        { heading: 'Forecasting & KPI Lab', body: 'Forecasting, experiments, and KPIs.', courseTitle: 'Forecasting & KPI Lab' },
+        { heading: 'Decision Analytics Core', body: 'Scorecards and quantified risk.', courseTitle: 'Decision Analytics Core' },
+        { heading: 'Venture Metrics Studio', body: 'Unit economics and cohort metrics.', courseTitle: 'Venture Metrics Studio' },
       ],
     },
   },
   'sam.creative@claro.demo': {
     id: 'creative',
-    label: 'Sam — Creative / brand track',
+    label: 'Sam (Creative and brand track)',
     accentHex: '#FFD6A8',
     tagline: 'Your graph highlights positioning, narrative, and entrepreneurial storytelling.',
     studentGraphKey: 'creative',
@@ -94,23 +90,23 @@ export const STUDENT_PERSONA_BY_EMAIL = {
     graphFocus:
       'Creative and brand-oriented learner. Emphasize positioning, value proposition, growth, culture, pitching, and narrative-heavy concepts across courses; fewer pure-technical nodes.',
     contentHub: {
-      title: 'Creative track — story & brand',
-      lead: 'Subjects emphasize narrative, positioning, and venture storytelling. Use readings to rehearse how you explain each arc.',
+      title: 'Creative track',
+      lead: 'Story, positioning, and brand.',
       bullets: [
-        'Brand & AI Signals — ethical AI stories and customer language.',
-        'Culture & Positioning Studio — culture, stakeholders, and change comms.',
-        'Venture Narrative Lab — pitch, PMF story, growth loops, pivots.',
+        'Brand & AI Signals',
+        'Culture & Positioning Studio',
+        'Venture Narrative Lab',
       ],
       focusPanels: [
-        { heading: 'Brand & AI Signals', body: 'Voice, NLP for insight, and responsible storytelling.', courseTitle: 'Brand & AI Signals' },
-        { heading: 'Culture & Positioning Studio', body: 'Positioning, culture, stakeholders, and change narratives.', courseTitle: 'Culture & Positioning Studio' },
-        { heading: 'Venture Narrative Lab', body: 'Pitch structure, PMF as story, growth loops, pivots.', courseTitle: 'Venture Narrative Lab' },
+        { heading: 'Brand & AI Signals', body: 'Voice and responsible storytelling.', courseTitle: 'Brand & AI Signals' },
+        { heading: 'Culture & Positioning Studio', body: 'Positioning and stakeholder framing.', courseTitle: 'Culture & Positioning Studio' },
+        { heading: 'Venture Narrative Lab', body: 'Pitch structure and PMF story.', courseTitle: 'Venture Narrative Lab' },
       ],
     },
   },
   'jordan.ops@claro.demo': {
     id: 'operator',
-    label: 'Jordan — Execution / ops track',
+    label: 'Jordan (Execution and ops track)',
     accentHex: '#FFB8C8',
     tagline: 'Your graph stresses implementation, change, and getting initiatives to land.',
     studentGraphKey: 'operator',
@@ -128,27 +124,27 @@ export const STUDENT_PERSONA_BY_EMAIL = {
     graphFocus:
       'Operations- and implementation-minded. Emphasize process automation, AI implementation, change management, stakeholder management, MVP, fundraising mechanics, and execution bridges between strategy and delivery.',
     contentHub: {
-      title: 'Operator track — ship & scale',
-      lead: 'Your subjects stress deployment, change, and delivery. Pair readings with the graph to see how execution topics connect.',
+      title: 'Operator track',
+      lead: 'Execution and operations.',
       bullets: [
-        'Systems & Responsible AI — automation, rollout, ROI, ethics.',
-        'Change & Execution — stakeholders, M&A integration, global execution.',
-        'Build & Scale Practice — lean ops, MVP delivery, fundraising execution, scale.',
+        'Systems & Responsible AI',
+        'Change & Execution',
+        'Build & Scale Practice',
       ],
       focusPanels: [
-        { heading: 'Systems & Responsible AI', body: 'Automation, implementation, ROI cases, and guardrails.', courseTitle: 'Systems & Responsible AI' },
-        { heading: 'Change & Execution', body: 'Change programs, stakeholder rollouts, M&A and global execution.', courseTitle: 'Change & Execution' },
-        { heading: 'Build & Scale Practice', body: 'Lean ops, MVPs, fundraising mechanics, scaling playbooks.', courseTitle: 'Build & Scale Practice' },
+        { heading: 'Systems & Responsible AI', body: 'Automation, rollout, and guardrails.', courseTitle: 'Systems & Responsible AI' },
+        { heading: 'Change & Execution', body: 'Change programs and stakeholder rollout.', courseTitle: 'Change & Execution' },
+        { heading: 'Build & Scale Practice', body: 'Lean ops and scaling basics.', courseTitle: 'Build & Scale Practice' },
       ],
     },
   },
 }
 
-/** Professor demo accounts — different cohort narratives + 2D graph variants */
+/** Professor demo accounts: different cohort narratives + 2D graph variants */
 export const PROFESSOR_PERSONA_BY_EMAIL = {
   'morgan.research@claro.demo': {
     id: 'morgan',
-    label: 'Prof. Morgan — Research-led marketing',
+    label: 'Prof. Morgan (Research-led marketing)',
     accentHex: '#C4B5FF',
     tagline: 'Cohort A: heavier analytics; watch Marketing Analytics and positioning gaps.',
     professorGraphVariant: 'marketing_research',
@@ -159,7 +155,7 @@ export const PROFESSOR_PERSONA_BY_EMAIL = {
   },
   'chen.strategy@claro.demo': {
     id: 'chen',
-    label: 'Prof. Chen — Strategy-first lens',
+    label: 'Prof. Chen (Strategy-first lens)',
     accentHex: '#8EE4D2',
     tagline: 'Cohort B: stronger on frameworks; consumer journey and retention need attention.',
     professorGraphVariant: 'marketing_strategy',

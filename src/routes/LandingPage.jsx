@@ -8,13 +8,13 @@ export default function LandingPage() {
   const [show, setShow] = useState(false)
   useEffect(() => { requestAnimationFrame(() => setShow(true)) }, [])
 
-const goSignup = () => { navigate('/login') }
-const goStudent = () => {
-  const u = login('demo@university.edu', 'student')
-  u.preferencesComplete = true
-  localStorage.setItem('eg_user', JSON.stringify(u))
-  window.location.href = '/student/home'
-}
+  const goSignup = () => { navigate('/login') }
+  const goStudent = () => {
+    const u = login('demo@university.edu', 'student')
+    u.preferencesComplete = true
+    localStorage.setItem('eg_user', JSON.stringify(u))
+    window.location.href = '/student/home'
+  }
   const fade = d => ({
     opacity: show ? 1 : 0,
     transform: show ? 'translateY(0)' : 'translateY(20px)',
@@ -44,7 +44,7 @@ const goStudent = () => {
         <div style={fade(0.25)}>
           <div style={{ width: 48, height: 2, background: '#ef4444', marginBottom: 20 }} />
           <p style={{ fontSize: 17, lineHeight: 1.7, color: '#706d63', maxWidth: 460, fontWeight: 300 }}>
-            An AI comprehension layer that turns raw quiz scores into diagnoses — prerequisite gaps, language barriers, and predicted exam outcomes. Your LMS shows you the number. Claro shows you the picture.
+            Turn quiz scores into clear next steps. Your LMS shows the number. Claro shows the why.
           </p>
         </div>
         <div style={{ ...fade(0.4), display: 'flex', gap: 12, marginTop: 40 }}>
@@ -76,10 +76,10 @@ const goStudent = () => {
         <h2 style={{ fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: 600, lineHeight: 1.2, marginBottom: 36, maxWidth: 480 }}>Paste your syllabus. Watch your course come alive.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {[
-            { n: '01', t: 'The graph appears', b: "Paste your syllabus. AI extracts concepts and maps dependencies. You've taught this for years. You've never seen it this way." },
-            { n: '02', t: 'Exam data lights it up', b: "Import quiz results from your LMS. Nodes turn green, yellow, red. See where the class understands — and where they're lost." },
-            { n: '03', t: 'Click to diagnose', b: 'Click a red node. See why students failed — concept gap, language barrier, missing prerequisite. Get a 5-minute fix.' },
-            { n: '04', t: 'Predict the future', b: "Paste your upcoming midterm. The graph predicts outcomes before students sit down." },
+            { n: '01', t: 'Build your map', b: 'Paste your syllabus. Get a concept map in seconds.' },
+            { n: '02', t: "See what's working", b: "Import quiz results. Spot what's solid and what needs review." },
+            { n: '03', t: 'Diagnose fast', b: 'Click a weak concept. See the likely cause and a quick fix.' },
+            { n: '04', t: 'Preview outcomes', b: 'Paste an upcoming exam. See where students may struggle.' },
           ].map(c => (
             <Card key={c.n} {...c} />
           ))}
@@ -93,9 +93,9 @@ const goStudent = () => {
           <h2 style={{ fontSize: 'clamp(20px, 3vw, 30px)', fontWeight: 600, lineHeight: 1.2, marginBottom: 28, maxWidth: 440 }}>Analytical, not conversational. No chatbot. No tutor.</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
             {[
-              { l: 'Comprehension decomposition', b: 'Turns "45%" into "prerequisite gap from Week 3 + language filter." The score becomes a diagnosis.' },
-              { l: 'Material analysis', b: 'Reads your exam before students see it. Flags phrasing that filters non-native speakers.' },
-              { l: 'Cohort pattern detection', b: '"Q3 and Q7 test the same concept. Q3 averages 52%. Q7 averages 83%. The difference is two words."' },
+              { l: 'Score to cause', b: 'Turns a score into the most likely reason.' },
+              { l: 'Material scan', b: 'Flags confusing or biased phrasing.' },
+              { l: 'Cohort patterns', b: 'Surfaces repeat issues across the class.' },
             ].map(c => (
               <div key={c.l} style={{ padding: 20, border: '1px solid #1a1a25', borderRadius: 6, background: '#0a0a0f' }}>
                 <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#ef4444', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{c.l}</p>
@@ -133,7 +133,7 @@ const goStudent = () => {
 
       <footer style={{ padding: '16px 36px', borderTop: '1px solid #1a1a25', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: 1100, margin: '0 auto' }}>
         <span style={{ fontSize: 15, fontWeight: 600 }}>Claro<span style={{ color: '#ef4444' }}>.</span></span>
-        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#475569', letterSpacing: '0.06em', textTransform: 'uppercase' }}>JHU Product Hackathon 2026 — Round 2</span>
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: '#475569', letterSpacing: '0.06em', textTransform: 'uppercase' }}>JHU Product Hackathon 2026, Round 2</span>
       </footer>
     </div>
   )

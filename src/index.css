@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+
   /* ~18px root: readable body copy + scales rem-based spacing */
   html {
     font-size: 112.5%;
   }
+
   body {
     @apply antialiased;
     line-height: 1.65;
@@ -14,19 +16,23 @@
   }
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 /*
  * Brand: black · red · yellow · green (Brandon Grotesque in index.html)
  * Legacy token names kept so Tailwind classes map without a full re-skin pass:
- *   claro-indigo  → primary coral-red (#E25850) — CTAs, primary borders
+ *   claro-indigo  → primary coral-red (#E25850) - CTAs, primary borders
  *   claro-amber   → yellow (secondary labels / warnings)
- *   claro-coral   → red (alerts / risk) — aligned with primary red
+ *   claro-coral   → red (alerts / risk) - aligned with primary red
  *   claro-sage    → lighter green (success highlights)
  *   claro-green   → brand green (non-button accents, graphs, scrollbar)
  */
 :root {
-  /* Deep space (nebula + stars via body::before) — not flat black */
+  /* Deep space (nebula + stars via body::before) - not flat black */
   --tw-claro-canvas: 10 16 40;
   --tw-claro-panel: 22 26 48;
   --tw-claro-slate: 38 44 72;
@@ -36,7 +42,7 @@
   --tw-claro-red: 226 88 80;
   --tw-claro-yellow: 234 179 8;
   --tw-claro-sage: 74 222 128;
-  /* Primary UI accent (buttons, filled CTAs) — #E25850 */
+  /* Primary UI accent (buttons, filled CTAs) - #E25850 */
   --tw-claro-indigo: 226 88 80;
   --tw-claro-amber: 234 179 8;
   --tw-claro-coral: 226 88 80;
@@ -45,7 +51,7 @@
   --tw-border: 55 62 88;
   --font-brand: 'Brandon Grotesque', system-ui, -apple-system, sans-serif;
 
-  /* Shared backdrop (gradients + stars) — also applied via .bg-space-page */
+  /* Shared backdrop (gradients + stars) - also applied via .bg-space-page */
   --bg-aurora:
     conic-gradient(from 210deg at 80% 15%, rgba(139, 92, 246, 0.05) 0deg, transparent 55deg),
     conic-gradient(from 30deg at 15% 25%, rgba(45, 212, 191, 0.04) 0deg, transparent 70deg),
@@ -74,27 +80,21 @@
     radial-gradient(1.2px 1.2px at 73% 33%, rgba(255, 220, 200, 0.15), transparent);
   /* Fine grids + neural mesh (repeating) */
   --bg-pattern-dots: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  --bg-pattern-diagonal: repeating-linear-gradient(
-    125deg,
-    transparent,
-    transparent 14px,
-    rgba(99, 102, 241, 0.04) 14px,
-    rgba(99, 102, 241, 0.04) 15px
-  );
-  --bg-pattern-cross: repeating-linear-gradient(
-      0deg,
+  --bg-pattern-diagonal: repeating-linear-gradient(125deg,
+      transparent,
+      transparent 14px,
+      rgba(99, 102, 241, 0.04) 14px,
+      rgba(99, 102, 241, 0.04) 15px);
+  --bg-pattern-cross: repeating-linear-gradient(0deg,
       transparent,
       transparent 35px,
       rgba(139, 92, 246, 0.035) 35px,
-      rgba(139, 92, 246, 0.035) 36px
-    ),
-    repeating-linear-gradient(
-      90deg,
+      rgba(139, 92, 246, 0.035) 36px),
+    repeating-linear-gradient(90deg,
       transparent,
       transparent 35px,
       rgba(99, 102, 241, 0.03) 35px,
-      rgba(99, 102, 241, 0.03) 36px
-    );
+      rgba(99, 102, 241, 0.03) 36px);
 }
 
 html {
@@ -102,7 +102,9 @@ html {
   background-color: rgb(var(--tw-claro-canvas));
 }
 
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
   min-height: 100%;
   font-family: var(--font-brand);
@@ -125,7 +127,7 @@ body::before {
   background-repeat: no-repeat, no-repeat;
 }
 
-/* Dot grid + line mesh — sits above gradient wash */
+/* Dot grid + line mesh - sits above gradient wash */
 body::after {
   content: '';
   position: fixed;
@@ -145,65 +147,152 @@ body::after {
 
 /*
  * Route shells: transparent so fixed body::before (aurora + stars) and body::after
- * (grids + dots) stay visible — avoids duplicating 20+ background layers.
+ * (grids + dots) stay visible - avoids duplicating 20+ background layers.
  */
 .bg-space-page {
   background: transparent;
 }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: rgb(var(--tw-claro-slate) / 0.6); }
-::-webkit-scrollbar-thumb { background: rgb(var(--tw-claro-green) / 0.55); border-radius: 2px; }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--tw-claro-slate) / 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--tw-claro-green) / 0.55);
+  border-radius: 2px;
+}
 
 /* Brain intro */
 @keyframes pulse-glow {
-  0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
 }
-.live-pulse { animation: pulse-glow 1.5s ease-in-out infinite; }
+
+.live-pulse {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
 
 /* Slide animations */
 @keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
+
 @keyframes slideInUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.fade-in { animation: fadeIn 0.3s ease-out forwards; }
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
 
 /* Loading skeleton */
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-.skeleton { animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite; }
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1
+  }
+
+  50% {
+    opacity: .5
+  }
+}
+
+.skeleton {
+  animation: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
+}
 
 /* Node color transitions for 2D graph */
-.node-circle { transition: fill 800ms ease-in-out; }
+.node-circle {
+  transition: fill 800ms ease-in-out;
+}
 
 /* Vignette overlay for brain intro */
 .vignette::after {
   content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%);
-  pointer-events: none; z-index: 5;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%);
+  pointer-events: none;
+  z-index: 5;
 }
 
 @keyframes tree-sway-l {
-  0%, 100% { transform: translateX(0) rotate(-0.5deg); }
-  50% { transform: translateX(4px) rotate(0.4deg); }
+
+  0%,
+  100% {
+    transform: translateX(0) rotate(-0.5deg);
+  }
+
+  50% {
+    transform: translateX(4px) rotate(0.4deg);
+  }
 }
+
 @keyframes tree-sway-r {
-  0%, 100% { transform: translateX(0) rotate(0.4deg); }
-  50% { transform: translateX(-4px) rotate(-0.35deg); }
+
+  0%,
+  100% {
+    transform: translateX(0) rotate(0.4deg);
+  }
+
+  50% {
+    transform: translateX(-4px) rotate(-0.35deg);
+  }
 }
-.tree-sway-left { animation: tree-sway-l 10s ease-in-out infinite; }
-.tree-sway-right { animation: tree-sway-r 12s ease-in-out infinite 1s; }
+
+.tree-sway-left {
+  animation: tree-sway-l 10s ease-in-out infinite;
+}
+
+.tree-sway-right {
+  animation: tree-sway-r 12s ease-in-out infinite 1s;
+}
 
 @media (prefers-reduced-motion: reduce) {
+
   .tree-sway-left,
-  .tree-sway-right { animation: none !important; }
-  body::after { opacity: 0.4; }
+  .tree-sway-right {
+    animation: none !important;
+  }
+
+  body::after {
+    opacity: 0.4;
+  }
 }

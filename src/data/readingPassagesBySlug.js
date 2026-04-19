@@ -32,7 +32,7 @@ const TRIPLE_DEFAULT = [
     'elaboration',
   ],
   [
-    'Self-check: explain the module goal aloud in under thirty seconds. If you cannot, revisit the section that felt fastest to read—often that is where subtle definitions hide.',
+    'Self-check: explain the module goal aloud in under thirty seconds. If you cannot, revisit the section that felt fastest to read. Often that is where subtle definitions hide.',
     'A quick self-test is useful when:',
     ['You want speed only', 'You are unsure you can summarize the goal', 'The font is small'],
     1,
@@ -78,7 +78,7 @@ const PASSAGES_BY_SLUG = {
     4,
     [
       [
-        'Strategy is the pattern of choices that positions a firm in its environment. Generic goals like “grow revenue” are not strategy until they imply what you will not do—because trade-offs are what make a position defensible.',
+        'Strategy is the pattern of choices that positions a firm in its environment. Generic goals like “grow revenue” are not strategy until they imply what you will not do, because trade-offs are what make a position defensible.',
         'A strategy is weakest when it:',
         ['Says yes to every attractive opportunity', 'Names a few coherent trade-offs', 'Aligns with capabilities'],
         0,
@@ -92,7 +92,7 @@ const PASSAGES_BY_SLUG = {
         'industry-analysis',
       ],
       [
-        'Implementation beats elegant planning. Strategy connects to budgets, incentives, and operating rhythms—otherwise “strategy” is only a slide title.',
+        'Implementation beats elegant planning. Strategy connects to budgets, incentives, and operating rhythms. Otherwise “strategy” is only a slide title.',
         'Strategy connects to execution through:',
         ['Only vision statements', 'Budgets, incentives, and operating cadence', 'Avoiding finance'],
         1,
@@ -114,7 +114,7 @@ const PASSAGES_BY_SLUG = {
         'discovery',
       ],
       [
-        'Investors read traction as proof of demand and execution—not vanity metrics. Consistent cohort behavior beats one-off spikes when you tell a credible story.',
+        'Investors read traction as proof of demand and execution, not vanity metrics. Consistent cohort behavior beats one-off spikes when you tell a credible story.',
         'Strong traction evidence usually includes:',
         ['Only logo slides', 'Repeatable customer behavior over time', 'A long feature list'],
         1,
@@ -144,7 +144,7 @@ const PASSAGES_BY_SLUG = {
         'forecast-spec',
       ],
       [
-        'KPIs fail when they optimize local numbers that harm the system—like pushing sales without margin discipline. Good KPI trees connect leading indicators to lagging outcomes the leadership team actually owns.',
+        'KPIs fail when they optimize local numbers that harm the system, like pushing sales without margin discipline. Good KPI trees connect leading indicators to lagging outcomes the leadership team actually owns.',
         'A KPI set is healthier when:',
         ['Each team maximizes its own metric blindly', 'Leading indicators tie to shared outcomes', 'There are hundreds of KPIs'],
         1,
@@ -166,7 +166,7 @@ const PASSAGES_BY_SLUG = {
     4,
     [
       [
-        'Quantitative risk combines scenarios, sensitivities, and distributions—not only single-point estimates. The goal is to describe how bad “bad” can get under plausible futures.',
+        'Quantitative risk combines scenarios, sensitivities, and distributions, not only single-point estimates. The goal is to describe how bad “bad” can get under plausible futures.',
         'Quant risk is most useful for:',
         ['Eliminating judgment', 'Mapping plausible downside and upside', 'Replacing meetings'],
         1,
@@ -180,7 +180,7 @@ const PASSAGES_BY_SLUG = {
         'competition',
       ],
       [
-        'Balanced scorecards translate strategy into metrics across financial, customer, process, and learning perspectives—so short-term wins do not cannibalize long-term capability.',
+        'Balanced scorecards translate strategy into metrics across financial, customer, process, and learning perspectives, so short-term wins do not cannibalize long-term capability.',
         'Scorecards help teams:',
         ['Track only quarterly profit', 'Balance short-term and long-term drivers', 'Avoid customer metrics'],
         1,
@@ -202,7 +202,7 @@ const PASSAGES_BY_SLUG = {
         'unit-econ',
       ],
       [
-        'PMF metrics blend retention, depth of usage, and organic pull—not a single vanity spike. Look for cohorts that stabilize rather than decay to zero.',
+        'PMF metrics blend retention, depth of usage, and organic pull, not a single vanity spike. Look for cohorts that stabilize rather than decay to zero.',
         'A PMF signal is stronger when:',
         ['Cohorts stabilize or improve over time', 'Only top-of-funnel grows', 'Churn is ignored'],
         0,
@@ -254,7 +254,7 @@ const PASSAGES_BY_SLUG = {
     4,
     [
       [
-        'Positioning is the promise kept consistently—product, pricing, service, and narrative must line up. Drift between promise and experience erodes trust faster than weak ads.',
+        'Positioning is the promise kept consistently. Product, pricing, service, and narrative must line up. Drift between promise and experience erodes trust faster than weak ads.',
         'Positioning breaks down when:',
         ['Promise and experience drift apart', 'Ads are colorful', 'Competitors exist'],
         0,
@@ -290,7 +290,7 @@ const PASSAGES_BY_SLUG = {
         'pitch',
       ],
       [
-        'PMF as a story ties user pain, behavior change, and repeatable acquisition—so each slide answers “why you?” not only “what it is.”',
+        'PMF as a story ties user pain, behavior change, and repeatable acquisition, so each slide answers “why you?” not only “what it is.”',
         'A PMF story should show:',
         ['Only screenshots', 'Pain, behavior change, and repeatable acquisition', 'Office photos'],
         1,
@@ -327,7 +327,7 @@ const PASSAGES_BY_SLUG = {
         'implementation',
       ],
       [
-        'ROI ties benefits, costs, and risk over an explicit horizon—otherwise “success” cannot be debated honestly.',
+        'ROI ties benefits, costs, and risk over an explicit horizon. Otherwise “success” cannot be debated honestly.',
         'A business case should quantify:',
         ['Only benefits', 'Benefits, costs, and risk over time', 'Only costs'],
         1,
@@ -342,7 +342,7 @@ const PASSAGES_BY_SLUG = {
     4,
     [
       [
-        'Change management sequences wins, trains coaches, and measures adoption—not only announcements. Resistance is information about missing incentives or skills.',
+        'Change management sequences wins, trains coaches, and measures adoption, not only announcements. Resistance is information about missing incentives or skills.',
         'Change programs improve when:',
         ['Only emails are sent', 'Wins, coaches, and adoption metrics exist', 'Deadlines are secret'],
         1,
@@ -356,7 +356,7 @@ const PASSAGES_BY_SLUG = {
         'stakeholders',
       ],
       [
-        'M&A integration succeeds when Day-1 decisions on customers, products, and people are rehearsed—not improvised at signing.',
+        'M&A integration succeeds when Day-1 decisions on customers, products, and people are rehearsed, not improvised at signing.',
         'Integration planning should rehearse:',
         ['Only press releases', 'Day-1 customer, product, and people decisions', 'Only finance models'],
         1,
@@ -378,7 +378,7 @@ const PASSAGES_BY_SLUG = {
         'lean',
       ],
       [
-        'MVP delivery scopes the smallest thing that tests the riskiest assumption—not the smallest thing that is easy to build.',
+        'MVP delivery scopes the smallest thing that tests the riskiest assumption, not the smallest thing that is easy to build.',
         'An MVP should test:',
         ['Every feature at once', 'The riskiest assumption cheaply', 'Only UI polish'],
         1,

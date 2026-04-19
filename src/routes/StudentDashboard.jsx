@@ -37,14 +37,14 @@ export default function StudentDashboard() {
   const navigate = useNavigate()
   const persona = useMemo(() => resolvePersona(user?.email, 'student'), [user?.email])
 
-  const [selectedNode, setSelectedNode]       = useState(null)
+  const [selectedNode, setSelectedNode] = useState(null)
   /** null = all subjects; non-empty array = highlight only those courses (OR) */
   const [subjectSelection, setSubjectSelection] = useState(null)
   /** 'graph' | 'content' hub */
-  const [view, setView]                         = useState('graph')
-  const [showGenerator, setShowGenerator]     = useState(false)
-  const [graphData, setGraphData]             = useState(() => getStaticStudentGraphForPersona({}))
-  const [masteryTick, setMasteryTick]         = useState(0)
+  const [view, setView] = useState('graph')
+  const [showGenerator, setShowGenerator] = useState(false)
+  const [graphData, setGraphData] = useState(() => getStaticStudentGraphForPersona({}))
+  const [masteryTick, setMasteryTick] = useState(0)
 
   const masteryMap = useMemo(() => readNodeMasteryMap(user?.email), [user?.email, masteryTick])
 
@@ -98,16 +98,16 @@ export default function StudentDashboard() {
     if (readCachedStudentAIGraph(user.email)) return
 
     let cancelled = false
-    ;(async () => {
-      try {
-        const g = await generatePersonaStudentKnowledgeGraph(p, user.name || user.email)
-        if (cancelled || !g?.nodes?.length) return
-        writeCachedStudentAIGraph(user.email, g)
-        setGraphData(g)
-      } catch {
-        /* keep static / persona fallback graph */
-      }
-    })()
+      ; (async () => {
+        try {
+          const g = await generatePersonaStudentKnowledgeGraph(p, user.name || user.email)
+          if (cancelled || !g?.nodes?.length) return
+          writeCachedStudentAIGraph(user.email, g)
+          setGraphData(g)
+        } catch {
+          /* keep static / persona fallback graph */
+        }
+      })()
     return () => { cancelled = true }
   }, [user?.email, user?.name, persona.id])
 
@@ -172,24 +172,16 @@ export default function StudentDashboard() {
               </p>
             </div>
 
-            {/* Subject pills: multi-select (OR) + Content — touch targets from main UI pass */}
+            {/* Subject pills */}
             <div className="flex flex-col items-end gap-1.5 max-w-[min(100%,42rem)]">
-              <p className="hidden text-[10px] text-claro-muted text-right max-w-full leading-snug sm:block">
-                <span className="font-medium uppercase tracking-wide text-claro-muted/90">Courses</span>
-                {' — '}
-                <span title="Each pill toggles on/off; more than one can stay selected">
-                  click several pills to highlight them together; click again to remove one. All shows every course.
-                </span>
-              </p>
               <div className="flex flex-wrap items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={clearSubjectFilters}
-                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all ${
-                    subjectSelection === null
-                      ? 'text-white border-transparent'
-                      : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
-                  }`}
+                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all ${subjectSelection === null
+                    ? 'text-white border-transparent'
+                    : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
+                    }`}
                   style={
                     subjectSelection === null
                       ? { backgroundColor: persona.accentHex, borderColor: persona.accentHex }
@@ -206,17 +198,16 @@ export default function StudentDashboard() {
                       key={title}
                       type="button"
                       onClick={() => { setView('graph'); toggleSubject(title) }}
-                      className={`min-h-touch inline-flex items-center max-w-[12rem] truncate text-sm px-4 py-2 rounded-full border transition-all ${
-                        on
-                          ? 'text-white border-transparent'
-                          : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
-                      }`}
+                      className={`min-h-touch inline-flex items-center max-w-[12rem] truncate text-sm px-4 py-2 rounded-full border transition-all ${on
+                        ? 'text-white border-transparent'
+                        : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
+                        }`}
                       style={
                         on
                           ? { backgroundColor: persona.accentHex, borderColor: persona.accentHex }
                           : undefined
                       }
-                      title={`${title} — click again to remove; click other courses to add more`}
+                      title={`${title}: click again to remove; click other courses to add more`}
                     >
                       {compactSubjectLabel(title, 18)}
                     </button>
@@ -225,19 +216,15 @@ export default function StudentDashboard() {
                 <button
                   type="button"
                   onClick={() => { setView('content'); setSelectedNode(null) }}
-                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all font-medium ${
-                    view === 'content'
-                      ? 'bg-claro-indigo border-claro-indigo text-white'
-                      : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
-                  }`}
-                  title="Readings and materials (same for every subject layout)"
+                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all font-medium ${view === 'content'
+                    ? 'bg-claro-indigo border-claro-indigo text-white'
+                    : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
+                    }`}
+                  title="Readings and tools"
                 >
                   Content
                 </button>
               </div>
-              <p className="hidden text-[10px] text-claro-muted/90 text-right max-w-full leading-snug md:block">
-                Map: +/− zoom, Fit, full screen, PNG download (top-left on the graph).
-              </p>
             </div>
 
             {/* Actions */}
@@ -285,14 +272,11 @@ export default function StudentDashboard() {
             </div>
           </div>
 
-          {/* Graph + detail panel — or Content hub (min height so 3D canvas always gets non-zero layout) */}
+          {/* Graph + detail panel - or Content hub (min height so 3D canvas always gets non-zero layout) */}
           <div className="flex-1 relative overflow-hidden min-h-[min(55vh,560px)] min-w-0 flex flex-col">
             {view === 'content' ? (
               <div className="h-full overflow-y-auto px-5 py-8 max-w-4xl mx-auto">
                 <PersonaContentHub persona={persona} subjects={subjects} />
-                <p className="text-sm text-claro-muted mt-4">
-                  Subject tabs match your graph. Readings use the same subject titles.
-                </p>
               </div>
             ) : (
               <div className="flex-1 flex flex-col min-h-0 w-full">
