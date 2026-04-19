@@ -173,20 +173,20 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         cooldownTime={3000}
       />
       {hovered && (
-        <div className="absolute bottom-4 left-4 bg-claro-panel/95 border border-claro-indigo/20 rounded-lg px-3 py-2 text-xs pointer-events-none shadow-sm">
-          <div className="text-claro-text font-medium">{hovered.label}</div>
-          <div className="text-claro-muted">{hovered.course}</div>
-          <div style={{ color: studentAccuracyColor(hovered, { degree: degreeById[hovered.id] }) }}>
+        <div className="absolute bottom-4 left-4 max-w-[min(calc(100vw-2rem),20rem)] bg-claro-panel border border-claro-indigo/20 rounded-lg px-4 py-3 text-sm pointer-events-none shadow-sm">
+          <div className="text-claro-text font-medium text-base leading-snug">{hovered.label}</div>
+          <div className="text-claro-muted text-sm mt-0.5">{hovered.course}</div>
+          <div className="text-sm font-medium mt-1" style={{ color: studentAccuracyColor(hovered, { degree: degreeById[hovered.id] }) }}>
             Accuracy: {Math.round((hovered.accuracy || 0) * 100)}%
           </div>
         </div>
       )}
       {/* Legend */}
-      <div className="pointer-events-none absolute top-2 right-2 flex max-w-[10.5rem] flex-col gap-0.5 rounded-lg border border-claro-indigo/15 bg-claro-panel/92 p-1.5 shadow-sm">
-        <div className="text-[9px] font-medium uppercase tracking-wide text-claro-muted">Accuracy</div>
+      <div className="pointer-events-none absolute top-3 right-3 flex max-w-[13rem] flex-col gap-1 rounded-lg border border-claro-indigo/15 bg-claro-panel p-3 shadow-sm">
+        <div className="text-xs font-medium text-claro-text">Accuracy</div>
         {SCORE_BANDS.map(b => (
-          <div key={b.range} className="flex items-center gap-1 text-[9px] text-claro-muted">
-            <span className="h-2 w-2 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+          <div key={b.range} className="flex items-center gap-2 text-xs text-claro-muted">
+            <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/10" style={{ background: b.color }} />
             <span>{b.range}</span>
           </div>
         ))}

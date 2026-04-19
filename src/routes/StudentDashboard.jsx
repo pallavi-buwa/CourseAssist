@@ -124,13 +124,13 @@ export default function StudentDashboard() {
     <RequireAuth role="student">
       <div className="flex min-h-screen flex-col bg-space-page">
         <Navbar />
-        <div className="flex min-h-0 flex-1 flex-col pt-14">
+        <div className="flex min-h-0 flex-1 flex-col pt-16">
 
           {/* Sub-header */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-claro-indigo/15 bg-claro-panel/95">
+          <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-claro-indigo/15 bg-claro-panel">
             <div>
-              <h1 className="text-sm font-medium text-claro-text">My Knowledge Graph</h1>
-              <p className="text-xs text-claro-muted">
+              <h1 className="text-lg font-semibold text-claro-text tracking-tight">My Knowledge Graph</h1>
+              <p className="text-sm text-claro-muted mt-1">
                 {graphData.nodes.length} concepts · {graphData.links.length} connections
                 {persona.matched && (
                   <span> · {persona.label}</span>
@@ -139,11 +139,11 @@ export default function StudentDashboard() {
             </div>
 
             {/* Subject tabs (from graph) + fixed Content tab */}
-            <div className="flex flex-wrap items-center justify-end gap-1.5 max-w-[min(100%,42rem)]">
+            <div className="flex flex-wrap items-center justify-end gap-2 max-w-[min(100%,42rem)]">
               <button
                 type="button"
                 onClick={() => { setActiveCourse('all'); setSelectedNode(null) }}
-                className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all ${
                   activeCourse === 'all'
                     ? 'text-white border-transparent'
                     : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
@@ -161,7 +161,7 @@ export default function StudentDashboard() {
                   key={title}
                   type="button"
                   onClick={() => { setActiveCourse(title); setSelectedNode(null) }}
-                  className={`text-xs px-3 py-1 rounded-full border transition-all max-w-[10rem] truncate ${
+                  className={`min-h-touch inline-flex items-center max-w-[12rem] text-sm px-4 py-2 rounded-full border transition-all truncate ${
                     activeCourse === title
                       ? 'text-white border-transparent'
                       : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
@@ -179,7 +179,7 @@ export default function StudentDashboard() {
               <button
                 type="button"
                 onClick={() => { setActiveCourse(CONTENT_TAB); setSelectedNode(null) }}
-                className={`text-xs px-3 py-1 rounded-full border transition-all font-medium ${
+                className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all font-medium ${
                   activeCourse === CONTENT_TAB
                     ? 'bg-claro-indigo border-claro-indigo text-white'
                     : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
@@ -191,16 +191,18 @@ export default function StudentDashboard() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <button
+                type="button"
                 onClick={() => navigate('/student/notes')}
-                className="rounded-lg border border-claro-indigo/25 bg-claro-panel px-3 py-1.5 text-xs text-claro-muted transition-colors hover:border-claro-indigo/40 hover:text-claro-text"
+                className="min-h-touch rounded-lg border border-claro-indigo/25 bg-claro-panel px-4 py-2.5 text-sm text-claro-muted transition-colors hover:border-claro-indigo/40 hover:text-claro-text"
               >
                 Notes
               </button>
               <button
+                type="button"
                 onClick={() => setShowGenerator(true)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125 ${persona.matched ? '' : 'bg-claro-indigo'}`}
+                className={`min-h-touch rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125 ${persona.matched ? '' : 'bg-claro-indigo'}`}
                 style={persona.matched ? { backgroundColor: persona.accentHex } : undefined}
               >
                 + Add from syllabus
@@ -209,25 +211,25 @@ export default function StudentDashboard() {
           </div>
 
           {/* Legend + stats */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-2 border-b border-claro-indigo/12 bg-claro-canvas/80">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-claro-muted">Accuracy</span>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-3 border-b border-claro-indigo/12 bg-claro-canvas/80">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <span className="text-sm font-medium text-claro-text">Legend</span>
               {SCORE_BANDS.map(b => (
-                <div key={b.range} className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
-                  <span className="text-[10px] text-claro-muted">{b.range} {b.label}</span>
+                <div key={b.range} className="flex items-center gap-2">
+                  <div className="h-3 w-3 flex-shrink-0 rounded-full ring-1 ring-black/10" style={{ background: b.color }} />
+                  <span className="text-sm text-claro-muted">{b.range} {b.label}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-1.5 border-l border-claro-indigo/15 pl-3">
-                <div className="h-0.5 w-4" style={{ background: '#a16207' }} />
-                <span className="text-[10px] text-claro-muted">Cross-course link</span>
+              <div className="flex items-center gap-2 border-l border-claro-indigo/15 pl-4">
+                <div className="h-0.5 w-5" style={{ background: '#a16207' }} />
+                <span className="text-sm text-claro-muted">Cross-course link</span>
               </div>
             </div>
-            <div className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-1 justify-end max-w-xl">
+            <div className="ml-auto flex flex-wrap items-center gap-x-5 gap-y-2 justify-end max-w-xl">
               {subjectLegend.map(({ title, label, color }) => (
-                <div key={title} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full opacity-70" style={{ background: color }} />
-                  <span className="text-[11px] text-claro-muted" title={title}>{label}</span>
+                <div key={title} className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full opacity-80" style={{ background: color }} />
+                  <span className="text-sm text-claro-muted" title={title}>{label}</span>
                 </div>
               ))}
             </div>
@@ -238,8 +240,8 @@ export default function StudentDashboard() {
             {activeCourse === CONTENT_TAB ? (
               <div className="h-full overflow-y-auto px-5 py-8 max-w-4xl mx-auto">
                 <PersonaContentHub persona={persona} subjects={subjects} />
-                <p className="text-[11px] text-claro-muted">
-                  Subject tabs above always mirror your graph. Readings use the same subject titles.
+                <p className="text-sm text-claro-muted mt-4">
+                  Subject tabs match your graph. Readings use the same subject titles.
                 </p>
               </div>
             ) : (

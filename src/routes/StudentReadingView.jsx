@@ -43,7 +43,7 @@ export default function StudentReadingView() {
     <RequireAuth role="student">
       <div className="min-h-screen bg-space-page">
         <Navbar />
-        <main className="pt-14 max-w-3xl mx-auto px-5 py-10">
+        <main className="pt-16 max-w-3xl mx-auto px-5 py-10">
           {/* Header */}
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>

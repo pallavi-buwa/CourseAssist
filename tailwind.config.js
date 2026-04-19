@@ -4,6 +4,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      minHeight: {
+        touch: '2.75rem',
+      },
       colors: {
         gray: {
           950: '#080c1c',

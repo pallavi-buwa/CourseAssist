@@ -75,7 +75,7 @@ export default function ProfessorHome() {
       <LeafBackdrop className="min-h-screen bg-space-page">
         <div className="h-0.5 w-full" style={{ backgroundColor: persona.accentHex, opacity: 0.65 }} aria-hidden />
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
+        <main className="pt-16 max-w-5xl mx-auto px-5 py-8">
           {/* Greeting */}
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-claro-text mb-1">

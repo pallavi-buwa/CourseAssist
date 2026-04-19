@@ -40,29 +40,29 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center gap-6 border-b border-claro-indigo/15 bg-claro-panel/95 px-5 backdrop-blur-sm dark:border-claro-sage/20">
+    <nav className="fixed top-0 left-0 right-0 z-50 flex h-16 min-h-touch items-center gap-4 border-b border-claro-indigo/20 bg-claro-panel px-4 sm:px-6">
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex min-w-0 items-center gap-2" title="Claro">
           <div
-            className="flex h-8 shrink-0 items-center rounded-lg ring-1 ring-claro-indigo/25"
-            style={{ boxShadow: `0 0 0 1px ${persona.accentHex}33` }}
+            className="flex h-9 shrink-0 items-center rounded-md border border-claro-indigo/25 bg-claro-canvas/50 px-0.5"
+            style={{ boxShadow: persona.matched ? `inset 0 0 0 1px ${persona.accentHex}40` : undefined }}
           >
-            <ClaroLogoMark size={28} />
+            <ClaroLogoMark size={32} />
           </div>
         </div>
-        <span className="text-claro-muted text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>
+        <span className="text-claro-muted text-sm hidden sm:block truncate max-w-[12rem]">{breadcrumb}</span>
       </div>
 
       {/* Nav links */}
-      <div className="flex-1 flex items-center justify-center gap-1">
+      <div className="flex-1 flex items-center justify-center gap-0.5 sm:gap-1">
         {links.map(l => (
           <Link
             key={l.label}
             to={l.to}
-            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+            className={`min-h-touch inline-flex items-center rounded-md px-3 sm:px-4 text-base transition-colors ${
               location.pathname.startsWith(l.to.split('/').slice(0, 3).join('/'))
-                ? 'bg-claro-indigo/15 text-claro-indigo dark:bg-claro-indigo/25'
+                ? 'bg-claro-indigo/15 text-claro-indigo font-medium'
                 : 'text-claro-muted hover:bg-claro-indigo/10 hover:text-claro-text'
             }`}
           >
@@ -74,28 +74,31 @@ export default function Navbar() {
       {/* Avatar + dropdown */}
       <div className="relative">
         <button
+          type="button"
           onClick={() => setDropOpen(v => !v)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-claro-indigo text-xs font-medium text-white transition-colors hover:brightness-110"
+          className="flex h-10 w-10 min-h-touch min-w-[2.5rem] items-center justify-center rounded-full bg-claro-indigo text-sm font-medium text-white transition-colors hover:brightness-110"
         >
           {initials}
         </button>
         {dropOpen && (
-          <div className="absolute right-0 top-10 z-50 w-44 rounded-xl border border-claro-indigo/20 bg-claro-panel py-1 shadow-xl dark:border-claro-sage/25">
-            <div className="border-b border-claro-indigo/10 px-3 py-2 dark:border-claro-sage/15">
-              <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
-              <div className="text-xs text-claro-muted capitalize">{user.role}</div>
+          <div className="absolute right-0 top-12 z-50 w-56 rounded-lg border border-claro-indigo/20 bg-claro-panel py-1 shadow-lg">
+            <div className="border-b border-claro-indigo/10 px-4 py-3">
+              <div className="text-sm text-claro-text font-medium truncate">{user.email}</div>
+              <div className="text-sm text-claro-muted capitalize mt-0.5">{user.role}</div>
             </div>
             {user.role === 'student' && (
               <button
+                type="button"
                 onClick={() => { setDropOpen(false); navigate('/student/preferences') }}
-                className="w-full px-3 py-2 text-left text-sm text-claro-text/90 transition-colors hover:bg-claro-indigo/10"
+                className="w-full px-4 py-3 text-left text-base text-claro-text transition-colors hover:bg-claro-indigo/10"
               >
                 Preferences
               </button>
             )}
             <button
+              type="button"
               onClick={handleLogout}
-              className="w-full px-3 py-2 text-left text-sm text-claro-coral transition-colors hover:bg-claro-coral/10"
+              className="w-full px-4 py-3 text-left text-base text-claro-coral transition-colors hover:bg-claro-coral/10"
             >
               Logout
             </button>

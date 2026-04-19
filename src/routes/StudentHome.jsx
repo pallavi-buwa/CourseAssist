@@ -41,29 +41,29 @@ export default function StudentHome() {
       <LeafBackdrop className="min-h-screen bg-space-page">
         <div className="h-0.5 w-full" style={{ backgroundColor: persona.accentHex, opacity: 0.65 }} aria-hidden />
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
+        <main className="pt-16 max-w-5xl mx-auto px-5 py-8">
           {/* Greeting */}
           <div className="mb-8">
             <h1 className="text-2xl font-semibold text-claro-text mb-1">
               Good morning, {user?.name}
             </h1>
-            <p className="text-claro-muted text-sm">{persona.tagline}</p>
+            <p className="text-claro-muted text-base">{persona.tagline}</p>
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
             {stats.map(s => (
-              <div key={s.label} className="bg-claro-panel border border-claro-indigo/12 rounded-2xl p-5 shadow-sm">
-                <p className="text-2xl font-semibold text-claro-text mb-0.5">{s.value}</p>
-                <p className="text-xs font-medium text-claro-text/85">{s.label}</p>
-                <p className="text-[11px] text-claro-muted mt-0.5">{s.sub}</p>
+              <div key={s.label} className="bg-claro-panel border border-claro-indigo/12 rounded-2xl p-6 shadow-sm">
+                <p className="text-3xl font-semibold text-claro-text mb-1">{s.value}</p>
+                <p className="text-sm font-medium text-claro-text">{s.label}</p>
+                <p className="text-sm text-claro-muted mt-1">{s.sub}</p>
               </div>
             ))}
           </div>
 
           {/* Courses */}
-          <h2 className="text-sm font-medium text-claro-muted uppercase tracking-wider mb-4">Your courses</h2>
-          <p className="text-[11px] text-claro-muted mb-3 -mt-2">Titles come from your knowledge graph, so they stay in sync when the graph changes.</p>
+          <h2 className="text-lg font-semibold text-claro-text mb-2">Your courses</h2>
+          <p className="text-sm text-claro-muted mb-5">Course titles follow your knowledge graph.</p>
           <div className="grid grid-cols-1 gap-4 mb-8">
             {courseCards.length === 0 && (
               <p className="text-sm text-claro-muted border border-claro-indigo/12 rounded-2xl px-5 py-6 bg-claro-panel/50">
@@ -74,17 +74,17 @@ export default function StudentHome() {
               <div key={c.slug} className={`bg-gradient-to-r ${c.color} border ${c.border} rounded-2xl p-5 flex items-center justify-between gap-6`}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[10px] font-medium ${c.accent} bg-claro-canvas/80 rounded px-1.5 py-0.5 border border-claro-indigo/10`}>{c.code}</span>
+                    <span className={`text-xs font-medium ${c.accent} bg-claro-canvas/80 rounded px-2 py-0.5 border border-claro-indigo/10`}>{c.code}</span>
                   </div>
-                  <h3 className="text-claro-text font-medium text-base mb-1">{c.title}</h3>
-                  <p className="text-xs text-claro-muted mb-3">Next: {c.nextModule}</p>
+                  <h3 className="text-claro-text font-semibold text-lg mb-1">{c.title}</h3>
+                  <p className="text-sm text-claro-muted mb-4">Next: {c.nextModule}</p>
                   <ProgressBar value={c.progress} progressGradient={c.progressGradient} />
-                  <p className={`text-[11px] ${c.accent} mt-1`}>{c.progress}% complete · {c.modules} modules</p>
+                  <p className={`text-sm ${c.accent} mt-2`}>{c.progress}% complete · {c.modules} modules</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => navigate(`/student/reading/${c.slug}`)}
-                  className="flex-shrink-0 rounded-xl border border-claro-indigo/40 bg-claro-indigo px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
+                  className="flex-shrink-0 min-h-touch rounded-xl border border-claro-indigo/40 bg-claro-indigo px-6 py-3 text-base font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
                 >
                   Continue
                 </button>
@@ -93,15 +93,15 @@ export default function StudentHome() {
           </div>
 
           {/* Recent activity */}
-          <h2 className="text-sm font-medium text-claro-muted uppercase tracking-wider mb-4">Recent Activity</h2>
+          <h2 className="text-lg font-semibold text-claro-text mb-4">Recent activity</h2>
           <div className="bg-claro-panel border border-claro-indigo/12 rounded-2xl divide-y divide-claro-indigo/10">
             {recent.map((r, i) => (
-              <div key={i} className="flex items-center gap-4 px-5 py-3.5">
+              <div key={i} className="flex items-center gap-4 px-5 py-4 min-h-touch">
                 {r.icon != null && r.icon !== '' && (
-                  <span className="text-base w-5 shrink-0 text-center" style={{ color: persona.accentHex }}>{r.icon}</span>
+                  <span className="text-lg w-6 shrink-0 text-center" style={{ color: persona.accentHex }}>{r.icon}</span>
                 )}
-                <span className="text-sm text-claro-text/90 flex-1">{r.label}</span>
-                <span className="text-xs text-claro-muted">{r.time}</span>
+                <span className="text-base text-claro-text flex-1">{r.label}</span>
+                <span className="text-sm text-claro-muted shrink-0">{r.time}</span>
               </div>
             ))}
           </div>

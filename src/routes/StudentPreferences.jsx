@@ -114,7 +114,7 @@ export default function StudentPreferences() {
     <RequireAuth role="student">
       <div className="min-h-screen bg-space-page">
         <Navbar />
-        <main className="pt-14">
+        <main className="pt-16">
           <section className="border-b border-gray-800 bg-gray-900">
             <div className="max-w-5xl mx-auto px-5 py-10">
               <p className="text-xs font-medium uppercase tracking-widest text-emerald-400 mb-3">

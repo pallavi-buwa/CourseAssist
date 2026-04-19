@@ -210,7 +210,7 @@ export default function StudentNotes() {
     <RequireAuth role="student">
       <div className="min-h-screen bg-space-page">
         <Navbar />
-        <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
+        <main className="pt-16 max-w-5xl mx-auto px-5 py-8">
 
           <div className="mb-6">
             <h1 className="text-xl font-semibold text-white mb-1">Notes</h1>

@@ -124,16 +124,16 @@ export default function NodeDetailPanel({
   const defaultAcc = graphDefaultAccuracy ?? node._graphAccuracy ?? score
 
   return (
-    <div className="fixed right-0 top-14 h-[calc(100vh-56px)] w-[360px] bg-claro-panel/98 border-l border-claro-indigo/15 flex flex-col z-40 backdrop-blur-sm"
+    <div className="fixed right-0 top-16 h-[calc(100vh-4rem)] w-[min(100vw,400px)] sm:w-[400px] bg-claro-panel border-l border-claro-indigo/15 flex flex-col z-40"
          style={{ animation: 'slideInRight 0.3s ease-out' }}>
 
       <div className="flex items-start justify-between p-5 border-b border-claro-indigo/12">
         <div>
-          <h2 className="text-white font-medium text-base leading-tight">{node.label || node.id}</h2>
-          {node.course && <p className="text-claro-muted text-xs mt-1">{node.course}</p>}
-          {node.week  && <p className="text-claro-muted text-xs">Week {node.week}</p>}
+          <h2 className="text-claro-text font-semibold text-lg leading-snug pr-2">{node.label || node.id}</h2>
+          {node.course && <p className="text-claro-muted text-sm mt-1">{node.course}</p>}
+          {node.week  && <p className="text-claro-muted text-sm">Week {node.week}</p>}
         </div>
-        <button onClick={onClose} className="text-claro-muted hover:text-claro-text transition-colors text-lg leading-none w-7 h-7 flex items-center justify-center rounded-lg hover:bg-claro-indigo/10">x</button>
+        <button type="button" onClick={onClose} className="text-claro-muted hover:text-claro-text transition-colors text-xl leading-none min-h-touch min-w-[2.75rem] flex items-center justify-center rounded-lg hover:bg-claro-indigo/10" aria-label="Close panel">×</button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -151,8 +151,8 @@ export default function NodeDetailPanel({
           ) : (
             <>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-claro-muted uppercase tracking-wider">Your accuracy</span>
-                <span className="text-sm font-medium" style={{ color: scoreColor }}>{Math.round(score * 100)}%</span>
+                <span className="text-sm text-claro-muted">Your accuracy</span>
+                <span className="text-base font-semibold" style={{ color: scoreColor }}>{Math.round(score * 100)}%</span>
               </div>
               <div className="w-full h-2 bg-claro-slate/80 rounded-full overflow-hidden">
                 <div className="h-full rounded-full transition-all" style={{ width: `${score * 100}%`, background: scoreColor }} />
@@ -163,8 +163,8 @@ export default function NodeDetailPanel({
 
         {mode === 'student' && onMasteryChange && (
           <Section title="How well you know this">
-            <p className="text-[11px] text-gray-500 mb-3 leading-relaxed">
-              Drag to recolor this node in your graph (saved on this browser). Reset returns to the graph default ({Math.round(defaultAcc * 100)}%).
+            <p className="text-sm text-claro-muted mb-4 leading-relaxed">
+              Drag to set how well you know this concept (saved in this browser). Reset uses the graph default ({Math.round(defaultAcc * 100)}%).
             </p>
             <input
               type="range"
@@ -175,14 +175,14 @@ export default function NodeDetailPanel({
               onChange={e => onMasteryChange(node.id, Number(e.target.value) / 100)}
               className="w-full accent-indigo-500"
             />
-            <div className="flex justify-between text-[10px] text-gray-600 mt-1">
+            <div className="flex justify-between text-sm text-claro-muted mt-2">
               <span>Needs work</span>
               <span>Strong</span>
             </div>
             <button
               type="button"
               onClick={() => onMasteryChange(node.id, null)}
-              className="mt-3 w-full text-xs py-2 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+              className="mt-4 w-full min-h-touch text-sm py-2.5 rounded-lg border border-claro-indigo/25 text-claro-muted hover:text-claro-text hover:border-claro-indigo/40 transition-colors"
             >
               Reset to graph default
             </button>
@@ -193,9 +193,9 @@ export default function NodeDetailPanel({
           <Section title="Struggling Students">
             <div className="space-y-1.5">
               {strugglingStudents.map(s => (
-                <div key={s.id} className="flex items-center justify-between text-xs">
-                  <span className="text-claro-text/90">{s.name}</span>
-                  <span className="text-red-400 text-[10px]">{node.misconception || 'Common misconception'}</span>
+                <div key={s.id} className="flex items-center justify-between text-sm gap-2">
+                  <span className="text-claro-text">{s.name}</span>
+                  <span className="text-red-400 text-xs text-right">{node.misconception || 'Common misconception'}</span>
                 </div>
               ))}
             </div>
@@ -204,7 +204,7 @@ export default function NodeDetailPanel({
 
         {mode === 'professor' && (
           <Section title="Suggested Intervention">
-            <div className="bg-claro-indigo/10 border border-claro-indigo/20 rounded-lg p-3 text-sm text-claro-text/90 leading-relaxed">
+            <div className="bg-claro-indigo/10 border border-claro-indigo/20 rounded-lg p-4 text-base text-claro-text leading-relaxed">
               Re-explain {node.label} with concrete examples. Consider assigning a short visual explainer and follow-up quiz next session.
             </div>
           </Section>
@@ -212,15 +212,15 @@ export default function NodeDetailPanel({
 
         {mode === 'student' && node.course && (
           <Section title="Appears In">
-            <span className="bg-claro-indigo/20 text-claro-indigo border border-claro-indigo/30 rounded px-2 py-1 text-xs">{node.course}</span>
+            <span className="bg-claro-indigo/20 text-claro-indigo border border-claro-indigo/30 rounded px-3 py-1.5 text-sm">{node.course}</span>
           </Section>
         )}
 
         {mode === 'student' && (
           <Section title="AI Learning Links">
             <div className="flex items-center justify-between gap-3 mb-3">
-              <p className="text-xs text-claro-muted">Prioritizing {summary}</p>
-              <span className={`text-[10px] rounded px-1.5 py-0.5 border flex-shrink-0 ${
+              <p className="text-sm text-claro-muted">Prioritizing {summary}</p>
+              <span className={`text-xs rounded px-2 py-1 border flex-shrink-0 ${
                 resourceStatus === 'ai'
                   ? 'text-emerald-300 bg-emerald-400/10 border-emerald-400/20'
                   : resourceStatus === 'loading'
@@ -231,7 +231,7 @@ export default function NodeDetailPanel({
               </span>
             </div>
 
-            {resourceNote && <p className="text-xs text-claro-muted leading-5 mb-3">{resourceNote}</p>}
+            {resourceNote && <p className="text-sm text-claro-muted leading-relaxed mb-3">{resourceNote}</p>}
 
             {resourceStatus === 'loading' && (
               <div className="space-y-2 mb-3">
@@ -246,19 +246,19 @@ export default function NodeDetailPanel({
                   href={resource.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="block p-3 bg-claro-slate/50 hover:bg-claro-slate/80 rounded-lg border border-claro-indigo/15 transition-colors"
+                  className="block p-4 bg-claro-slate/50 hover:bg-claro-slate/80 rounded-lg border border-claro-indigo/15 transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="text-xs text-claro-text font-medium truncate">{resource.title}</div>
-                      <div className="text-xs text-claro-muted leading-5 mt-1">{resource.description}</div>
-                      {resource.why && <div className="text-[10px] text-claro-muted leading-4 mt-1">{resource.why}</div>}
+                      <div className="text-sm text-claro-text font-medium truncate">{resource.title}</div>
+                      <div className="text-sm text-claro-muted leading-snug mt-1">{resource.description}</div>
+                      {resource.why && <div className="text-xs text-claro-muted leading-relaxed mt-2">{resource.why}</div>}
                     </div>
-                    <span className="text-[10px] text-emerald-300 bg-emerald-400/10 border border-emerald-400/20 rounded px-1.5 py-0.5 flex-shrink-0">
+                    <span className="text-xs text-emerald-300 bg-emerald-400/10 border border-emerald-400/20 rounded px-2 py-1 flex-shrink-0">
                       {RESOURCE_LABELS[resource.type] || resource.type}
                     </span>
                   </div>
-                  <div className="text-[10px] text-claro-muted mt-2">
+                  <div className="text-xs text-claro-muted mt-3">
                     {resource.source || 'Learning resource'} - {resource.language || 'English'}
                   </div>
                 </a>
@@ -274,7 +274,7 @@ export default function NodeDetailPanel({
 function Section({ title, children }) {
   return (
     <div className="p-5 border-b border-claro-indigo/12">
-      <h3 className="text-[11px] uppercase tracking-widest text-claro-muted font-medium mb-3">{title}</h3>
+      <h3 className="text-sm font-semibold text-claro-text mb-3">{title}</h3>
       {children}
     </div>
   )

@@ -37,33 +37,33 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-10">
           <h1 className="sr-only">Claro</h1>
-          <div className="mx-auto mb-5 flex justify-center px-2">
-            <ClaroLogoMark size={52} />
+          <div className="mx-auto mb-6 flex justify-center px-2">
+            <ClaroLogoMark size={56} />
           </div>
-          <p className="text-claro-muted text-sm max-w-sm mx-auto leading-relaxed">
+          <p className="text-claro-muted text-base max-w-md mx-auto leading-relaxed">
             Canvas gives you the grade. We give you the why.
           </p>
         </div>
 
-        <div className="bg-claro-panel border border-claro-indigo/15 rounded-2xl p-8 shadow-sm">
-          <h2 className="text-claro-text font-medium text-lg mb-6">Sign in</h2>
+        <div className="bg-claro-panel border border-claro-indigo/20 rounded-2xl p-8 sm:p-10 shadow-sm">
+          <h2 className="text-claro-text font-semibold text-xl mb-8">Sign in</h2>
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-6">
             {/* Email */}
             <div>
-              <label className="text-xs text-claro-muted mb-1.5 block">Email</label>
+              <label className="text-sm text-claro-muted mb-2 block font-medium">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@university.edu"
-                className="w-full bg-claro-panel border border-claro-indigo/18 rounded-xl px-4 py-2.5 text-sm text-claro-text placeholder-claro-muted/60 focus:outline-none focus:border-claro-indigo transition-colors dark:bg-claro-slate/50"
+                className="w-full min-h-touch bg-claro-panel border border-claro-indigo/20 rounded-xl px-4 py-3 text-base text-claro-text placeholder-claro-muted/60 focus:outline-none focus:border-claro-indigo focus:ring-1 focus:ring-claro-indigo/30 transition-colors dark:bg-claro-slate/50"
               />
             </div>
 
             {/* Role */}
             <div>
-              <label className="text-xs text-claro-muted mb-1.5 block">I am a</label>
+              <label className="text-sm text-claro-muted mb-2 block font-medium">I am a</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { value: 'student', label: 'Student' },
@@ -73,7 +73,7 @@ export default function LoginPage() {
                     key={r.value}
                     type="button"
                     onClick={() => setRole(r.value)}
-                    className={`flex items-center justify-center px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
+                    className={`min-h-touch flex items-center justify-center px-4 py-3 rounded-xl border text-base font-medium transition-all ${
                       role === r.value
                         ? 'bg-claro-indigo/12 border-claro-indigo text-claro-indigo'
                         : 'bg-claro-canvas border-claro-indigo/15 text-claro-muted hover:border-claro-indigo/30'
@@ -85,28 +85,28 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {error && <p className="text-claro-coral text-xs">{error}</p>}
+            {error && <p className="text-claro-coral text-sm">{error}</p>}
 
             <button
               type="submit"
-              className="w-full rounded-xl bg-claro-indigo py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
+              className="w-full min-h-touch rounded-xl bg-claro-indigo py-3.5 text-base font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
             >
               Continue
             </button>
           </form>
 
-          <p className="text-center text-xs text-claro-muted/80 mt-5">Demo — no real authentication required</p>
+          <p className="text-center text-sm text-claro-muted mt-6">Demo — no password required</p>
 
-          <div className="mt-6 rounded-xl border border-claro-indigo/15 bg-claro-canvas/60 p-4 text-left">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-claro-muted mb-2">Demo personas (different graphs & UI)</p>
-            <p className="text-[11px] text-claro-muted mb-1.5"><span className="text-claro-text/80">Students:</span>{' '}
+          <div className="mt-8 rounded-xl border border-claro-indigo/15 bg-claro-canvas/50 p-5 text-left">
+            <p className="text-sm font-medium text-claro-text mb-3">Demo accounts</p>
+            <p className="text-sm text-claro-muted mb-2"><span className="text-claro-text">Students:</span>{' '}
               {listDemoPersonaHints().students.join(', ')}
             </p>
-            <p className="text-[11px] text-claro-muted"><span className="text-claro-text/80">Professors:</span>{' '}
+            <p className="text-sm text-claro-muted"><span className="text-claro-text">Professors:</span>{' '}
               {listDemoPersonaHints().professors.join(', ')}
             </p>
-            <p className="text-[11px] text-claro-muted/90 mt-2">
-              With <code className="text-claro-text/70">VITE_OPENAI_API_KEY</code> set, graphs personalize once via AI and are cached in this browser.
+            <p className="text-sm text-claro-muted mt-3 leading-relaxed">
+              Optional: set <code className="text-claro-text/90 bg-claro-slate/80 px-1.5 py-0.5 rounded text-[0.9em]">VITE_OPENAI_API_KEY</code> to personalize graphs once; results stay in this browser.
             </p>
           </div>
         </div>
