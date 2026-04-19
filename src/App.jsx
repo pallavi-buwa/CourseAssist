@@ -15,8 +15,10 @@ const MaterialAnalyzer   = lazy(() => import('./routes/MaterialAnalyzer.jsx'))
 
 function Loading() {
   return (
-    <div style={{ minHeight: '100vh', background: '#07070b', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: 14 }}>
-      Loading...
+    <div className="min-h-screen bg-space-page flex items-center justify-center px-4">
+      <div className="rounded-xl border border-claro-indigo/20 bg-claro-panel px-6 py-4 text-sm text-claro-muted">
+        Loading...
+      </div>
     </div>
   )
 }

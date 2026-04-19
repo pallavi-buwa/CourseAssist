@@ -372,7 +372,7 @@ export default function BrainIntro({ onEnter }) {
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(10, 16, 40, 0.88) 0%, rgba(10, 16, 40, 0.45) 45%, transparent 72%)',
+            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(8, 8, 10, 0.88) 0%, rgba(8, 8, 10, 0.45) 45%, transparent 72%)',
         }}
       />
 
