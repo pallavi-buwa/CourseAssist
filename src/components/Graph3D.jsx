@@ -26,8 +26,8 @@ function makeLabelSprite(text, hexColor, opacity = 0.92) {
   ctx.fill()
 
   // Text
-  ctx.font = '500 15px Inter, system-ui, sans-serif'
-  ctx.fillStyle = hexColor || '#ffffff'
+  ctx.font = '500 15px Lato, system-ui, sans-serif'
+  ctx.fillStyle = hexColor || '#1B4332'
   ctx.globalAlpha = opacity
   ctx.fillText(text, 8, 26)
 
@@ -133,11 +133,11 @@ function createParticleField() {
   const geo = new THREE.BufferGeometry()
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
   const mat = new THREE.PointsMaterial({
-    color: 0xffffff,
+    color: 0xa8d5ba,
     size:  2.2,
     sizeAttenuation: true,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.16,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   })
@@ -146,9 +146,9 @@ function createParticleField() {
 
 // ─── Status colors ────────────────────────────────────────────────────────────
 const STATUS_EMISSIVE = {
-  active:     '#FFD6A8',
-  mastered:   '#9EE4D4',
-  struggling: '#FFB8C8',
+  active:     '#ca8a04',
+  mastered:   '#047857',
+  struggling: '#c2410c',
   default:    null,
 }
 
@@ -182,7 +182,7 @@ const Graph3D = memo(({
     sceneInitRef.current = true
 
     // Dark fog for depth
-    const fog = new THREE.FogExp2(0x110e1a, 0.0018)
+    const fog = new THREE.FogExp2(0xfdf6ed, 0.0012)
     scene.fog = fog
     fogRef.current = fog
 
@@ -192,15 +192,15 @@ const Graph3D = memo(({
       ambient.name = '_ca_ambient'
       scene.add(ambient)
 
-      const pt1 = new THREE.PointLight(0xc4b5ff, 3.5, 900)
+      const pt1 = new THREE.PointLight(0x2d6a4f, 2.8, 900)
       pt1.name = '_ca_pt1'; pt1.position.set(300, 250, 200)
       scene.add(pt1)
 
-      const pt2 = new THREE.PointLight(0x9ee4d4, 2.5, 700)
+      const pt2 = new THREE.PointLight(0x52b788, 2.2, 700)
       pt2.name = '_ca_pt2'; pt2.position.set(-250, -150, -300)
       scene.add(pt2)
 
-      const pt3 = new THREE.PointLight(0xd4b8ff, 2, 600)
+      const pt3 = new THREE.PointLight(0xfff7ed, 1.5, 600)
       pt3.name = '_ca_pt3'; pt3.position.set(0, -300, 300)
       scene.add(pt3)
 
@@ -374,7 +374,7 @@ const Graph3D = memo(({
         graphData={filteredData}
         width={width}
         height={height}
-        backgroundColor="#110E1A"
+        backgroundColor="#FDF6ED"
         // Node
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}

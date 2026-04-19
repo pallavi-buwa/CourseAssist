@@ -5,26 +5,28 @@ export default {
     extend: {
       colors: {
         claro: {
-          // Pastel-forward palette — soft, distinctive, readable on dark UI
-          indigo: '#C4B5FF',
-          amber: '#FFD6A8',
-          sage: '#9EE4D4',
-          coral: '#FFB8C8',
-          midnight: '#110E1A',
-          slate: '#1E1B2E',
-          text: '#F6F2FF',
-          muted: '#B4ABC9',
+          // Cream canvas + forest greens + brown accents
+          cream: '#FDF6ED',
+          indigo: '#2D6A4F',
+          amber: '#a16207',
+          sage: '#52B788',
+          coral: '#78350f',
+          midnight: '#FDF6ED',
+          slate: '#E8F0EB',
+          text: '#1B4332',
+          muted: '#5C6B63',
         },
-        surface: '#1E1B2E',
-        panel: '#1E1B2E',
-        border: '#2E2A40',
+        surface: '#EEF5F0',
+        panel: '#E8F0EB',
+        border: '#C5D4C8',
         accent: {
-          python: '#C4B5FF',
-          dsa: '#D4B8FF',
-          cn: '#8EE4D2',
+          python: '#14532d',
+          dsa: '#1a5f45',
+          cn: '#3f5c4d',
         },
       },
       fontFamily: {
+        sans: ['Lato', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
     },

@@ -1,5 +1,6 @@
 import { useRef, useCallback, useEffect, useState, memo } from 'react'
 import { comprehensionColor } from '../data/mockGraphMarketing.js'
+import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 // Lazy-load ForceGraph2D to avoid the AFRAME global requirement at module evaluation time
 let ForceGraph2DModule = null
@@ -38,14 +39,14 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
     fgRef.current?.refresh?.()
   }, [liveUpdates])
 
-  const nodeColor = useCallback((node) => comprehensionColor(node.comprehension ?? 0.5), [liveUpdates])
+  const nodeColor = useCallback((node) => comprehensionColor(node), [liveUpdates])
   const nodeVal   = useCallback(() => 6, [])
   const nodeLabel = useCallback((node) => `${node.label} — ${Math.round((node.comprehension ?? 0.5) * 100)}%`, [liveUpdates])
-  const linkColor = useCallback(() => 'rgba(100,116,139,0.35)', [])
+  const linkColor = useCallback(() => 'rgba(45,106,79,0.28)', [])
   const linkWidth = useCallback(() => 1, [])
 
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', background: '#110E1A' }}>
+    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', background: '#FDF6ED' }}>
       {!FG && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-gray-500 text-sm">Loading graph…</div>
@@ -58,7 +59,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
           graphData={graphData}
           width={dims.width}
           height={dims.height}
-          backgroundColor="#110E1A"
+          backgroundColor="#FDF6ED"
           nodeColor={nodeColor}
           nodeVal={nodeVal}
           nodeLabel={nodeLabel}
@@ -74,11 +75,13 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
       {FG === 'fallback' && <FallbackGraph graphData={graphData} onNodeClick={onNodeClick} dims={dims} />}
 
       {/* Legend */}
-      <div className="absolute top-3 right-3 bg-gray-900/80 border border-gray-700 rounded-lg p-2 flex flex-col gap-1 pointer-events-none">
-        <div className="text-[10px] text-gray-500 mb-0.5 uppercase tracking-wider">Comprehension</div>
-        {[['#9EE4D4', '>70%'], ['#FFD6A8', '50–70%'], ['#FFB8C8', '<50%']].map(([c, l]) => (
-          <div key={l} className="flex items-center gap-1.5 text-[10px] text-gray-300">
-            <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: c }} />{l}
+      <div className="pointer-events-none absolute top-3 right-3 flex max-h-[min(70vh,320px)] max-w-[11rem] flex-col gap-0.5 overflow-y-auto rounded-lg border border-[#2D6A4F]/18 bg-[#FFFCF7]/95 p-2 shadow-sm">
+        <div className="text-[10px] font-medium uppercase tracking-wider text-claro-muted">Score</div>
+        <p className="text-[9px] leading-tight text-claro-muted/90">Green/teal = strong · gold–rust = risk</p>
+        {SCORE_BANDS.map(b => (
+          <div key={b.range} className="flex items-center gap-1.5 text-[9px] text-claro-text/90">
+            <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+            <span>{b.range} · {b.label}</span>
           </div>
         ))}
       </div>
@@ -109,7 +112,7 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
     ctx.clearRect(0, 0, width, height)
 
     // Draw links
-    ctx.strokeStyle = 'rgba(100,116,139,0.3)'
+    ctx.strokeStyle = 'rgba(45,106,79,0.28)'
     ctx.lineWidth = 1
     graphData.links.forEach(l => {
       const s = nodeMap[l.source?.id ?? l.source]
@@ -120,13 +123,13 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
 
     // Draw nodes
     nodes.forEach(n => {
-      const color = comprehensionColor(n.comprehension ?? 0.5)
+      const color = comprehensionColor(n)
       ctx.beginPath()
       ctx.arc(n.x, n.y, 7, 0, Math.PI * 2)
       ctx.fillStyle = color
       ctx.fill()
-      ctx.fillStyle = 'rgba(255,255,255,0.7)'
-      ctx.font = '9px Inter, sans-serif'
+      ctx.fillStyle = 'rgba(27,67,50,0.85)'
+      ctx.font = '9px Lato, sans-serif'
       ctx.fillText(n.label?.split(' ')[0] ?? '', n.x + 9, n.y + 3)
     })
 

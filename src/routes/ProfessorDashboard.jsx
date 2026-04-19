@@ -9,6 +9,8 @@ import MicroCheckGenerator from '../components/MicroCheckGenerator.jsx'
 import GraphGenerator from '../components/GraphGenerator.jsx'
 import { marketingGraph } from '../data/mockGraphMarketing.js'
 import { subscribeToConceptScores } from '../firebase/realtimeSync.js'
+import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
+import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 export default function ProfessorDashboard() {
   const { courseId } = useParams()
@@ -52,9 +54,10 @@ export default function ProfessorDashboard() {
 
   return (
     <RequireAuth role="professor">
-      <div className="min-h-screen bg-claro-midnight flex flex-col">
+      <div className="flex min-h-screen flex-col bg-claro-midnight">
         <Navbar />
-        <div className="pt-14 flex flex-1 overflow-hidden">
+        <LeafBackdrop className="flex min-h-0 flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden pt-14">
 
           {/* Left sidebar */}
           <AlertsSidebar
@@ -66,31 +69,31 @@ export default function ProfessorDashboard() {
           <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
             {/* Sub-header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800 bg-gray-900/50">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[#2D6A4F]/15 bg-[#FFFCF7]/95">
               <div className="flex items-center gap-3">
-                <button onClick={() => navigate('/professor/home')} className="text-gray-600 hover:text-white text-sm transition-colors">←</button>
+                <button onClick={() => navigate('/professor/home')} className="text-[#5C6B63] hover:text-[#1B4332] text-sm transition-colors">←</button>
                 <div>
-                  <h1 className="text-sm font-medium text-white">{courseTitle} — Class Overview</h1>
-                  <p className="text-xs text-gray-500">{graphData.nodes.length} concepts · {graphData.links.length} connections · 50 students</p>
+                  <h1 className="text-sm font-medium text-[#1B4332]">{courseTitle} — Class Overview</h1>
+                  <p className="text-xs text-[#5C6B63]">{graphData.nodes.length} concepts · {graphData.links.length} connections · 50 students</p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
                 {/* Live indicator */}
-                <div className="flex items-center gap-1.5 text-xs text-gray-500 mr-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-claro-sage animate-pulse" />
+                <div className="flex items-center gap-1.5 text-xs text-[#5C6B63] mr-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#52b788] animate-pulse" />
                   Live sync
                 </div>
 
                 <button
                   onClick={() => setShowMicroCheck(true)}
-                  className="border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg px-3 py-1.5 text-xs transition-colors"
+                  className="border border-[#2D6A4F]/25 text-[#5C6B63] hover:text-[#1B4332] hover:border-[#2D6A4F]/40 rounded-lg px-3 py-1.5 text-xs transition-colors bg-[#FFFCF7]"
                 >
                   + Micro-check
                 </button>
                 <button
                   onClick={() => setShowGenerator(true)}
-                  className="bg-claro-indigo hover:brightness-110 text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                  className="bg-[#2D6A4F] hover:bg-[#1B4332] text-white rounded-lg px-3 py-1.5 text-xs font-medium transition-colors shadow-sm"
                 >
                   + From syllabus
                 </button>
@@ -98,18 +101,15 @@ export default function ProfessorDashboard() {
             </div>
 
             {/* Legend */}
-            <div className="flex items-center gap-5 px-5 py-2 border-b border-gray-800">
-              {[
-                { color: '#9EE4D4', label: 'Strong (≥70%)' },
-                { color: '#FFD6A8', label: 'Developing (50–69%)' },
-                { color: '#FFB8C8', label: 'Needs work (<50%)' },
-              ].map(l => (
-                <div key={l.label} className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
-                  <span className="text-[11px] text-gray-500">{l.label}</span>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-5 py-2 border-b border-[#2D6A4F]/12 bg-[#FDF6ED]/80">
+              <span className="text-[10px] font-medium uppercase tracking-wide text-[#5C6B63]">Comprehension</span>
+              {SCORE_BANDS.map(b => (
+                <div key={b.range} className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+                  <span className="text-[10px] text-[#5C6B63]">{b.range}</span>
                 </div>
               ))}
-              <span className="text-[11px] text-gray-600 ml-auto">Node size = student engagement · Click node to inspect</span>
+              <span className="text-[10px] text-[#5C6B63] ml-auto min-w-[12rem]">Cool tones = strong · warm = at risk · Node size = engagement</span>
             </div>
 
             {/* 2D Graph */}
@@ -131,6 +131,7 @@ export default function ProfessorDashboard() {
 
           </div>
         </div>
+        </LeafBackdrop>
 
         {showMicroCheck && <MicroCheckGenerator onClose={() => setShowMicroCheck(false)} />}
         {showGenerator && (

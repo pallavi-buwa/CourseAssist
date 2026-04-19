@@ -1,7 +1,8 @@
-import { useRef, useEffect, useCallback, useState, memo } from 'react'
+import { useRef, useEffect, useCallback, useState, useMemo, memo } from 'react'
 import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from 'three'
 import { studentAccuracyColor } from '../data/mockStudentGraph.js'
+import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height = 500, interactive = true }) => {
   const fgRef = useRef()
@@ -27,12 +28,23 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
 
   const stopRotate = useCallback(() => { hasInteracted.current = true }, [])
 
+  const degreeById = useMemo(() => {
+    const m = {}
+    graphData?.links?.forEach(l => {
+      const s = typeof l.source === 'object' ? l.source.id : l.source
+      const t = typeof l.target === 'object' ? l.target.id : l.target
+      if (s) m[s] = (m[s] || 0) + 1
+      if (t) m[t] = (m[t] || 0) + 1
+    })
+    return m
+  }, [graphData])
+
   const nodeColor = useCallback((node) => {
     if (highlightCourse && node.course !== highlightCourse) return 'rgba(100,100,100,0.15)'
-    const col = studentAccuracyColor(node.accuracy ?? 0.5)
-    if (hovered?.id === node.id) return '#ffffff'
+    const col = studentAccuracyColor(node, { degree: degreeById[node.id] })
+    if (hovered?.id === node.id) return '#FFFCF7'
     return col
-  }, [highlightCourse, hovered])
+  }, [highlightCourse, hovered, degreeById])
 
   const nodeVal = useCallback((node) => {
     if (hovered?.id === node.id) return 10
@@ -42,7 +54,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   const nodeThreeObject = useCallback((node) => {
     const isHighlighted = highlightCourse && node.course !== highlightCourse
     const r = hovered?.id === node.id ? 8 : 5.5
-    const color = studentAccuracyColor(node.accuracy ?? 0.5)
+    const color = studentAccuracyColor(node, { degree: degreeById[node.id] })
 
     const group = new THREE.Group()
 
@@ -65,10 +77,10 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
     }
 
     return group
-  }, [hovered, highlightCourse])
+  }, [hovered, highlightCourse, degreeById])
 
   const linkColor = useCallback((link) => {
-    return link.crossCourse ? '#FFD6A8' : 'rgba(180,171,201,0.2)'
+    return link.crossCourse ? '#a16207' : 'rgba(45,106,79,0.25)'
   }, [])
 
   const linkWidth = useCallback((link) => {
@@ -110,20 +122,21 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         cooldownTime={3000}
       />
       {hovered && (
-        <div className="absolute bottom-4 left-4 bg-claro-slate/95 border border-white/10 rounded-lg px-3 py-2 text-xs pointer-events-none">
+        <div className="absolute bottom-4 left-4 bg-[#FFFCF7]/95 border border-[#2D6A4F]/20 rounded-lg px-3 py-2 text-xs pointer-events-none shadow-sm">
           <div className="text-claro-text font-medium">{hovered.label}</div>
           <div className="text-claro-muted">{hovered.course}</div>
-          <div style={{ color: studentAccuracyColor(hovered.accuracy) }}>
+          <div style={{ color: studentAccuracyColor(hovered, { degree: degreeById[hovered.id] }) }}>
             Accuracy: {Math.round((hovered.accuracy || 0) * 100)}%
           </div>
         </div>
       )}
       {/* Legend */}
-      <div className="absolute top-2 right-2 flex flex-col gap-1">
-        {[['#9EE4D4','>70%'],['#FFD6A8','50–70%'],['#FFB8C8','<50%']].map(([c,l]) => (
-          <div key={l} className="flex items-center gap-1.5 text-[10px] text-claro-muted">
-            <span className="w-2 h-2 rounded-full" style={{ background: c }} />
-            {l}
+      <div className="pointer-events-none absolute top-2 right-2 flex max-w-[10.5rem] flex-col gap-0.5 rounded-lg border border-[#2D6A4F]/15 bg-[#FFFCF7]/92 p-1.5 shadow-sm">
+        <div className="text-[9px] font-medium uppercase tracking-wide text-claro-muted">Accuracy</div>
+        {SCORE_BANDS.map(b => (
+          <div key={b.range} className="flex items-center gap-1 text-[9px] text-[#5C6B63]">
+            <span className="h-2 w-2 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+            <span>{b.range}</span>
           </div>
         ))}
       </div>

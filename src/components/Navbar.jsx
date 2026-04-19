@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
 
 const studentLinks = [
   { label: 'Home',     to: '/student/home' },
@@ -37,11 +38,16 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-claro-slate border-b border-white/8 flex items-center px-5 gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-[#FFFCF7]/95 backdrop-blur-sm border-b border-[#2D6A4F]/12 flex items-center px-5 gap-6">
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-claro-indigo flex items-center justify-center text-white text-xs font-semibold">C</div>
+          <div
+            className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#2D6A4F]/25 bg-gradient-to-br from-[#E8F0EB] to-[#d8eadc] p-0.5 shadow-sm"
+            title="Claro"
+          >
+            <ClaroLogoMark size={30} className="drop-shadow-sm" />
+          </div>
           <span className="font-medium text-claro-text text-sm">Claro</span>
         </div>
         <span className="text-claro-muted text-xs hidden sm:block truncate max-w-40">{breadcrumb}</span>
@@ -55,8 +61,8 @@ export default function Navbar() {
             to={l.to}
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               location.pathname.startsWith(l.to.split('/').slice(0, 3).join('/'))
-                ? 'bg-claro-indigo/20 text-claro-indigo'
-                : 'text-claro-muted hover:text-claro-text hover:bg-white/5'
+                ? 'bg-[#2D6A4F]/15 text-[#14532d]'
+                : 'text-claro-muted hover:text-claro-text hover:bg-[#2D6A4F]/8'
             }`}
           >
             {l.label}
@@ -73,13 +79,13 @@ export default function Navbar() {
           {initials}
         </button>
         {dropOpen && (
-          <div className="absolute right-0 top-10 w-44 bg-claro-slate border border-white/10 rounded-xl shadow-xl py-1 z-50">
-            <div className="px-3 py-2 border-b border-white/8">
+          <div className="absolute right-0 top-10 w-44 bg-[#FFFCF7] border border-[#2D6A4F]/18 rounded-xl shadow-xl py-1 z-50">
+            <div className="px-3 py-2 border-b border-[#2D6A4F]/10">
               <div className="text-xs text-claro-text font-medium truncate">{user.email}</div>
               <div className="text-xs text-claro-muted capitalize">{user.role}</div>
             </div>
-            <button className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-white/5 transition-colors">Preferences</button>
-            <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-claro-coral hover:bg-white/5 transition-colors">Logout</button>
+            <button className="w-full text-left px-3 py-2 text-sm text-claro-text/90 hover:bg-[#2D6A4F]/8 transition-colors">Preferences</button>
+            <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-sm text-[#78350f] hover:bg-[#78350f]/8 transition-colors">Logout</button>
           </div>
         )}
       </div>

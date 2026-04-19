@@ -1,7 +1,12 @@
-export function comprehensionColor(score) {
-  if (score >= 0.7) return '#9EE4D4'
-  if (score >= 0.5) return '#FFD6A8'
-  return '#FFB8C8'
+import { scoreToNodeColor, marketingEffectiveScore } from '../utils/nodeColorScale.js'
+
+/** Pass a number (legacy) or a node with `comprehension` (+ optional `week`) for smarter ramping. */
+export function comprehensionColor(scoreOrNode) {
+  if (typeof scoreOrNode === 'object' && scoreOrNode !== null && 'comprehension' in scoreOrNode) {
+    return scoreToNodeColor(marketingEffectiveScore(scoreOrNode))
+  }
+  const t = typeof scoreOrNode === 'number' ? scoreOrNode : 0.5
+  return scoreToNodeColor(t ?? 0.5)
 }
 
 export const marketingGraph = {

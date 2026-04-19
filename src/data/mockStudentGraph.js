@@ -1,3 +1,5 @@
+import { scoreToNodeColor, smartStudentNodeColor } from '../utils/nodeColorScale.js'
+
 // Student personal knowledge graph across 3 courses
 export const studentGraph = {
   nodes: [
@@ -78,8 +80,10 @@ export const studentGraph = {
   ]
 }
 
-export function studentAccuracyColor(acc) {
-  if (acc >= 0.7) return '#9EE4D4'
-  if (acc >= 0.5) return '#FFD6A8'
-  return '#FFB8C8'
+/** Number (legacy) or full node (+ optional `opts.degree` from the live graph). */
+export function studentAccuracyColor(accOrNode, opts) {
+  if (typeof accOrNode === 'object' && accOrNode !== null && 'accuracy' in accOrNode) {
+    return smartStudentNodeColor(accOrNode, opts || {})
+  }
+  return scoreToNodeColor(accOrNode ?? 0.5)
 }

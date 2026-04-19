@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,14 +7,14 @@
 
 html, body, #root {
   width: 100%; height: 100%;
-  font-family: 'Inter', system-ui, sans-serif;
-  background: #110E1A;
-  color: #F6F2FF;
+  font-family: 'Lato', system-ui, sans-serif;
+  background: #FDF6ED;
+  color: #1B4332;
 }
 
 ::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: #1E1B2E; }
-::-webkit-scrollbar-thumb { background: #3D3755; border-radius: 2px; }
+::-webkit-scrollbar-track { background: #E8F0EB; }
+::-webkit-scrollbar-thumb { background: #2D6A4F; border-radius: 2px; }
 
 /* Brain intro */
 @keyframes pulse-glow {
@@ -48,6 +48,46 @@ html, body, #root {
 .vignette::after {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(17,14,26,0.68) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(27,67,50,0.08) 100%);
   pointer-events: none; z-index: 5;
+}
+
+/* Falling leaves (respect reduced motion) */
+@keyframes leaf-fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% { opacity: 0.62; }
+  22% { transform: translateY(18vh) translateX(14px) rotate(55deg); }
+  45% { transform: translateY(48vh) translateX(-10px) rotate(120deg); }
+  68% { transform: translateY(78vh) translateX(12px) rotate(190deg); }
+  100% {
+    transform: translateY(118vh) translateX(-6px) rotate(265deg);
+    opacity: 0.25;
+  }
+}
+@keyframes tree-sway-l {
+  0%, 100% { transform: translateX(0) rotate(-0.5deg); }
+  50% { transform: translateX(4px) rotate(0.4deg); }
+}
+@keyframes tree-sway-r {
+  0%, 100% { transform: translateX(0) rotate(0.4deg); }
+  50% { transform: translateX(-4px) rotate(-0.35deg); }
+}
+.leaf-fall {
+  animation-name: leaf-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.tree-sway-left { animation: tree-sway-l 10s ease-in-out infinite; }
+.tree-sway-right { animation: tree-sway-r 12s ease-in-out infinite 1s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .leaf-fall {
+    animation: none !important;
+    opacity: 0.1 !important;
+  }
+  .tree-sway-left,
+  .tree-sway-right { animation: none !important; }
 }
