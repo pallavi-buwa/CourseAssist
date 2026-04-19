@@ -23,7 +23,6 @@ import { readNodeMasteryMap, writeNodeMastery } from '../utils/nodeMasteryStorag
 import PersonaContentHub from '../components/PersonaContentHub.jsx'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
-const CONTENT_TAB = 'content'
 const SUBJECT_LEGEND_COLORS = ['#C4B5FF', '#8EE4D2', '#FFD6A8', '#FFB8C8', '#67e8f9', '#fbbf24']
 
 export default function StudentDashboard() {
@@ -32,8 +31,10 @@ export default function StudentDashboard() {
   const persona = useMemo(() => resolvePersona(user?.email, 'student'), [user?.email])
 
   const [selectedNode, setSelectedNode]       = useState(null)
-  /** 'all' | full subject title from graph | 'content' (fixed hub tab) */
-  const [activeCourse, setActiveCourse]       = useState('all')
+  /** null = all subjects; non-empty array = highlight only those courses (OR) */
+  const [subjectSelection, setSubjectSelection] = useState(null)
+  /** 'graph' | 'content' hub */
+  const [view, setView]                         = useState('graph')
   const [showGenerator, setShowGenerator]     = useState(false)
   const [graphData, setGraphData]             = useState(() => getStaticStudentGraphForPersona({}))
   const [masteryTick, setMasteryTick]         = useState(0)
@@ -64,9 +65,11 @@ export default function StudentDashboard() {
   )
 
   useEffect(() => {
-    if (activeCourse === 'all' || activeCourse === CONTENT_TAB) return
-    if (!subjects.includes(activeCourse)) setActiveCourse('all')
-  }, [subjects, activeCourse])
+    if (view !== 'graph' || !subjectSelection?.length) return
+    const valid = subjectSelection.filter(t => subjects.includes(t))
+    if (valid.length === subjectSelection.length) return
+    setSubjectSelection(valid.length ? valid : null)
+  }, [subjects, view, subjectSelection])
 
   useEffect(() => {
     if (!user?.email) return
@@ -120,6 +123,25 @@ export default function StudentDashboard() {
     }))
   }
 
+  const toggleSubject = (title) => {
+    setSubjectSelection((prev) => {
+      if (prev === null) return [title]
+      const has = prev.includes(title)
+      if (has) {
+        const next = prev.filter(t => t !== title)
+        return next.length ? next : null
+      }
+      return [...prev, title]
+    })
+    setSelectedNode(null)
+  }
+
+  const clearSubjectFilters = () => {
+    setView('graph')
+    setSubjectSelection(null)
+    setSelectedNode(null)
+  }
+
   return (
     <RequireAuth role="student">
       <div className="flex min-h-screen flex-col bg-space-page">
@@ -138,56 +160,72 @@ export default function StudentDashboard() {
               </p>
             </div>
 
-            {/* Subject tabs (from graph) + fixed Content tab */}
-            <div className="flex flex-wrap items-center justify-end gap-2 max-w-[min(100%,42rem)]">
-              <button
-                type="button"
-                onClick={() => { setActiveCourse('all'); setSelectedNode(null) }}
-                className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all ${
-                  activeCourse === 'all'
-                    ? 'text-white border-transparent'
-                    : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
-                }`}
-                style={
-                  activeCourse === 'all'
-                    ? { backgroundColor: persona.accentHex, borderColor: persona.accentHex }
-                    : undefined
-                }
-              >
-                All
-              </button>
-              {subjects.map(title => (
+            {/* Subject pills: multi-select (OR) + Content — touch targets from main UI pass */}
+            <div className="flex flex-col items-end gap-1.5 max-w-[min(100%,42rem)]">
+              <p className="hidden text-[10px] text-claro-muted text-right max-w-full leading-snug sm:block">
+                <span className="font-medium uppercase tracking-wide text-claro-muted/90">Courses</span>
+                {' — '}
+                <span title="Each pill toggles on/off; more than one can stay selected">
+                  click several pills to highlight them together; click again to remove one. All shows every course.
+                </span>
+              </p>
+              <div className="flex flex-wrap items-center justify-end gap-2">
                 <button
-                  key={title}
                   type="button"
-                  onClick={() => { setActiveCourse(title); setSelectedNode(null) }}
-                  className={`min-h-touch inline-flex items-center max-w-[12rem] text-sm px-4 py-2 rounded-full border transition-all truncate ${
-                    activeCourse === title
+                  onClick={clearSubjectFilters}
+                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all ${
+                    subjectSelection === null
                       ? 'text-white border-transparent'
                       : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
                   }`}
                   style={
-                    activeCourse === title
+                    subjectSelection === null
                       ? { backgroundColor: persona.accentHex, borderColor: persona.accentHex }
                       : undefined
                   }
-                  title={title}
+                  title="Show every course on the graph"
                 >
-                  {compactSubjectLabel(title, 18)}
+                  All
                 </button>
-              ))}
-              <button
-                type="button"
-                onClick={() => { setActiveCourse(CONTENT_TAB); setSelectedNode(null) }}
-                className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all font-medium ${
-                  activeCourse === CONTENT_TAB
-                    ? 'bg-claro-indigo border-claro-indigo text-white'
-                    : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
-                }`}
-                title="Readings and materials (same for every subject layout)"
-              >
-                Content
-              </button>
+                {subjects.map(title => {
+                  const on = subjectSelection !== null && subjectSelection.includes(title)
+                  return (
+                    <button
+                      key={title}
+                      type="button"
+                      onClick={() => { setView('graph'); toggleSubject(title) }}
+                      className={`min-h-touch inline-flex items-center max-w-[12rem] truncate text-sm px-4 py-2 rounded-full border transition-all ${
+                        on
+                          ? 'text-white border-transparent'
+                          : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
+                      }`}
+                      style={
+                        on
+                          ? { backgroundColor: persona.accentHex, borderColor: persona.accentHex }
+                          : undefined
+                      }
+                      title={`${title} — click again to remove; click other courses to add more`}
+                    >
+                      {compactSubjectLabel(title, 18)}
+                    </button>
+                  )
+                })}
+                <button
+                  type="button"
+                  onClick={() => { setView('content'); setSelectedNode(null) }}
+                  className={`min-h-touch inline-flex items-center text-sm px-4 py-2 rounded-full border transition-all font-medium ${
+                    view === 'content'
+                      ? 'bg-claro-indigo border-claro-indigo text-white'
+                      : 'bg-claro-canvas border-claro-indigo/20 text-claro-muted hover:border-claro-indigo/40'
+                  }`}
+                  title="Readings and materials (same for every subject layout)"
+                >
+                  Content
+                </button>
+              </div>
+              <p className="hidden text-[10px] text-claro-muted/90 text-right max-w-full leading-snug md:block">
+                Map: +/− zoom, Fit, full screen, PNG download (top-left on the graph).
+              </p>
             </div>
 
             {/* Actions */}
@@ -237,7 +275,7 @@ export default function StudentDashboard() {
 
           {/* Graph + detail panel — or Content hub (min height so 3D canvas always gets non-zero layout) */}
           <div className="flex-1 relative overflow-hidden min-h-[min(55vh,560px)] min-w-0 flex flex-col">
-            {activeCourse === CONTENT_TAB ? (
+            {view === 'content' ? (
               <div className="h-full overflow-y-auto px-5 py-8 max-w-4xl mx-auto">
                 <PersonaContentHub persona={persona} subjects={subjects} />
                 <p className="text-sm text-claro-muted mt-4">
@@ -249,7 +287,7 @@ export default function StudentDashboard() {
                 <KnowledgeGraph3D
                   graphData={mergedGraph}
                   onNodeClick={handleNodeClick}
-                  highlightCourse={activeCourse === 'all' ? null : activeCourse}
+                  highlightCourses={subjectSelection}
                 />
 
                 {selectedNode && (

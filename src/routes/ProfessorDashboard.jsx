@@ -160,7 +160,7 @@ export default function ProfessorDashboard() {
             </div>
 
             {/* 2D Graph */}
-            <div className="flex-1 relative overflow-hidden">
+            <div className="relative min-h-0 flex-1 overflow-hidden">
               <KnowledgeGraph2D
                 graphData={graphData}
                 onNodeClick={(node) => setSelectedNode(node)}

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback, forwardRef } from 'react'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import { generateStudyGuide } from '../api/openai.js'
@@ -26,67 +26,328 @@ const INITIAL_NOTES = [
 
 const BRANCH_COLORS = ['#818cf8', '#67e8f9', '#fbbf24', '#34d399', '#f87171', '#fb923c', '#e879f9']
 
+/** Split only tokens that exceed maxLen (URLs / long compounds) — never slice normal words */
+function chunkLongToken(token, maxLen) {
+  if (token.length <= maxLen) return [token]
+  const out = []
+  let i = 0
+  while (i < token.length) {
+    const chunkSize = i === 0 ? maxLen : maxLen - 1
+    const piece = token.slice(i, i + chunkSize)
+    i += chunkSize
+    out.push(i < token.length ? `${piece}\u2010` : piece)
+  }
+  return out
+}
+
+/** Word-wrap at spaces; only then break oversized single tokens */
+function splitSvgLines(str, maxLen) {
+  const s = String(str || '').trim() || '—'
+  const words = s.split(/\s+/).flatMap(w => (w.length > maxLen ? chunkLongToken(w, maxLen) : [w]))
+  const lines = []
+  let cur = ''
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w
+    if (next.length > maxLen && cur) {
+      lines.push(cur)
+      cur = w
+    } else {
+      cur = next
+    }
+  }
+  if (cur) lines.push(cur)
+  return lines
+}
+
+/**
+ * Canvas + radii scale with branch/child count so AI maps (e.g. Zipcar) are not clipped.
+ * Leaves are placed on a circle from the center; pad must cover label overflow past nodes.
+ */
+function getMindMapLayout(mindmap) {
+  const branches = Array.isArray(mindmap?.branches) ? mindmap.branches : []
+  const n = Math.max(branches.length, 1)
+  const maxChildren = branches.length
+    ? Math.max(1, ...branches.map(b => (Array.isArray(b.children) ? b.children.length : 0)))
+    : 1
+  const rLeaf = Math.min(520, Math.max(300, 240 + n * 26 + maxChildren * 22))
+  const rBranch = Math.round(rLeaf * 0.5)
+  const labelSlack = 130
+  const halfExtent = rLeaf + labelSlack
+  const innerW = Math.max(2 * halfExtent + 80, 960 + n * 40)
+  const innerH = Math.max(2 * halfExtent + 80, 900 + maxChildren * 28)
+  const pad = 120
+  return {
+    innerW,
+    innerH,
+    pad,
+    vbW: innerW + 2 * pad,
+    vbH: innerH + 2 * pad,
+    cx: innerW / 2,
+    cy: innerH / 2,
+    rBranch,
+    rLeaf,
+    branchCircleR: 38 + Math.min(10, Math.floor(maxChildren / 2)),
+    leafCircleR: 30 + Math.min(8, Math.floor(maxChildren / 3)),
+    centerCircleR: Math.min(72, 52 + Math.min(14, Math.floor(String(mindmap?.center || '').length / 18))),
+  }
+}
+
+function SvgWrappedLines({ x, y, lines, fontSize, fill, fontWeight, lineGap = 11 }) {
+  const startY = y - ((lines.length - 1) * lineGap) / 2
+  return (
+    <text
+      x={x}
+      y={startY}
+      textAnchor="middle"
+      fill={fill}
+      fontSize={fontSize}
+      fontWeight={fontWeight || 'normal'}
+      fontFamily='ui-sans-serif, system-ui, "Segoe UI", sans-serif'
+      style={{ pointerEvents: 'none' }}
+    >
+      {lines.map((ln, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? 0 : lineGap}>
+          {ln}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
 // ─── SVG Mind Map renderer ────────────────────────────────────────────────────
-function MindMapSVG({ mindmap }) {
+const MindMapSVG = forwardRef(function MindMapSVG({ mindmap, layout, layoutPx }, ref) {
   if (!mindmap?.center) return null
   const { center, branches = [] } = mindmap
-  const W = 660, H = 480, CX = W / 2, CY = H / 2
-  const R_BRANCH = branches.length <= 3 ? 160 : 180
-  const R_LEAF   = branches.length <= 3 ? 280 : 300
+  const {
+    innerW: W,
+    innerH: H,
+    pad: PAD,
+    vbW: VW,
+    vbH: VH,
+    cx: CX,
+    cy: CY,
+    rBranch: R_BRANCH,
+    rLeaf: R_LEAF,
+    branchCircleR,
+    leafCircleR,
+    centerCircleR,
+  } = layout
 
-  const angle = (i) => (i / branches.length) * 2 * Math.PI - Math.PI / 2
+  const n = Math.max(branches.length, 1)
+  const angle = (i) => (i / n) * 2 * Math.PI - Math.PI / 2
+
+  const centerLines = splitSvgLines(center, 24)
+  const centerFont = centerLines.length > 4 ? 9.5 : centerLines.length > 2 ? 10.5 : 11
+  const centerGap = centerLines.length > 4 ? 11 : 12
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ maxHeight: 400 }}>
-      {branches.map((branch, bi) => {
-        const a  = angle(bi)
-        const bx = CX + Math.cos(a) * R_BRANCH
-        const by = CY + Math.sin(a) * R_BRANCH
-        const col = branch.color || BRANCH_COLORS[bi % BRANCH_COLORS.length]
-        const children = branch.children || []
+    <svg
+      ref={ref}
+      viewBox={`0 0 ${VW} ${VH}`}
+      width={layoutPx ? VW : undefined}
+      height={layoutPx ? VH : undefined}
+      className={layoutPx ? 'max-w-none' : 'w-full max-w-full'}
+      style={layoutPx ? { display: 'block' } : { maxHeight: 560, display: 'block' }}
+      preserveAspectRatio={layoutPx ? undefined : 'xMidYMid meet'}
+      overflow="visible"
+    >
+      <rect x="0" y="0" width={VW} height={VH} fill="#0b1220" rx="8" />
+      <g transform={`translate(${PAD},${PAD})`}>
+        {branches.map((branch, bi) => {
+          const a = angle(bi)
+          const bx = CX + Math.cos(a) * R_BRANCH
+          const by = CY + Math.sin(a) * R_BRANCH
+          const col = branch.color || BRANCH_COLORS[bi % BRANCH_COLORS.length]
+          const children = branch.children || []
+          const branchLines = splitSvgLines(branch.label, 28)
+          const brR = branchCircleR + Math.min(12, Math.max(0, branchLines.length - 1) * 4)
 
-        return (
-          <g key={bi}>
-            {/* Center → branch */}
-            <line x1={CX} y1={CY} x2={bx} y2={by}
-              stroke={col} strokeWidth="2" strokeOpacity="0.55" strokeDasharray="6 3" />
-            {/* Branch circle */}
-            <circle cx={bx} cy={by} r="32" fill={col} fillOpacity="0.12"
-              stroke={col} strokeWidth="1.5" strokeOpacity="0.65" />
-            <foreignObject x={bx - 28} y={by - 15} width="56" height="30">
-              <div style={{ fontSize: 9, color: '#e2e8f0', textAlign: 'center', lineHeight: '1.25', wordBreak: 'break-word' }}>
-                {branch.label}
-              </div>
-            </foreignObject>
-            {/* Leaf children */}
-            {children.map((child, ci) => {
-              const spread = Math.min(0.7, 0.9 / Math.max(children.length, 1))
-              const la = a + (ci - (children.length - 1) / 2) * spread
-              const lx = CX + Math.cos(la) * R_LEAF
-              const ly = CY + Math.sin(la) * R_LEAF
-              return (
-                <g key={ci}>
-                  <line x1={bx} y1={by} x2={lx} y2={ly} stroke={col} strokeWidth="1" strokeOpacity="0.3" />
-                  <circle cx={lx} cy={ly} r="24" fill="#1f2937" stroke={col} strokeWidth="1" strokeOpacity="0.35" />
-                  <foreignObject x={lx - 20} y={ly - 12} width="40" height="24">
-                    <div style={{ fontSize: 8, color: '#94a3b8', textAlign: 'center', lineHeight: '1.2', wordBreak: 'break-word' }}>
-                      {child}
-                    </div>
-                  </foreignObject>
-                </g>
-              )
-            })}
-          </g>
-        )
-      })}
-      {/* Center node */}
-      <circle cx={CX} cy={CY} r="46" fill="#312e81" stroke="#818cf8" strokeWidth="2" />
-      <foreignObject x={CX - 38} y={CY - 18} width="76" height="36">
-        <div style={{ fontSize: 11, color: '#c7d2fe', textAlign: 'center', fontWeight: 600, lineHeight: '1.3', wordBreak: 'break-word' }}>
-          {center}
-        </div>
-      </foreignObject>
+          return (
+            <g key={bi}>
+              <line
+                x1={CX}
+                y1={CY}
+                x2={bx}
+                y2={by}
+                stroke={col}
+                strokeWidth="2"
+                strokeOpacity="0.55"
+                strokeDasharray="6 3"
+              />
+              <circle cx={bx} cy={by} r={brR} fill={col} fillOpacity="0.12" stroke={col} strokeWidth="1.5" strokeOpacity="0.65" />
+              <SvgWrappedLines x={bx} y={by} lines={branchLines} fontSize={9} fill="#e2e8f0" lineGap={10} />
+              {children.map((child, ci) => {
+                const spread = Math.min(0.72, 1.05 / Math.max(children.length, 1))
+                const la = a + (ci - (children.length - 1) / 2) * spread
+                const lx = CX + Math.cos(la) * R_LEAF
+                const ly = CY + Math.sin(la) * R_LEAF
+                const childLines = splitSvgLines(child, 26)
+                const lf = childLines.length > 5 ? 7 : childLines.length > 3 ? 7.5 : 8
+                const lg = childLines.length > 5 ? 8.5 : 9
+                const lr = leafCircleR + Math.min(10, Math.max(0, childLines.length - 1) * 3)
+                return (
+                  <g key={ci}>
+                    <line x1={bx} y1={by} x2={lx} y2={ly} stroke={col} strokeWidth="1" strokeOpacity="0.3" />
+                    <circle cx={lx} cy={ly} r={lr} fill="#1f2937" stroke={col} strokeWidth="1" strokeOpacity="0.35" />
+                    <SvgWrappedLines x={lx} y={ly} lines={childLines} fontSize={lf} fill="#94a3b8" lineGap={lg} />
+                  </g>
+                )
+              })}
+            </g>
+          )
+        })}
+        <circle cx={CX} cy={CY} r={centerCircleR} fill="#312e81" stroke="#818cf8" strokeWidth="2" />
+        <SvgWrappedLines
+          x={CX}
+          y={CY}
+          lines={centerLines}
+          fontSize={centerFont}
+          fill="#c7d2fe"
+          fontWeight="600"
+          lineGap={centerGap}
+        />
+      </g>
     </svg>
+  )
+})
+MindMapSVG.displayName = 'MindMapSVG'
+
+/** Clone SVG for download: explicit pixel size + namespaces so the full diagram rasterizes */
+function svgElementToExportString(svgEl, pixelScale = 2) {
+  const clone = svgEl.cloneNode(true)
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+  clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+  clone.removeAttribute('class')
+  clone.removeAttribute('style')
+  const vb = svgEl.viewBox?.baseVal
+  if (vb && vb.width && vb.height) {
+    const pw = Math.round(vb.width * pixelScale)
+    const ph = Math.round(vb.height * pixelScale)
+    clone.setAttribute('width', String(pw))
+    clone.setAttribute('height', String(ph))
+  }
+  return new XMLSerializer().serializeToString(clone)
+}
+
+/** Zoom, fullscreen, and export for the Content-tab SVG mind map */
+function NotesMindMapFrame({ mindmap, onClear, branchColors }) {
+  const svgRef = useRef(null)
+  const shellRef = useRef(null)
+  const [zoom, setZoom] = useState(1)
+  const [isFs, setIsFs] = useState(false)
+  const layout = useMemo(() => getMindMapLayout(mindmap), [mindmap])
+
+  useEffect(() => {
+    setZoom(1)
+  }, [mindmap.center, mindmap.branches?.length])
+
+  useEffect(() => {
+    const onFs = () => setIsFs(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', onFs)
+    return () => document.removeEventListener('fullscreenchange', onFs)
+  }, [])
+
+  const zoomIn = useCallback(() => {
+    setZoom(z => Math.min(3.25, Math.round(z * 1.18 * 100) / 100))
+  }, [])
+  const zoomOut = useCallback(() => {
+    setZoom(z => Math.max(0.35, Math.round(z / 1.18 * 100) / 100))
+  }, [])
+  const resetZoom = useCallback(() => setZoom(1), [])
+
+  const toggleFullscreen = useCallback(() => {
+    const el = shellRef.current
+    if (!el) return
+    if (!document.fullscreenElement) el.requestFullscreen?.().catch(() => {})
+    else document.exitFullscreen?.().catch(() => {})
+  }, [])
+
+  const handleDownload = useCallback(() => {
+    const el = svgRef.current
+    if (!el) return
+    const xml = svgElementToExportString(el, 1)
+    const blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n`, xml], { type: 'image/svg+xml;charset=utf-8' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `mindmap-${String(mindmap.center || 'map').slice(0, 40).replace(/\s+/g, '-')}.svg`
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }, [mindmap.center])
+
+  return (
+    <div
+      ref={shellRef}
+      className="relative flex min-h-0 flex-1 flex-col rounded-xl border border-gray-800/80 bg-gray-950/40"
+    >
+      <div
+        className="pointer-events-auto absolute left-2 top-2 z-10 flex flex-wrap items-center gap-1 rounded-lg border border-gray-700 bg-gray-900/95 p-1 shadow-lg"
+        onMouseDown={e => e.stopPropagation()}
+      >
+        <button type="button" title="Zoom in" onClick={zoomIn} className="rounded-md px-2 py-1 text-xs font-medium text-white hover:bg-indigo-600/30">
+          +
+        </button>
+        <button type="button" title="Zoom out" onClick={zoomOut} className="rounded-md px-2 py-1 text-xs font-medium text-white hover:bg-indigo-600/30">
+          −
+        </button>
+        <button type="button" title="Reset zoom" onClick={resetZoom} className="rounded-md px-2 py-1 text-xs text-gray-400 hover:bg-gray-800 hover:text-white">
+          Reset
+        </button>
+        <span className="mx-0.5 h-4 w-px bg-gray-700" aria-hidden />
+        <button type="button" title={isFs ? 'Exit full screen' : 'Full screen'} onClick={toggleFullscreen} className="rounded-md px-2 py-1 text-xs text-gray-400 hover:bg-gray-800 hover:text-white">
+          {isFs ? 'Exit' : 'Full'}
+        </button>
+        <span className="mx-0.5 h-4 w-px bg-gray-700" aria-hidden />
+        <button
+          type="button"
+          title="Download mind map"
+          aria-label="Download mind map"
+          onClick={handleDownload}
+          className="rounded-md p-1.5 text-gray-300 hover:bg-gray-800 hover:text-white"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1.25A2.75 2.75 0 006.75 20h10.5A2.75 2.75 0 0020 17.25V16M12 4v12m0 0l-3.5-3.5M12 16l3.5-3.5" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Spacer sized to scaled content so overflow-auto can reach clipped edges (transform:scale does not grow layout alone) */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-auto overscroll-contain px-1 pb-2 pt-12">
+        <div
+          className="shrink-0"
+          style={{
+            width: layout.vbW * zoom,
+            height: layout.vbH * zoom,
+          }}
+        >
+          <div
+            className="origin-top-left"
+            style={{
+              width: layout.vbW,
+              height: layout.vbH,
+              transform: `scale(${zoom})`,
+            }}
+          >
+            <MindMapSVG ref={svgRef} mindmap={mindmap} layout={layout} layoutPx />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-shrink-0 items-center justify-between border-t border-gray-800 px-4 py-3">
+        <h3 className="text-sm font-medium text-white">{mindmap.center}</h3>
+        <button type="button" onClick={onClear} className="text-xs text-gray-600 hover:text-gray-400">
+          Clear
+        </button>
+      </div>
+
+      <div className="flex flex-wrap gap-2 border-t border-gray-800 px-4 py-3">
+        {mindmap.branches?.map((b, i) => (
+          <div key={i} className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="h-2 w-2 rounded-full" style={{ background: b.color || branchColors[i % branchColors.length] }} />
+            {b.label}
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -439,25 +700,13 @@ export default function StudentNotes() {
               </div>
 
               {/* Map canvas */}
-              <div className="col-span-3 bg-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col min-h-96">
+              <div className="col-span-3 flex min-h-96 flex-col rounded-2xl border border-gray-800 bg-gray-900 p-3">
                 {mindmap ? (
-                  <>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-medium text-white">{mindmap.center}</h3>
-                      <button onClick={() => setMindmap(null)} className="text-xs text-gray-600 hover:text-gray-400">Clear</button>
-                    </div>
-                    <MindMapSVG mindmap={mindmap} />
-
-                    {/* Branch legend */}
-                    <div className="mt-4 flex flex-wrap gap-2 border-t border-gray-800 pt-4">
-                      {mindmap.branches?.map((b, i) => (
-                        <div key={i} className="flex items-center gap-1.5 text-xs text-gray-400">
-                          <div className="w-2 h-2 rounded-full" style={{ background: b.color || BRANCH_COLORS[i % BRANCH_COLORS.length] }} />
-                          {b.label}
-                        </div>
-                      ))}
-                    </div>
-                  </>
+                  <NotesMindMapFrame
+                    mindmap={mindmap}
+                    onClear={() => setMindmap(null)}
+                    branchColors={BRANCH_COLORS}
+                  />
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center text-center gap-3 text-gray-600">
                     <div className="text-4xl">🗺</div>
