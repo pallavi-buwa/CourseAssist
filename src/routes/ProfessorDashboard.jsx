@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { RequireAuth } from '../context/AuthContext.jsx'
+import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import KnowledgeGraph2D from '../components/KnowledgeGraph2D.jsx'
 import AlertsSidebar from '../components/AlertsSidebar.jsx'
@@ -8,12 +8,24 @@ import NodeDetailPanel from '../components/NodeDetailPanel.jsx'
 import MicroCheckGenerator from '../components/MicroCheckGenerator.jsx'
 import GraphGenerator from '../components/GraphGenerator.jsx'
 import { marketingGraph } from '../data/mockGraphMarketing.js'
+import { resolvePersona } from '../data/personas.js'
+import { getProfessorMarketingGraph } from '../data/personaProfessorGraphs.js'
+import {
+  readCachedProfessorAIGraph,
+  writeCachedProfessorAIGraph,
+} from '../utils/personaGraphStorage.js'
+import {
+  generatePersonaProfessorCohortGraph,
+  isOpenAIConfigured,
+} from '../api/openai.js'
 import { subscribeToConceptScores } from '../firebase/realtimeSync.js'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 export default function ProfessorDashboard() {
   const { courseId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const persona = useMemo(() => resolvePersona(user?.email, 'professor'), [user?.email])
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [selectedNode, setSelectedNode]         = useState(null)
@@ -21,7 +33,36 @@ export default function ProfessorDashboard() {
   const [graphData, setGraphData]               = useState(marketingGraph)
   const [showMicroCheck, setShowMicroCheck]     = useState(false)
   const [showGenerator, setShowGenerator]       = useState(false)
-  const unsubRef = useRef(null)
+
+  useEffect(() => {
+    if (!user?.email) return
+    const p = resolvePersona(user.email, 'professor')
+    const cached = readCachedProfessorAIGraph(user.email, 'marketing')
+    setGraphData(cached || getProfessorMarketingGraph(p))
+    setSelectedNode(null)
+  }, [user?.email])
+
+  useEffect(() => {
+    if (!user?.email) return
+    const p = resolvePersona(user.email, 'professor')
+    if (!p.tryAIGraph || !isOpenAIConfigured()) return
+    if (readCachedProfessorAIGraph(user.email, 'marketing')) return
+
+    let cancelled = false
+    ;(async () => {
+      try {
+        const g = await generatePersonaProfessorCohortGraph(p, 'Marketing Management')
+        if (cancelled || !g?.nodes?.length) return
+        writeCachedProfessorAIGraph(user.email, 'marketing', g)
+        setGraphData(g)
+      } catch {
+        /* keep static persona / default graph */
+      }
+    })()
+    return () => { cancelled = true }
+  }, [user?.email, persona.id])
+
+  const graphNodeIds = graphData.nodes.map(n => n.id).join(',')
 
   // Subscribe to live Firebase updates for each node
   useEffect(() => {
@@ -38,7 +79,7 @@ export default function ProfessorDashboard() {
       unsubs.push(unsub)
     })
     return () => unsubs.forEach(u => u?.())
-  }, [])
+  }, [graphNodeIds])
 
   const handleGenerated = (newGraph) => {
     setGraphData(prev => ({
@@ -72,7 +113,12 @@ export default function ProfessorDashboard() {
                 <button type="button" onClick={() => navigate('/professor/home')} className="text-claro-muted hover:text-claro-text text-sm transition-colors">Back</button>
                 <div>
                   <h1 className="text-sm font-medium text-claro-text">{courseTitle} — Class Overview</h1>
-                  <p className="text-xs text-claro-muted">{graphData.nodes.length} concepts · {graphData.links.length} connections · 50 students</p>
+                  <p className="text-xs text-claro-muted">
+                    {graphData.nodes.length} concepts · {graphData.links.length} connections · 50 students
+                    {persona.matched && (
+                      <span> · {persona.cohortHint}</span>
+                    )}
+                  </p>
                 </div>
               </div>
 
@@ -91,7 +137,8 @@ export default function ProfessorDashboard() {
                 </button>
                 <button
                   onClick={() => setShowGenerator(true)}
-                  className="rounded-lg bg-claro-indigo px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125"
+                  className={`rounded-lg px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all hover:brightness-110 active:brightness-95 dark:hover:brightness-125 ${persona.matched ? '' : 'bg-claro-indigo'}`}
+                  style={persona.matched ? { backgroundColor: persona.accentHex } : undefined}
                 >
                   + From syllabus
                 </button>

@@ -1,18 +1,30 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { RequireAuth } from '../context/AuthContext.jsx'
+import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import MicroCheck from '../components/MicroCheck.jsx'
 import NotesWorkspace from '../components/NotesWorkspace.jsx'
-import { passage } from '../data/marketingPassage.js'
+import { getReadingPassageForRoute } from '../data/readingPassagesBySlug.js'
 import { writeStudentAnswer } from '../firebase/realtimeSync.js'
 
 export default function StudentReadingView() {
   const { moduleId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const { passage, displayTitle } = useMemo(
+    () => getReadingPassageForRoute(moduleId, user?.email),
+    [moduleId, user?.email],
+  )
+
   const [answered, setAnswered] = useState({})  // sectionId → { correct }
   const [showNotes, setShowNotes] = useState(false)
   const [checkVisible, setCheckVisible] = useState({})  // sectionId → bool
+
+  useEffect(() => {
+    setAnswered({})
+    setCheckVisible({})
+  }, [moduleId, passage.title])
 
   const handleAnswer = async (sectionId, { conceptId, correct }) => {
     setAnswered(prev => ({ ...prev, [sectionId]: { correct } }))
@@ -39,7 +51,7 @@ export default function StudentReadingView() {
                 Back to courses
               </button>
               <h1 className="text-xl font-semibold text-white">{passage.title}</h1>
-              <p className="text-gray-500 text-sm mt-1">MBA 601 · AI for Business Decisions · Week 3</p>
+              <p className="text-gray-500 text-sm mt-1">{displayTitle} · Week {passage.week ?? 3}</p>
             </div>
             <button
               onClick={() => setShowNotes(v => !v)}

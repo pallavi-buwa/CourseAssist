@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { ClaroLogoMark } from '../components/brand/ClaroLogoMark.jsx'
 import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
+import { listDemoPersonaHints } from '../data/personas.js'
 export default function LoginPage() {
   const { login, user } = useAuth()
   const navigate = useNavigate()
@@ -95,6 +96,19 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-xs text-claro-muted/80 mt-5">Demo — no real authentication required</p>
+
+          <div className="mt-6 rounded-xl border border-claro-indigo/15 bg-claro-canvas/60 p-4 text-left">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-claro-muted mb-2">Demo personas (different graphs & UI)</p>
+            <p className="text-[11px] text-claro-muted mb-1.5"><span className="text-claro-text/80">Students:</span>{' '}
+              {listDemoPersonaHints().students.join(', ')}
+            </p>
+            <p className="text-[11px] text-claro-muted"><span className="text-claro-text/80">Professors:</span>{' '}
+              {listDemoPersonaHints().professors.join(', ')}
+            </p>
+            <p className="text-[11px] text-claro-muted/90 mt-2">
+              With <code className="text-claro-text/70">VITE_OPENAI_API_KEY</code> set, graphs personalize once via AI and are cached in this browser.
+            </p>
+          </div>
         </div>
       </div>
     </LeafBackdrop>

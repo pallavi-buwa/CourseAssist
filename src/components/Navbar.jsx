@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
+import { resolvePersona } from '../data/personas.js'
 const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
-  { label: 'Courses',  to: '/student/reading/module-1' },
+  { label: 'Courses',  to: '/student/home' },
   { label: 'Notes',       to: '/student/notes' },
   { label: 'Preferences', to: '/student/preferences' },
 ]
@@ -26,6 +27,7 @@ export default function Navbar() {
 
   const links = user.role === 'professor' ? professorLinks : studentLinks
   const initials = (user.name || user.email || 'U').slice(0, 2).toUpperCase()
+  const persona = useMemo(() => resolvePersona(user.email, user.role), [user.email, user.role])
 
   const breadcrumb = location.pathname
     .split('/').filter(Boolean)
@@ -42,7 +44,10 @@ export default function Navbar() {
       {/* Logo + breadcrumb */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex min-w-0 items-center gap-2" title="Claro">
-          <div className="flex h-8 shrink-0 items-center">
+          <div
+            className="flex h-8 shrink-0 items-center rounded-lg ring-1 ring-claro-indigo/25"
+            style={{ boxShadow: `0 0 0 1px ${persona.accentHex}33` }}
+          >
             <ClaroLogoMark size={28} />
           </div>
         </div>

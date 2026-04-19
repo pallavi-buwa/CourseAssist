@@ -1,14 +1,27 @@
-import { useState } from 'react'
-import { RequireAuth } from '../context/AuthContext.jsx'
+import { useState, useMemo, useEffect } from 'react'
+import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import { generateStudyGuide } from '../api/openai.js'
-import { studentGraph } from '../data/mockStudentGraph.js'
+import {
+  getStudentGraphSnapshot,
+  uniqueSubjectsFromGraph,
+  compactSubjectLabel,
+} from '../utils/studentGraphSnapshot.js'
+import { resolvePersona } from '../data/personas.js'
+import PersonaContentHub from '../components/PersonaContentHub.jsx'
 
-// ─── Initial mock notes ───────────────────────────────────────────────────────
+const CONTENT_TAB_ID = 'content'
+
+function courseForNodeLabel(graphData, label) {
+  const n = graphData?.nodes?.find(x => x.label === label)
+  return n?.course ? String(n.course) : ''
+}
+
+// ─── Initial mock notes (course used for subject-tab filtering) ───────────────
 const INITIAL_NOTES = [
-  { id: 1, title: 'Decision Frameworks', text: 'Decision Frameworks are key for both AI and strategy courses — strong cross-course link!', node: 'Decision Frameworks', timestamp: '2 days ago', color: '#818cf8' },
-  { id: 2, title: 'Risk Assessment', text: 'Review the difference between qualitative and quantitative risk methods. Qualitative = likelihood × impact matrix. Quantitative = Monte Carlo, expected value.', node: 'Risk Assessment', timestamp: '1 week ago', color: '#67e8f9' },
-  { id: 3, title: 'Market Segmentation', text: 'STP: Segment → Target → Position. Geographic, demographic, psychographic, behavioral.', node: 'Market Segmentation', timestamp: '3 days ago', color: '#fbbf24' },
+  { id: 1, title: 'Decision Frameworks', text: 'Decision Frameworks are key for both AI and strategy courses — strong cross-course link!', node: 'Decision Frameworks', course: 'AI for Business Decisions', timestamp: '2 days ago', color: '#818cf8' },
+  { id: 2, title: 'Risk Assessment', text: 'Review the difference between qualitative and quantitative risk methods. Qualitative = likelihood × impact matrix. Quantitative = Monte Carlo, expected value.', node: 'Risk Assessment', course: 'Strategic Management', timestamp: '1 week ago', color: '#67e8f9' },
+  { id: 3, title: 'Market Segmentation', text: 'STP: Segment → Target → Position. Geographic, demographic, psychographic, behavioral.', node: 'Market Segmentation', course: 'Entrepreneurship', timestamp: '3 days ago', color: '#fbbf24' },
 ]
 
 const BRANCH_COLORS = ['#818cf8', '#67e8f9', '#fbbf24', '#34d399', '#f87171', '#fb923c', '#e879f9']
@@ -79,7 +92,21 @@ function MindMapSVG({ mindmap }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function StudentNotes() {
-  const [tab, setTab] = useState('notes')
+  const { user } = useAuth()
+  const persona = useMemo(() => resolvePersona(user?.email, 'student'), [user?.email])
+  const graphData = useMemo(() => getStudentGraphSnapshot(user?.email), [user?.email])
+  const subjects = useMemo(() => uniqueSubjectsFromGraph(graphData), [graphData])
+
+  /** One tab per graph subject, plus fixed "Content" (mind-map tools) at the end. */
+  const [mainTab, setMainTab] = useState(CONTENT_TAB_ID)
+
+  useEffect(() => {
+    setMainTab(prev => {
+      if (prev === CONTENT_TAB_ID) return prev
+      if (subjects.includes(prev)) return prev
+      return subjects[0] || CONTENT_TAB_ID
+    })
+  }, [subjects])
 
   // ── Notes state ──
   const [notes, setNotes]           = useState(INITIAL_NOTES)
@@ -102,20 +129,40 @@ export default function StudentNotes() {
     { label: '', children: '' },
   ])
 
-  const allNodes = studentGraph.nodes.map(n => n.label)
+  const allNodes = graphData.nodes.map(n => n.label)
   const filteredNodes = allNodes.filter(n =>
     n.toLowerCase().includes(nodeSearch.toLowerCase()) && nodeSearch
   )
+
+  const visibleNotes = useMemo(() => {
+    if (mainTab === CONTENT_TAB_ID) return []
+    return notes.filter(n => {
+      const c = n.course || courseForNodeLabel(graphData, n.node)
+      return c === mainTab
+    })
+  }, [notes, mainTab, graphData])
+
+  const noteCountBySubject = useMemo(() => {
+    const m = {}
+    for (const t of subjects) {
+      m[t] = notes.filter(n => (n.course || courseForNodeLabel(graphData, n.node)) === t).length
+    }
+    return m
+  }, [notes, subjects, graphData])
 
   // ── Save note ──
   const saveNote = () => {
     if (!noteText.trim()) return
     const colors = BRANCH_COLORS
+    const inferredCourse = attachedNode
+      ? courseForNodeLabel(graphData, attachedNode)
+      : (mainTab !== CONTENT_TAB_ID ? mainTab : '')
     setNotes(prev => [{
       id: Date.now(),
       title: noteTitle.trim() || 'Untitled',
       text: noteText.trim(),
       node: attachedNode || 'General',
+      course: inferredCourse || undefined,
       timestamp: 'just now',
       color: colors[prev.length % colors.length],
     }, ...prev])
@@ -167,28 +214,46 @@ export default function StudentNotes() {
 
           <div className="mb-6">
             <h1 className="text-xl font-semibold text-white mb-1">Notes</h1>
-            <p className="text-gray-500 text-sm">Log your notes and build mind maps to help remember concepts.</p>
+            <p className="text-gray-500 text-sm">
+              Subject tabs follow your knowledge graph. The <span className="text-gray-400">Content</span> tab combines persona-specific course shortcuts with the mind-map workspace below.
+            </p>
           </div>
 
-          {/* Tab bar */}
-          <div className="flex gap-1 mb-6 border-b border-gray-800">
-            {[
-              { id: 'notes',   label: `Notes${notes.length ? ` (${notes.length})` : ''}` },
-              { id: 'mindmap', label: 'Mind Map' },
-            ].map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`px-5 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
-                  tab === t.id
+          {/* Subject tabs (dynamic) + fixed Content tab */}
+          <div className="flex flex-wrap gap-1 mb-6 border-b border-gray-800">
+            {subjects.map(title => (
+              <button
+                key={title}
+                type="button"
+                onClick={() => setMainTab(title)}
+                className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors max-w-[11rem] truncate ${
+                  mainTab === title
                     ? 'border-indigo-500 text-indigo-400'
                     : 'border-transparent text-gray-500 hover:text-gray-300'
-                }`}>
-                {t.label}
+                }`}
+                title={title}
+              >
+                {compactSubjectLabel(title, 22)}
+                {noteCountBySubject[title] > 0 && (
+                  <span className="text-gray-600 font-normal"> ({noteCountBySubject[title]})</span>
+                )}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => setMainTab(CONTENT_TAB_ID)}
+              className={`px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                mainTab === CONTENT_TAB_ID
+                  ? 'border-white/50 text-white'
+                  : 'border-transparent text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              Content
+            </button>
           </div>
 
-          {/* ── NOTES TAB ── */}
-          {tab === 'notes' && (
+          {/* ── Per-subject notes (not on Content tab) ── */}
+          {mainTab !== CONTENT_TAB_ID && (
             <div className="grid grid-cols-5 gap-6">
 
               {/* Editor */}
@@ -252,13 +317,13 @@ export default function StudentNotes() {
                       <span className="text-xs text-gray-600">{openNote.timestamp}</span>
                     </div>
                   </div>
-                ) : notes.length === 0 ? (
+                ) : visibleNotes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-48 text-center">
-                    <p className="text-gray-600 text-sm">No notes yet. Write your first one →</p>
+                    <p className="text-gray-600 text-sm">No notes for this subject yet. Write your first one →</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-3">
-                    {notes.map(n => (
+                    {visibleNotes.map(n => (
                       <button key={n.id} onClick={() => setOpenNote(n)}
                         className="text-left bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 transition-colors">
                         <div className="flex items-center gap-2 mb-2">
@@ -278,9 +343,11 @@ export default function StudentNotes() {
             </div>
           )}
 
-          {/* ── MIND MAP TAB ── */}
-          {tab === 'mindmap' && (
-            <div className="grid grid-cols-5 gap-6">
+          {/* ── Content tab: mind-map workspace (constant) ── */}
+          {mainTab === CONTENT_TAB_ID && (
+            <div>
+              <PersonaContentHub persona={persona} subjects={subjects} />
+              <div className="grid grid-cols-5 gap-6">
 
               {/* Left controls */}
               <div className="col-span-2 flex flex-col gap-4">
@@ -402,6 +469,7 @@ export default function StudentNotes() {
                   </div>
                 )}
               </div>
+            </div>
             </div>
           )}
 

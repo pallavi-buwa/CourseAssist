@@ -1,7 +1,9 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import { LeafBackdrop } from '../components/brand/LeafBackdrop.jsx'
+import { resolvePersona } from '../data/personas.js'
 
 const COURSES = [
   {
@@ -63,6 +65,7 @@ function TrendBadge({ trend }) {
 export default function ProfessorHome() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const persona = useMemo(() => resolvePersona(user?.email, 'professor'), [user?.email])
 
   const totalStudents = COURSES.reduce((s, c) => s + c.students, 0)
   const avgHealth = (COURSES.reduce((s, c) => s + c.avgComprehension, 0) / COURSES.length * 100).toFixed(0)
@@ -70,6 +73,7 @@ export default function ProfessorHome() {
   return (
     <RequireAuth role="professor">
       <LeafBackdrop className="min-h-screen bg-space-page">
+        <div className="h-0.5 w-full" style={{ backgroundColor: persona.accentHex, opacity: 0.65 }} aria-hidden />
         <Navbar />
         <main className="pt-14 max-w-5xl mx-auto px-5 py-8">
           {/* Greeting */}
@@ -77,7 +81,7 @@ export default function ProfessorHome() {
             <h1 className="text-2xl font-semibold text-claro-text mb-1">
               Welcome back, Prof. {user?.name}
             </h1>
-            <p className="text-claro-muted text-sm">Here's how your cohorts are performing today.</p>
+            <p className="text-claro-muted text-sm">{persona.tagline}</p>
           </div>
 
           {/* Quick stats */}

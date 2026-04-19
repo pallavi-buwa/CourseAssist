@@ -42,7 +42,14 @@ function getCacheKey(node, preferences) {
   })
 }
 
-export default function NodeDetailPanel({ node, mode, onClose, preferences }) {
+export default function NodeDetailPanel({
+  node,
+  mode,
+  onClose,
+  preferences,
+  onMasteryChange,
+  graphDefaultAccuracy,
+}) {
   const fallbackResources = useMemo(
     () => mode === 'student' ? buildLearningResources(node, preferences) : [],
     [mode, node, preferences]
@@ -114,6 +121,7 @@ export default function NodeDetailPanel({ node, mode, onClose, preferences }) {
     mode === 'student' && node?.accuracy != null
       ? studentAccuracyColor(node)
       : comprehensionColor(node)
+  const defaultAcc = graphDefaultAccuracy ?? node._graphAccuracy ?? score
 
   return (
     <div className="fixed right-0 top-14 h-[calc(100vh-56px)] w-[360px] bg-claro-panel/98 border-l border-claro-indigo/15 flex flex-col z-40 backdrop-blur-sm"
@@ -152,6 +160,34 @@ export default function NodeDetailPanel({ node, mode, onClose, preferences }) {
             </>
           )}
         </div>
+
+        {mode === 'student' && onMasteryChange && (
+          <Section title="How well you know this">
+            <p className="text-[11px] text-gray-500 mb-3 leading-relaxed">
+              Drag to recolor this node in your graph (saved on this browser). Reset returns to the graph default ({Math.round(defaultAcc * 100)}%).
+            </p>
+            <input
+              type="range"
+              min={5}
+              max={98}
+              step={1}
+              value={Math.round(score * 100)}
+              onChange={e => onMasteryChange(node.id, Number(e.target.value) / 100)}
+              className="w-full accent-indigo-500"
+            />
+            <div className="flex justify-between text-[10px] text-gray-600 mt-1">
+              <span>Needs work</span>
+              <span>Strong</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => onMasteryChange(node.id, null)}
+              className="mt-3 w-full text-xs py-2 rounded-lg border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 transition-colors"
+            >
+              Reset to graph default
+            </button>
+          </Section>
+        )}
 
         {mode === 'professor' && strugglingStudents.length > 0 && (
           <Section title="Struggling Students">
