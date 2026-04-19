@@ -79,7 +79,7 @@ export const studentGraph = {
 }
 
 export function studentAccuracyColor(acc) {
-  if (acc >= 0.7) return '#22c55e'
-  if (acc >= 0.5) return '#f59e0b'
-  return '#ef4444'
+  if (acc >= 0.7) return '#9EE4D4'
+  if (acc >= 0.5) return '#FFD6A8'
+  return '#FFB8C8'
 }

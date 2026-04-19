@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { RequireAuth } from '../context/AuthContext.jsx'
 import Navbar from '../components/Navbar.jsx'
 import FlagCard from '../components/FlagCard.jsx'
-import { analyzeForInclusivity } from '../api/claude.js'
+import { analyzeForInclusivity } from '../api/openai.js'
 
 const PLACEHOLDER = `Example: Week 1 — Introduction to Marketing Strategy
 
@@ -27,7 +27,7 @@ export default function MaterialAnalyzer() {
       setFlags(result)
     } catch (e) {
       setError(e.message.includes('API_KEY')
-        ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI analysis.'
+        ? 'Add VITE_OPENAI_API_KEY to .env to use AI analysis.'
         : e.message)
     } finally {
       setLoading(false)
@@ -70,7 +70,7 @@ export default function MaterialAnalyzer() {
                 <textarea
                   value={text}
                   onChange={e => setText(e.target.value)}
-                  className="flex-1 min-h-64 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed"
+                  className="flex-1 min-h-64 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 resize-none focus:outline-none focus:border-claro-indigo transition-colors leading-relaxed"
                   placeholder={PLACEHOLDER}
                 />
 
@@ -81,7 +81,7 @@ export default function MaterialAnalyzer() {
                 <button
                   onClick={handleAnalyze}
                   disabled={loading || !text.trim()}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-2.5 text-sm font-medium transition-colors flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
@@ -153,7 +153,7 @@ export default function MaterialAnalyzer() {
                       {totalFlags === 0 ? (
                         <span className="text-green-400 text-sm font-medium">✓ No issues found</span>
                       ) : (
-                        <span className="text-amber-400 text-sm">{totalFlags} issue{totalFlags !== 1 ? 's' : ''} to review</span>
+                        <span className="text-claro-amber text-sm">{totalFlags} issue{totalFlags !== 1 ? 's' : ''} to review</span>
                       )}
                     </div>
                   </div>

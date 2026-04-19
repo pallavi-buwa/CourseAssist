@@ -3,20 +3,34 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
-      colors: {
-        surface: '#0d0d14',
-        panel: '#13131f',
-        border: '#1e1e30',
-        accent: {
-          python: '#3b82f6',
-          dsa: '#8b5cf6',
-          cn: '#10b981',
-        }
-      },
       fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-      }
-    }
+      },
+      colors: {
+        gray: {
+          950: '#0a0a0f',
+        },
+        claro: {
+          indigo: '#C4B5FF',
+          amber: '#FFD6A8',
+          sage: '#9EE4D4',
+          coral: '#FFB8C8',
+          midnight: '#110E1A',
+          slate: '#1E1B2E',
+          text: '#F6F2FF',
+          muted: '#B4ABC9',
+        },
+        surface: '#1E1B2E',
+        panel: '#1E1B2E',
+        border: '#2E2A40',
+        accent: {
+          python: '#C4B5FF',
+          dsa: '#D4B8FF',
+          cn: '#8EE4D2',
+        },
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 }

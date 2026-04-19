@@ -344,24 +344,28 @@ export default function BrainIntro({ onEnter }) {
       cancelAnimationFrame(s.rafId)
       window.removeEventListener('resize', onResize)
       renderer.dispose()
-      el.removeChild(renderer.domElement)
+      if (renderer.domElement.parentNode === el) {
+        el.removeChild(renderer.domElement)
+      }
     }
   }, [])
 
   const handleEnter = useCallback(() => {
+    if (!ready || exiting) return
     const s = stateRef.current
     s.phase = 'exit'
     setExiting(true)
-    setTimeout(() => onEnter?.(), 1100)
-  }, [onEnter])
+    setTimeout(() => onEnter?.(), 250)
+  }, [exiting, onEnter, ready])
 
   return (
     <div
       className={`absolute inset-0 z-50 transition-opacity duration-700 ${exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-      style={{ background: '#050508' }}
+      style={{ background: '#110E1A' }}
+      onClick={handleEnter}
     >
       {/* Three.js canvas mount */}
-      <div ref={mountRef} className="absolute inset-0" />
+      <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
 
       {/* Overlay UI */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
@@ -370,16 +374,16 @@ export default function BrainIntro({ onEnter }) {
         <div className={`transition-all duration-1000 ${ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
              style={{ textAlign: 'center' }}>
 
-          <div className="text-[11px] tracking-[0.35em] text-slate-500 uppercase mb-4">
+          <div className="text-[11px] tracking-[0.35em] text-[#B4ABC9] uppercase mb-4">
             Cognitive Knowledge System
           </div>
 
-          <h1 className="text-5xl font-light text-white mb-3 tracking-tight"
-              style={{ textShadow: '0 0 60px rgba(99,102,241,0.6), 0 0 120px rgba(99,102,241,0.2)' }}>
-            CourseAssist
+          <h1 className="text-5xl font-light text-[#F6F2FF] mb-3 tracking-tight"
+              style={{ textShadow: '0 0 60px rgba(196,181,255,0.45), 0 0 120px rgba(212,184,255,0.18)' }}>
+            Claro
           </h1>
 
-          <p className="text-slate-400 text-sm max-w-xs text-center leading-relaxed mb-12">
+          <p className="text-[#B4ABC9] text-sm max-w-xs text-center leading-relaxed mb-12">
             Explore 210 concepts across 3 subjects —<br />
             mapped as a living neural network
           </p>
@@ -387,31 +391,34 @@ export default function BrainIntro({ onEnter }) {
           {/* Subject previews */}
           <div className="flex items-center gap-6 mb-12 justify-center">
             {[
-              { color: '#3b82f6', label: 'Python Programming', count: 70 },
-              { color: '#8b5cf6', label: 'DS & Algorithms',    count: 75 },
-              { color: '#10b981', label: 'Computer Networks',  count: 65 },
+              { color: '#C4B5FF', label: 'Python Programming', count: 70 },
+              { color: '#D4B8FF', label: 'DS & Algorithms',    count: 75 },
+              { color: '#8EE4D2', label: 'Computer Networks',  count: 65 },
             ].map(({ color, label, count }) => (
-              <div key={label} className="flex items-center gap-2 text-xs text-slate-400">
+              <div key={label} className="flex items-center gap-2 text-xs text-[#B4ABC9]">
                 <span className="w-2 h-2 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}` }} />
                 <span>{label}</span>
-                <span className="text-slate-600">·{count}</span>
+                <span className="text-[#B4ABC9]/60">·{count}</span>
               </div>
             ))}
           </div>
 
           {/* CTA */}
           <button
-            onClick={handleEnter}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleEnter()
+            }}
             disabled={!ready}
             className={`pointer-events-auto px-10 py-4 rounded-full text-sm font-medium
               transition-all duration-300 border
               ${ready
-                ? 'border-white/20 text-white hover:border-white/50 hover:bg-white/8 cursor-pointer'
-                : 'border-white/5 text-slate-600 cursor-not-allowed'
+                ? 'border-white/20 text-[#F6F2FF] hover:border-white/50 hover:bg-white/8 cursor-pointer'
+                : 'border-white/5 text-[#B4ABC9]/50 cursor-not-allowed'
               }`}
             style={{
               background: ready ? 'rgba(255,255,255,0.04)' : 'transparent',
-              boxShadow: ready ? '0 0 40px rgba(99,102,241,0.15), inset 0 0 20px rgba(99,102,241,0.05)' : 'none',
+              boxShadow: ready ? '0 0 42px rgba(196,181,255,0.2), inset 0 0 22px rgba(212,184,255,0.07)' : 'none',
             }}
           >
             {ready ? 'Enter the Knowledge Network →' : 'Initializing neurons…'}
@@ -421,11 +428,11 @@ export default function BrainIntro({ onEnter }) {
 
       {/* Vignette */}
       <div className="absolute inset-0 pointer-events-none"
-           style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(5,5,8,0.75) 100%)' }} />
+           style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(17,14,26,0.8) 100%)' }} />
 
       {/* Corner micro-stats */}
       {ready && (
-        <div className="absolute bottom-6 left-6 text-[10px] text-slate-600 pointer-events-none space-y-1">
+        <div className="absolute bottom-6 left-6 text-[10px] text-[#B4ABC9]/75 pointer-events-none space-y-1">
           <div>neurons: 1,200</div>
           <div>synapses: active</div>
           <div>webgl: enabled</div>

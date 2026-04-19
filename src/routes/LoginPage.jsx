@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export default function LoginPage() {
@@ -9,17 +9,24 @@ export default function LoginPage() {
   const [role, setRole] = useState('student')
   const [error, setError] = useState('')
 
-  // Already logged in
-  if (user) {
-    navigate(user.role === 'professor' ? '/professor/home' : '/student/home', { replace: true })
-    return null
-  }
+  const signedInDestination = user?.role === 'professor'
+    ? '/professor/home'
+    : user?.preferencesComplete ? '/student/home' : '/student/preferences'
+
+  useEffect(() => {
+    if (user) navigate(signedInDestination, { replace: true })
+  }, [navigate, signedInDestination, user])
+
+  if (user) return <Navigate to={signedInDestination} replace />
 
   const handleLogin = (e) => {
     e.preventDefault()
     if (!email.trim()) { setError('Please enter an email.'); return }
     const u = login(email.trim(), role)
-    navigate(u.role === 'professor' ? '/professor/home' : '/student/home', { replace: true })
+    const destination = u.role === 'professor'
+      ? '/professor/home'
+      : u.preferencesComplete ? '/student/home' : '/student/preferences'
+    navigate(destination, { replace: true })
   }
 
   return (
@@ -27,8 +34,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-600/20 border border-indigo-600/30 mb-4">
-            <svg viewBox="0 0 24 24" className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-claro-indigo/20 border border-claro-indigo/30 mb-4">
+            <svg viewBox="0 0 24 24" className="w-8 h-8 text-claro-indigo" fill="none" stroke="currentColor" strokeWidth="1.5">
               <circle cx="12" cy="5" r="2" />
               <circle cx="5" cy="19" r="2" />
               <circle cx="19" cy="19" r="2" />
@@ -53,7 +60,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@university.edu"
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-claro-indigo transition-colors"
               />
             </div>
 
@@ -71,7 +78,7 @@ export default function LoginPage() {
                     onClick={() => setRole(r.value)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
                       role === r.value
-                        ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300'
+                        ? 'bg-claro-indigo/20 border-claro-indigo text-claro-indigo/90'
                         : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-600'
                     }`}
                   >
@@ -86,7 +93,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl py-2.5 text-sm font-medium transition-colors"
+              className="w-full bg-claro-indigo hover:brightness-110 text-white rounded-xl py-2.5 text-sm font-medium transition-colors"
             >
               Continue →
             </button>

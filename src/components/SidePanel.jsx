@@ -3,25 +3,25 @@ import { SUBJECTS } from '../data/graphData.js'
 
 const RESOURCE_ICONS = { video: '▶', article: '◈', podcast: '◉' }
 const RESOURCE_COLORS = {
-  video:   'text-blue-400 bg-blue-500/10 border-blue-500/20',
-  article: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-  podcast: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+  video:   'text-claro-indigo bg-claro-indigo/12 border-claro-indigo/22',
+  article: 'text-[#EDE5FF] bg-[#D4B8FF]/14 border-[#D4B8FF]/24',
+  podcast: 'text-claro-sage bg-claro-sage/12 border-claro-sage/22',
 }
 const STATUS_META = {
-  active:     { label: 'In Progress', cls: 'bg-yellow-500/15 text-yellow-300 border-yellow-500/25' },
-  mastered:   { label: 'Mastered',    cls: 'bg-green-500/15 text-green-300 border-green-500/25' },
-  struggling: { label: 'Needs Help',  cls: 'bg-red-500/15 text-red-300 border-red-500/25' },
-  default:    { label: 'Not Started', cls: 'bg-slate-700/50 text-slate-400 border-slate-600' },
+  active:     { label: 'In Progress', cls: 'bg-claro-amber/15 text-claro-amber border-claro-amber/28' },
+  mastered:   { label: 'Mastered',    cls: 'bg-claro-sage/15 text-claro-sage border-claro-sage/28' },
+  struggling: { label: 'Needs Help',  cls: 'bg-claro-coral/15 text-claro-coral border-claro-coral/28' },
+  default:    { label: 'Not Started', cls: 'bg-white/5 text-claro-muted border-white/10' },
 }
 const SUBJECT_HEADER = {
-  python: 'from-blue-900/60 to-slate-900/0 border-blue-500/20',
-  dsa:    'from-purple-900/60 to-slate-900/0 border-purple-500/20',
-  cn:     'from-emerald-900/60 to-slate-900/0 border-emerald-500/20',
+  python: 'from-[#C4B5FF]/38 to-claro-midnight/0 border-claro-indigo/28',
+  dsa:    'from-[#D4B8FF]/38 to-claro-midnight/0 border-[#D4B8FF]/28',
+  cn:     'from-claro-sage/35 to-claro-midnight/0 border-claro-sage/25',
 }
 const SUBJECT_DOT = {
-  python: 'bg-blue-400',
-  dsa:    'bg-purple-400',
-  cn:     'bg-emerald-400',
+  python: 'bg-claro-indigo',
+  dsa:    'bg-[#D4B8FF]',
+  cn:     'bg-claro-sage',
 }
 
 const SidePanel = memo(({ node, onClose }) => {
@@ -29,12 +29,12 @@ const SidePanel = memo(({ node, onClose }) => {
 
   const subjectInfo = Object.values(SUBJECTS).find(s => s.id === node.subject)
   const statusMeta  = STATUS_META[node.status] || STATUS_META.default
-  const headerCls   = SUBJECT_HEADER[node.subject] || 'from-slate-800/60 to-slate-900/0 border-slate-600'
-  const dotCls      = SUBJECT_DOT[node.subject] || 'bg-slate-400'
+  const headerCls   = SUBJECT_HEADER[node.subject] || 'from-claro-slate/80 to-claro-midnight/0 border-white/10'
+  const dotCls      = SUBJECT_DOT[node.subject] || 'bg-claro-muted'
 
   return (
     <aside className="panel-enter absolute top-0 right-0 h-full w-[340px] flex flex-col z-10"
-           style={{ background: '#13131f', borderLeft: '1px solid #1e1e30' }}>
+           style={{ background: '#1E1B2E', borderLeft: '1px solid rgba(180,171,201,0.2)' }}>
 
       {/* Header */}
       <div className={`bg-gradient-to-b ${headerCls} border-b p-5 pb-4`}>
@@ -125,9 +125,9 @@ const SidePanel = memo(({ node, onClose }) => {
         {/* Brain-link visual (mock neuron indicator) */}
         <Section title="Neuron Activation">
           <div className="space-y-2">
-            <NeuronBar label="Retention" value={Math.min(1, node.weight / 3)} color="#3b82f6" />
-            <NeuronBar label="Connectivity" value={Math.min(1, node.degree / 12)} color="#8b5cf6" />
-            <NeuronBar label="Complexity" value={Math.min(1, (node.misconceptions?.length || 0) / 4 + 0.2)} color="#f59e0b" />
+            <NeuronBar label="Retention" value={Math.min(1, node.weight / 3)} color="#C4B5FF" />
+            <NeuronBar label="Connectivity" value={Math.min(1, node.degree / 12)} color="#D4B8FF" />
+            <NeuronBar label="Complexity" value={Math.min(1, (node.misconceptions?.length || 0) / 4 + 0.2)} color="#FFD6A8" />
           </div>
           <p className="text-[11px] text-slate-500 mt-3">
             Based on concept weight, connections, and known difficulty patterns.

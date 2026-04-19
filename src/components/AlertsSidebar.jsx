@@ -72,7 +72,7 @@ export default function AlertsSidebar({ collapsed, onToggle }) {
           </div>
 
           {/* Drift alerts */}
-          <Accordion title="Drift Alerts" badge={DRIFT_ALERTS.length} badgeColor="bg-red-600">
+          <Accordion title="Drift Alerts" badge={DRIFT_ALERTS.length} badgeColor="bg-claro-coral">
             <div className="space-y-2">
               {DRIFT_ALERTS.map(a => (
                 <div key={a.id} className="flex items-center justify-between">
@@ -84,13 +84,13 @@ export default function AlertsSidebar({ collapsed, onToggle }) {
           </Accordion>
 
           {/* Pattern alerts */}
-          <Accordion title="Cohort Patterns" badge={PATTERN_ALERTS.length} badgeColor="bg-amber-600">
+          <Accordion title="Cohort Patterns" badge={PATTERN_ALERTS.length} badgeColor="bg-claro-amber">
             <div className="space-y-3">
               {PATTERN_ALERTS.map(a => (
                 <div key={a.id}>
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-xs text-gray-300">{a.label}</span>
-                    <span className="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded px-1.5 py-0.5">{a.pct}% wrong</span>
+                    <span className="text-[10px] text-claro-amber bg-claro-amber/10 border border-claro-amber/22 rounded px-1.5 py-0.5">{a.pct}% wrong</span>
                   </div>
                   <p className="text-[10px] text-gray-500 italic">{a.misconception}</p>
                 </div>

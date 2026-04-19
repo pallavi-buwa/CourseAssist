@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { generateKnowledgeGraph } from '../api/claude.js'
+import { generateKnowledgeGraph } from '../api/openai.js'
 
 export default function GraphGenerator({ onClose, onGenerated }) {
   const [text, setText]       = useState('')
@@ -22,7 +22,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
       }
       onGenerated?.(graph)
     } catch (e) {
-      setError(e.message.includes('API_KEY') ? 'Add VITE_ANTHROPIC_API_KEY to .env to use AI generation.' : e.message)
+      setError(e.message.includes('API_KEY') ? 'Add VITE_OPENAI_API_KEY to .env to use AI generation.' : e.message)
     } finally {
       setLoading(false)
     }
@@ -40,13 +40,13 @@ export default function GraphGenerator({ onClose, onGenerated }) {
           <textarea
             value={text}
             onChange={e => setText(e.target.value)}
-            className="w-full h-36 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-indigo-500"
+            className="w-full h-36 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 resize-none focus:outline-none focus:border-claro-indigo"
             placeholder="Paste syllabus or topic list here…"
           />
 
           {loading && (
             <div className="flex items-center gap-3 text-sm text-gray-400">
-              <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-claro-indigo border-t-transparent rounded-full animate-spin" />
               Analyzing course structure…
             </div>
           )}
@@ -60,7 +60,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
               </p>
               <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
                 {result.nodes?.map((n, i) => (
-                  <span key={i} className="text-xs bg-indigo-600/20 text-indigo-400 border border-indigo-600/30 rounded px-2 py-0.5 fade-in">{n.label}</span>
+                  <span key={i} className="text-xs bg-claro-indigo/20 text-claro-indigo border border-claro-indigo/30 rounded px-2 py-0.5 fade-in">{n.label}</span>
                 ))}
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
 
         <div className="px-6 py-4 border-t border-gray-800">
           <button onClick={handleBuild} disabled={loading || !text.trim()}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors">
+            className="w-full bg-claro-indigo hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors">
             {loading ? 'Building…' : 'Build graph'}
           </button>
         </div>

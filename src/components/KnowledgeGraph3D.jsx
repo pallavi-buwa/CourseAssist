@@ -68,7 +68,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   }, [hovered, highlightCourse])
 
   const linkColor = useCallback((link) => {
-    return link.crossCourse ? '#f59e0b' : 'rgba(148,163,184,0.25)'
+    return link.crossCourse ? '#FFD6A8' : 'rgba(180,171,201,0.2)'
   }, [])
 
   const linkWidth = useCallback((link) => {
@@ -110,9 +110,9 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         cooldownTime={3000}
       />
       {hovered && (
-        <div className="absolute bottom-4 left-4 bg-gray-900/90 border border-gray-700 rounded-lg px-3 py-2 text-xs pointer-events-none">
-          <div className="text-white font-medium">{hovered.label}</div>
-          <div className="text-gray-400">{hovered.course}</div>
+        <div className="absolute bottom-4 left-4 bg-claro-slate/95 border border-white/10 rounded-lg px-3 py-2 text-xs pointer-events-none">
+          <div className="text-claro-text font-medium">{hovered.label}</div>
+          <div className="text-claro-muted">{hovered.course}</div>
           <div style={{ color: studentAccuracyColor(hovered.accuracy) }}>
             Accuracy: {Math.round((hovered.accuracy || 0) * 100)}%
           </div>
@@ -120,8 +120,8 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
       )}
       {/* Legend */}
       <div className="absolute top-2 right-2 flex flex-col gap-1">
-        {[['#22c55e','>70%'],['#f59e0b','50–70%'],['#ef4444','<50%']].map(([c,l]) => (
-          <div key={l} className="flex items-center gap-1.5 text-[10px] text-gray-400">
+        {[['#9EE4D4','>70%'],['#FFD6A8','50–70%'],['#FFB8C8','<50%']].map(([c,l]) => (
+          <div key={l} className="flex items-center gap-1.5 text-[10px] text-claro-muted">
             <span className="w-2 h-2 rounded-full" style={{ background: c }} />
             {l}
           </div>
