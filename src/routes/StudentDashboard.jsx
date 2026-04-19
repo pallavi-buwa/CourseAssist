@@ -25,6 +25,13 @@ import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 const SUBJECT_LEGEND_COLORS = ['#C4B5FF', '#8EE4D2', '#FFD6A8', '#FFB8C8', '#67e8f9', '#fbbf24']
 
+/** D3 force replaces link source/target with node objects; remap to ids so new node copies stay wired. */
+function linkEndpointRefId(ref) {
+  if (ref == null) return ''
+  if (typeof ref === 'object' && ref.id != null) return String(ref.id)
+  return String(ref)
+}
+
 export default function StudentDashboard() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -43,7 +50,12 @@ export default function StudentDashboard() {
 
   const mergedGraph = useMemo(() => {
     const nodes = Array.isArray(graphData?.nodes) ? graphData.nodes : []
-    const links = Array.isArray(graphData?.links) ? graphData.links : []
+    const rawLinks = Array.isArray(graphData?.links) ? graphData.links : []
+    const links = rawLinks.map(l => ({
+      ...l,
+      source: linkEndpointRefId(l.source),
+      target: linkEndpointRefId(l.target),
+    }))
     return {
       nodes: nodes.map(n => ({
         ...n,
