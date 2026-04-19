@@ -49,7 +49,26 @@ function parseJSON(raw) {
 }
 
 export async function analyzeForInclusivity(text) {
-  const instructions = `You are an expert in educational equity and inclusive course design. Analyze the provided text for comprehension barriers. Return ONLY a JSON array (no markdown, no preamble) where each item is: { "phrase": string, "category": string, "affected": string, "suggestion": string, "severity": "high"|"medium"|"low" }. Categories must be one of: Jargon, Cultural assumption, Readability, Implicit knowledge, Biased framing.`
+  const instructions = `You are an expert in educational equity and inclusive course design.
+Analyze the provided content for comprehension barriers and return practical rewrites that help diverse students relate.
+
+Return ONLY a JSON array (no markdown, no preamble), each item exactly:
+{
+  "phrase": string,
+  "category": "Jargon"|"Cultural assumption"|"Readability"|"Implicit knowledge"|"Biased framing",
+  "affected": string,
+  "suggestion": string,
+  "severity": "high"|"medium"|"low",
+  "countryContext": string,
+  "example": string,
+  "referenceLinks": string[]
+}
+
+Rules:
+- 4-8 items max; avoid duplicates.
+- "countryContext" should name a country/region context the student can relate to (for example India, Kenya, Brazil, etc).
+- "example" must be a short daily-life analogy or local-style jargon/lingo that clarifies the concept.
+- "referenceLinks" must include 1-3 direct URLs with helpful explainers/examples (no search result pages, no placeholders).`
   const raw = await callAI(instructions, text)
   return parseJSON(raw)
 }

@@ -14,7 +14,6 @@ const professorLinks = [
   { label: 'Home',      to: '/professor/home' },
   { label: 'Dashboard', to: '/professor/dashboard/intro-marketing' },
   { label: 'Analyzer',  to: '/professor/analyzer' },
-  { label: 'Settings',  to: '/professor/home' },
 ]
 
 export default function Navbar() {
