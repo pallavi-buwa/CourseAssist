@@ -70,6 +70,12 @@ export default function BrainIntro({ onEnter }) {
   const [ready, setReady]         = useState(false)
   const [exiting, setExiting]     = useState(false)
 
+  // Fallback: if rAF is throttled (background tab / headless), enable button after 2.5s
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 2500)
+    return () => clearTimeout(t)
+  }, [])
+
   useEffect(() => {
     const el = mountRef.current
     if (!el) return
