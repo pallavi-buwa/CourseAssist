@@ -1,526 +1,177 @@
-\# Inclusive Learning Intelligence Platform
+# Claro.
 
+> Your LMS gives you the grade. We make it clear.
 
+---
 
-> Canvas tells you who logged in. We tell you who understood.
-
-
-
-\---
-
-
-
-\## Problem
-
-
+## Problem
 
 In large university classrooms (50–200+ students), a significant portion of students struggle silently.
 
+- They do not ask questions
+- They do not attend office hours
+- They do not self-identify confusion
 
+By the time professors detect issues (e.g., midterms), intervention is often too late — eight weeks of silent confusion.
 
-\- They do not ask questions  
+**Root cause:** The system depends on student self-disclosure. The students who need help most are the least likely to speak up.
 
-\- They do not attend office hours  
+---
 
-\- They do not self-identify confusion  
+## Solution
 
+Claro is an AI comprehension layer that turns raw quiz scores into diagnoses — prerequisite gaps, language barriers, and predicted exam outcomes — so professors can intervene before students fail.
 
+It runs on assessment data that already exists in every LMS. No new student behavior. No new professor habits.
 
-By the time professors detect issues (e.g., midterms), intervention is often too late.
+### What changes
 
+- **Today:** Professor sees "Marcus scored 45%."
+- **With Claro:** Professor sees "Marcus scored 45% because of a Week 3 prerequisite gap, not Week 7 content. 14 students share the same root cause. Question phrasing is filtering non-native speakers."
 
+---
 
-\*\*Root Issue:\*\*  
+## Product
 
-The system depends on student self-disclosure, but the students who need help the most are the least likely to speak up.
+### Professor View
 
+Three tabs on one page:
 
+**Knowledge Graph** — Professor pastes their syllabus. AI extracts concepts and maps dependencies as a force-directed graph. Import quiz/exam results from the LMS — nodes light up green (understood), yellow (shaky), or red (gap) based on cohort comprehension. Click a red node to see:
+- The specific misconception
+- Whether it's a language barrier, concept gap, or prerequisite failure
+- Which earlier concept is the root cause
+- A concrete 5-minute intervention
 
-\---
+Prediction mode: professor pastes an upcoming midterm. The graph re-colors showing predicted outcomes — which questions will fail, why, and how to fix them before students sit down.
 
+**Cohort Insights** — Patterns across the class: language filters creating score gaps, prerequisite cascades, at-risk student profiles with root causes.
 
+**Material Analyzer** — Professor pastes assignment text or exam questions. Live AI flags phrases that create comprehension barriers — academic jargon, cultural assumptions, unstated prerequisites, vague assessment criteria. Each flag includes a concrete rephrase.
 
-\## Solution
+### Student View
 
+Personal 3D knowledge graph across enrolled courses. Nodes colored by individual performance. Cross-course connections show where the same concept appears in multiple classes. Opt-in, pull-based — like checking Spotify Wrapped.
 
+---
 
-We built a real-time comprehension sensing system that detects learning gaps before they become failures.
+## AI Architecture
 
+Analytical, not conversational. No chatbot. No tutor. AI operates at specific trigger points:
 
+1. **Comprehension Decomposition** — Decomposes quiz scores into root causes: concept gap vs language filter vs prerequisite failure vs format confusion.
+2. **Material Analysis** (live) — Reads exam questions and flags phrasing that creates invisible barriers for non-native speakers, first-gen students, and neurodivergent learners.
+3. **Knowledge Graph Generator** — Extracts concepts and dependencies from syllabus text. Builds the graph in seconds.
+4. **Exam Prediction** — Takes an upcoming assessment and predicts outcomes based on current comprehension data.
 
-\### Core Idea
+---
 
+## Product Flow
 
+1. Professor pastes syllabus → knowledge graph builds itself
+2. Professor imports quiz/exam results from LMS → nodes light up by comprehension
+3. Professor clicks a red node → diagnosis panel: misconception, root cause, language filter, intervention
+4. Professor pastes upcoming midterm → prediction mode shows expected outcomes
+5. Professor adjusts lecture or rephrases exam → students benefit without ever self-disclosing
 
-\- Students read course content on the platform  
+Students change nothing. They take exams like they always do. Claro works on data they already generate.
 
-\- Lightweight micro-checks capture understanding in seconds  
+---
 
-\- AI constructs a knowledge graph of concepts and dependencies  
+## Demo Scope
 
-\- Professors gain visibility into cohort-level comprehension  
+### Live AI
+- Material Inclusivity Analyzer
+- Knowledge Graph Generator
+- Micro-Check Generator
 
-\- Students gain visibility into their own understanding across courses  
+### Mocked (with realistic data)
+- Cohort comprehension overlay on graph
+- Node diagnostic panels
+- Prediction mode
+- Cohort pattern alerts
+- Cross-course student graph
 
+---
 
+## Moat (7 Powers Framework)
 
-\---
+**Counter-Positioning** — LMS platforms sell to IT procurement. Claro sells to the provost. They must stay neutral; Claro is opinionated. They can't add diagnostic AI without alienating their existing buyers.
 
+**Data Network Effects with Fast Decay** — Comprehension data decays fast (like Waze traffic data). Every quiz recalibrates. A new entrant starts at zero. Claro has semesters of accumulated patterns. Cross-course deployment creates indirect network effects.
 
+**Switching Costs** — After two semesters, the professor's knowledge graph is calibrated to their course. Predictions are tuned to their teaching style. Intervention history tracks what worked. None of it transfers.
 
-\## Features
+---
 
+## Metrics
 
+### North Star Metric
+- Professor interventions triggered by Claro per week
 
-\### Student Reading Experience
+### Leading Indicators
+- Dashboard opens before lecture
+- Material analyzer usage
+- Prediction mode activations
 
-\- Minimal, distraction-free interface  
+### Lagging Indicators
+- Student comprehension improvement (pre/post)
+- Course satisfaction delta
+- Failure rate reduction
 
-\- 2–3 micro-checks per section  
+---
 
-\- No grading or pressure (approximately 3 seconds per check)  
+## Target Users
 
-\- Immediate nudges for incorrect responses  
+### User
+- Professors teaching large, diverse classes (50–200+ students)
+- Particularly in public universities and introductory courses
 
-\- Live updates to system state  
+### Buyer
+- Deans, department heads, provosts
+- Cares about: retention, equity metrics, accreditation
 
+### Beneficiary
+- International students, first-gen students, neurodivergent learners
+- They benefit without needing to self-identify
 
+---
 
-\---
+## Go-To-Market
 
+1. **Land** with the free material analyzer — professor pastes an exam, gets flags, zero commitment
+2. **Pilot** one department — dean with worst retention mandates a one-semester trial
+3. **Prove** with outcomes — comprehension delta, failure rate reduction, intervention count
+4. **Expand** across the university — dean becomes internal champion, cross-course graph unlocks new value
 
+---
 
-\### Knowledge Graph (Core System)
+## Tech Stack
 
+- **Frontend:** React 18, Tailwind CSS, Vite
+- **Graph:** react-force-graph (2D professor view), react-force-graph-3d + Three.js (3D student view)
+- **Backend:** Firebase (auth, realtime sync)
+- **AI:** Claude API (Anthropic) via direct browser access
+- **Deployment:** Vercel
 
+---
 
-A dynamic concept map:
+## Risks
 
+### Riskiest Assumption
+Quiz decomposition accurately identifies root causes.
 
+### Mitigation
+Validate against actual exam outcomes in a one-semester pilot. Material analyzer delivers value regardless — it works even if decomposition needs tuning.
 
-\- \*\*Nodes\*\* represent concepts  
+---
 
-\- \*\*Edges\*\* represent dependencies  
+## Team
 
-\- \*\*Colors\*\* represent comprehension levels  
+Built for JHU Product Hackathon 2026 — Round 2.
 
-&#x20; - Green: understood  
+---
 
-&#x20; - Yellow: partial understanding  
+## License
 
-&#x20; - Red: learning gap  
-
-
-
-\#### Two Modes:
-
-\- \*\*Professor View\*\*: cohort-level insights  
-
-\- \*\*Student View\*\*: individual understanding across courses  
-
-
-
-\---
-
-
-
-\### Professor Dashboard
-
-
-
-\- Real-time visibility into student comprehension  
-
-\- Drill-down capabilities:
-
-&#x20; - Misconceptions  
-
-&#x20; - Affected students  
-
-&#x20; - Root causes  
-
-
-
-\- Includes:
-
-&#x20; - Cohort pattern alerts  
-
-&#x20; - Drift detection  
-
-&#x20; - Micro-check accuracy heatmaps  
-
-&#x20; - AI-generated intervention suggestions  
-
-
-
-\---
-
-
-
-\### AI Capabilities
-
-
-
-\#### 1. Material Inclusivity Analyzer (Live)
-
-\- Input: assignment or syllabus text  
-
-\- Output:
-
-&#x20; - Ambiguous phrasing  
-
-&#x20; - Cultural assumptions  
-
-&#x20; - Missing prerequisites  
-
-&#x20; - Suggested rephrases  
-
-
-
-\---
-
-
-
-\#### 2. Micro-Check Generator
-
-\- Generates conceptual questions (not recall-based)  
-
-\- Each incorrect option maps to a specific misconception  
-
-
-
-\---
-
-
-
-\#### 3. Knowledge Graph Generator
-
-\- Extracts:
-
-&#x20; - Concepts (nodes)  
-
-&#x20; - Dependencies (edges)  
-
-\- Builds the graph progressively as course content is uploaded  
-
-
-
-\---
-
-
-
-\#### 4. Intervention Suggester
-
-\- Analyzes cohort patterns  
-
-\- Produces actionable teaching recommendations  
-
-
-
-Example:  
-
-“Clarify the difference between argumentative and descriptive writing. A subset of students demonstrates task clarity confusion rather than content gaps.”
-
-
-
-\---
-
-
-
-\## Product Flow
-
-
-
-1\. Professor uploads weekly material  
-
-2\. AI:
-
-&#x20;  - Analyzes content  
-
-&#x20;  - Generates micro-checks  
-
-&#x20;  - Updates the knowledge graph  
-
-
-
-3\. Students:
-
-&#x20;  - Read content  
-
-&#x20;  - Respond to micro-checks  
-
-
-
-4\. System:
-
-&#x20;  - Detects misconceptions  
-
-&#x20;  - Updates the graph in real time  
-
-
-
-5\. Professor:
-
-&#x20;  - Reviews dashboard prior to lecture  
-
-&#x20;  - Applies targeted interventions  
-
-
-
-\---
-
-
-
-\## Demo Scope
-
-
-
-\### Real (Live AI)
-
-\- Material Inclusivity Analyzer  
-
-\- Micro-Check Generator  
-
-\- Knowledge Graph Generator  
-
-\- Live student-to-graph updates  
-
-
-
-\### Mocked
-
-\- Cohort pattern alerts  
-
-\- Intervention suggestions  
-
-\- Cross-course student graph  
-
-
-
-\---
-
-
-
-\## Tech Stack (Suggested)
-
-
-
-\- Frontend: React, Tailwind CSS  
-
-\- Graph Visualization: D3.js or react-force-graph  
-
-\- Backend: Node.js or Firebase  
-
-\- Realtime Communication: WebSockets or Firebase Realtime Database  
-
-\- AI Integration: Claude API or OpenAI  
-
-
-
-\---
-
-
-
-\## Metrics
-
-
-
-\### North Star Metric
-
-\- Number of AI-triggered professor interventions per week  
-
-
-
-\### Leading Indicators
-
-\- Micro-check completion rate  
-
-\- Dashboard usage prior to lectures  
-
-\- Material analyzer usage  
-
-
-
-\### Lagging Indicators
-
-\- Student comprehension improvement  
-
-\- Assignment completion rates  
-
-\- Course satisfaction metrics  
-
-
-
-\---
-
-
-
-\## Target Users
-
-
-
-\### Primary
-
-\- Professors teaching large, diverse classes  
-
-\- Particularly in public universities and introductory courses  
-
-
-
-\### Secondary
-
-\- Students managing multiple courses  
-
-&#x20; - International students  
-
-&#x20; - First-generation students  
-
-&#x20; - Neurodivergent learners  
-
-
-
-\### Buyer
-
-\- Deans, department heads, and provosts  
-
-
-
-\---
-
-
-
-\## Architecture Philosophy
-
-
-
-\- Focus on analytical AI rather than conversational AI  
-
-\- AI operates at specific trigger points:
-
-&#x20; - Material upload  
-
-&#x20; - Dashboard analysis  
-
-
-
-No continuous chatbot layer is required  
-
-
-
-\---
-
-
-
-\## Competitive Positioning
-
-
-
-\- Learning Management Systems track engagement but not comprehension  
-
-\- AI tutors support individual learners but lack cohort visibility  
-
-\- This platform provides system-level insight into understanding across a class  
-
-
-
-\---
-
-
-
-\## Moat
-
-
-
-\- Real-time comprehension data that decays quickly and is difficult to replicate  
-
-\- Cross-course knowledge graph  
-
-\- Cohort-level pattern detection  
-
-\- Accumulated institutional insights over time  
-
-
-
-\---
-
-
-
-\## Risks
-
-
-
-\### Primary Risk
-
-\- Behavioral signals may not accurately represent comprehension  
-
-
-
-\### Mitigation Strategy
-
-\- Validate predictions against assessment outcomes  
-
-\- Maintain independent value through the material analyzer  
-
-
-
-\---
-
-
-
-\## Future Work
-
-
-
-\- Integration with LMS platforms (e.g., Canvas, Blackboard)  
-
-\- Longitudinal student learning profiles  
-
-\- Accessibility-driven personalization  
-
-\- Predictive academic risk detection  
-
-\- Cross-institution benchmarking  
-
-
-
-\---
-
-
-
-\## Summary
-
-
-
-\- Existing systems measure activity  
-
-\- AI tutors assist individuals  
-
-\- This platform identifies comprehension gaps at the system level in real time  
-
-
-
-\---
-
-
-
-\## Team
-
-
-
-Built for JHU Product Hackathon 2026 — Round 2 :contentReference\[oaicite:0]{index=0}
-
-
-
-\---
-
-
-
-\## License
-
-
-
-MIT (or hackathon default)
-
-
-
-\---
-
+MIT
