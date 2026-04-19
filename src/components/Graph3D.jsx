@@ -146,9 +146,9 @@ function createParticleField() {
 
 // ─── Status colors ────────────────────────────────────────────────────────────
 const STATUS_EMISSIVE = {
-  active:     '#d97706',
-  mastered:   '#16a34a',
-  struggling: '#dc2626',
+  active:     '#FFD6A8',
+  mastered:   '#9EE4D4',
+  struggling: '#FFB8C8',
   default:    null,
 }
 
@@ -182,7 +182,7 @@ const Graph3D = memo(({
     sceneInitRef.current = true
 
     // Dark fog for depth
-    const fog = new THREE.FogExp2(0x0a0a12, 0.0018)
+    const fog = new THREE.FogExp2(0x110e1a, 0.0018)
     scene.fog = fog
     fogRef.current = fog
 
@@ -192,15 +192,15 @@ const Graph3D = memo(({
       ambient.name = '_ca_ambient'
       scene.add(ambient)
 
-      const pt1 = new THREE.PointLight(0x4f46e5, 3.5, 900)
+      const pt1 = new THREE.PointLight(0xc4b5ff, 3.5, 900)
       pt1.name = '_ca_pt1'; pt1.position.set(300, 250, 200)
       scene.add(pt1)
 
-      const pt2 = new THREE.PointLight(0x06b6d4, 2.5, 700)
+      const pt2 = new THREE.PointLight(0x9ee4d4, 2.5, 700)
       pt2.name = '_ca_pt2'; pt2.position.set(-250, -150, -300)
       scene.add(pt2)
 
-      const pt3 = new THREE.PointLight(0x7c3aed, 2, 600)
+      const pt3 = new THREE.PointLight(0xd4b8ff, 2, 600)
       pt3.name = '_ca_pt3'; pt3.position.set(0, -300, 300)
       scene.add(pt3)
 
@@ -374,7 +374,7 @@ const Graph3D = memo(({
         graphData={filteredData}
         width={width}
         height={height}
-        backgroundColor="#0a0a12"
+        backgroundColor="#110E1A"
         // Node
         nodeThreeObject={nodeThreeObject}
         nodeThreeObjectExtend={false}

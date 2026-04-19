@@ -7,7 +7,6 @@ import LoginPage          from './routes/LoginPage.jsx'
 import StudentHome        from './routes/StudentHome.jsx'
 import StudentReadingView from './routes/StudentReadingView.jsx'
 import StudentDashboard   from './routes/StudentDashboard.jsx'
-import StudentPreferences from './routes/StudentPreferences.jsx'
 import ProfessorHome      from './routes/ProfessorHome.jsx'
 import ProfessorDashboard from './routes/ProfessorDashboard.jsx'
 import MaterialAnalyzer   from './routes/MaterialAnalyzer.jsx'
@@ -28,7 +27,6 @@ export default function App() {
           <Route path="/student/home"                  element={<StudentHome />} />
           <Route path="/student/reading/:moduleId"     element={<StudentReadingView />} />
           <Route path="/student/dashboard"             element={<StudentDashboard />} />
-          <Route path="/student/preferences"           element={<StudentPreferences />} />
           <Route path="/professor/home"                element={<ProfessorHome />} />
           <Route path="/professor/dashboard/:courseId" element={<ProfessorDashboard />} />
           <Route path="/professor/analyzer"            element={<MaterialAnalyzer />} />

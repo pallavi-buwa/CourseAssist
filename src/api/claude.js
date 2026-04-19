@@ -1,32 +1,34 @@
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY
-const MODEL   = 'gpt-4o'
-const BASE    = 'https://api.openai.com/v1/chat/completions'
+const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY
+const MODEL   = 'claude-sonnet-4-6'
+const BASE    = 'https://api.anthropic.com/v1/messages'
 
 async function callAI(systemPrompt, userMessage) {
   if (!API_KEY || API_KEY === 'your_key_here') {
-    throw new Error('VITE_OPENAI_API_KEY not set')
+    throw new Error('VITE_ANTHROPIC_API_KEY not set')
   }
   const res = await fetch(BASE, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`,
+      'x-api-key': API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 2000,
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user',   content: userMessage  },
+        { role: 'user', content: userMessage },
       ],
     }),
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
-    throw new Error(`OpenAI API error ${res.status}: ${err?.error?.message || res.statusText}`)
+    throw new Error(`Anthropic API error ${res.status}: ${err?.error?.message || res.statusText}`)
   }
   const data = await res.json()
-  return data.choices[0].message.content
+  return data.content[0].text
 }
 
 // Strip markdown code fences if the model wraps JSON in ```json ... ```
