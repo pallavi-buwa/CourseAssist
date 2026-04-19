@@ -11,6 +11,7 @@ import StudentPreferences from './routes/StudentPreferences.jsx'
 import ProfessorHome      from './routes/ProfessorHome.jsx'
 import ProfessorDashboard from './routes/ProfessorDashboard.jsx'
 import MaterialAnalyzer   from './routes/MaterialAnalyzer.jsx'
+import StudentNotes       from './routes/StudentNotes.jsx'
 
 export default function App() {
   const [introDone, setIntroDone] = useState(false)
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/professor/home"                element={<ProfessorHome />} />
           <Route path="/professor/dashboard/:courseId" element={<ProfessorDashboard />} />
           <Route path="/professor/analyzer"            element={<MaterialAnalyzer />} />
+          <Route path="/student/notes"                 element={<StudentNotes />} />
           <Route path="*"                              element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

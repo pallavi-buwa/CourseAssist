@@ -6,6 +6,7 @@ const studentLinks = [
   { label: 'Home',     to: '/student/home' },
   { label: 'My Graph', to: '/student/dashboard' },
   { label: 'Courses',  to: '/student/reading/module-1' },
+  { label: 'Notes',       to: '/student/notes' },
   { label: 'Preferences', to: '/student/preferences' },
 ]
 const professorLinks = [

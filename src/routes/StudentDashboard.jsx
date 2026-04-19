@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 import { RequireAuth, useAuth } from '../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import KnowledgeGraph3D from '../components/KnowledgeGraph3D.jsx'
 import NodeDetailPanel from '../components/NodeDetailPanel.jsx'
-import NotesWorkspace from '../components/NotesWorkspace.jsx'
 import GraphGenerator from '../components/GraphGenerator.jsx'
 import { studentGraph } from '../data/mockStudentGraph.js'
 
@@ -16,9 +16,9 @@ const COURSE_FILTERS = [
 
 export default function StudentDashboard() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [selectedNode, setSelectedNode]       = useState(null)
   const [activeCourse, setActiveCourse]       = useState('all')
-  const [showNotes, setShowNotes]             = useState(false)
   const [showGenerator, setShowGenerator]     = useState(false)
   const [graphData, setGraphData]             = useState(studentGraph)
 
@@ -66,7 +66,7 @@ export default function StudentDashboard() {
             {/* Actions */}
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setShowNotes(v => !v)}
+                onClick={() => navigate('/student/notes')}
                 className="border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg px-3 py-1.5 text-xs transition-colors"
               >
                 ✎ Notes
@@ -132,7 +132,6 @@ export default function StudentDashboard() {
 
         </div>
 
-        {showNotes && <NotesWorkspace onClose={() => setShowNotes(false)} />}
         {showGenerator && (
           <GraphGenerator
             onClose={() => setShowGenerator(false)}
