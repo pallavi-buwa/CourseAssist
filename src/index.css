@@ -43,7 +43,7 @@
   --tw-surface: 14 14 16;
   --tw-panel: 24 24 26;
   --tw-border: 58 58 64;
-  --font-brand: 'Brandon Grotesque', system-ui, -apple-system, sans-serif;
+  --font-brand: 'Poppins', system-ui, -apple-system, sans-serif;
 
   /* Shared backdrop (gradients + stars) — also applied via .bg-space-page */
   --bg-aurora:

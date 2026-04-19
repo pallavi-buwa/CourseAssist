@@ -38,7 +38,7 @@ export default {
       },
       fontFamily: {
         sans: [
-          '"Brandon Grotesque"',
+          'Poppins',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
