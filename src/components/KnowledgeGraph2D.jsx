@@ -1,11 +1,13 @@
 import { useRef, useCallback, useEffect, useState, memo } from 'react'
 import { comprehensionColor } from '../data/mockGraphMarketing.js'
+import { useTheme } from '../context/ThemeContext.jsx'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 // Lazy-load ForceGraph2D to avoid the AFRAME global requirement at module evaluation time
 let ForceGraph2DModule = null
 
 const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
+  const { canvasHex, isDark } = useTheme()
   const fgRef = useRef()
   const containerRef = useRef()
   const [FG, setFG] = useState(null)
@@ -42,11 +44,18 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
   const nodeColor = useCallback((node) => comprehensionColor(node), [liveUpdates])
   const nodeVal   = useCallback(() => 6, [])
   const nodeLabel = useCallback((node) => `${node.label} — ${Math.round((node.comprehension ?? 0.5) * 100)}%`, [liveUpdates])
-  const linkColor = useCallback(() => 'rgba(45,106,79,0.28)', [])
+  const linkColor = useCallback(
+    () => (isDark ? 'rgba(34,197,94,0.24)' : 'rgba(34,197,94,0.22)'),
+    [isDark]
+  )
   const linkWidth = useCallback(() => 1, [])
 
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative', background: '#FDF6ED' }}>
+    <div
+      ref={containerRef}
+      className="relative bg-claro-canvas"
+      style={{ width: '100%', height: '100%' }}
+    >
       {!FG && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-gray-500 text-sm">Loading graph…</div>
@@ -59,7 +68,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
           graphData={graphData}
           width={dims.width}
           height={dims.height}
-          backgroundColor="#FDF6ED"
+          backgroundColor={canvasHex}
           nodeColor={nodeColor}
           nodeVal={nodeVal}
           nodeLabel={nodeLabel}
@@ -72,15 +81,23 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
         />
       )}
 
-      {FG === 'fallback' && <FallbackGraph graphData={graphData} onNodeClick={onNodeClick} dims={dims} />}
+      {FG === 'fallback' && (
+        <FallbackGraph
+          graphData={graphData}
+          onNodeClick={onNodeClick}
+          dims={dims}
+          isDark={isDark}
+          canvasHex={canvasHex}
+        />
+      )}
 
       {/* Legend */}
-      <div className="pointer-events-none absolute top-3 right-3 flex max-h-[min(70vh,320px)] max-w-[11rem] flex-col gap-0.5 overflow-y-auto rounded-lg border border-[#2D6A4F]/18 bg-[#FFFCF7]/95 p-2 shadow-sm">
+      <div className="pointer-events-none absolute top-3 right-3 flex max-h-[min(70vh,320px)] max-w-[11rem] flex-col gap-0.5 overflow-y-auto rounded-lg border border-claro-indigo/18 bg-claro-panel/95 p-2 shadow-sm">
         <div className="text-[10px] font-medium uppercase tracking-wider text-claro-muted">Score</div>
-        <p className="text-[9px] leading-tight text-claro-muted/90">Green/teal = strong · gold–rust = risk</p>
+        <p className="text-[9px] leading-tight text-claro-muted/90">Green = strong · yellow to red = risk</p>
         {SCORE_BANDS.map(b => (
           <div key={b.range} className="flex items-center gap-1.5 text-[9px] text-claro-text/90">
-            <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
+            <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-white/10" style={{ background: b.color }} />
             <span>{b.range} · {b.label}</span>
           </div>
         ))}
@@ -90,7 +107,7 @@ const KnowledgeGraph2D = memo(({ graphData, onNodeClick, liveUpdates }) => {
 })
 
 // Simple canvas fallback that doesn't require react-force-graph
-function FallbackGraph({ graphData, onNodeClick, dims }) {
+function FallbackGraph({ graphData, onNodeClick, dims, isDark, canvasHex }) {
   const canvasRef = useRef()
 
   useEffect(() => {
@@ -101,6 +118,9 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
     canvas.width = width
     canvas.height = height
 
+    ctx.fillStyle = canvasHex
+    ctx.fillRect(0, 0, width, height)
+
     // Simple static layout: place nodes in a circle
     const nodes = graphData.nodes.map((n, i) => {
       const angle = (i / graphData.nodes.length) * Math.PI * 2
@@ -109,10 +129,8 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
     })
     const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]))
 
-    ctx.clearRect(0, 0, width, height)
-
     // Draw links
-    ctx.strokeStyle = 'rgba(45,106,79,0.28)'
+    ctx.strokeStyle = isDark ? 'rgba(34,197,94,0.24)' : 'rgba(34,197,94,0.22)'
     ctx.lineWidth = 1
     graphData.links.forEach(l => {
       const s = nodeMap[l.source?.id ?? l.source]
@@ -128,8 +146,8 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
       ctx.arc(n.x, n.y, 7, 0, Math.PI * 2)
       ctx.fillStyle = color
       ctx.fill()
-      ctx.fillStyle = 'rgba(27,67,50,0.85)'
-      ctx.font = '9px Lato, sans-serif'
+      ctx.fillStyle = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(27,67,50,0.85)'
+      ctx.font = '9px "Brandon Grotesque", system-ui, sans-serif'
       ctx.fillText(n.label?.split(' ')[0] ?? '', n.x + 9, n.y + 3)
     })
 
@@ -142,7 +160,7 @@ function FallbackGraph({ graphData, onNodeClick, dims }) {
     }
     canvas.addEventListener('click', handleClick)
     return () => canvas.removeEventListener('click', handleClick)
-  }, [graphData, dims, onNodeClick])
+  }, [graphData, dims, onNodeClick, isDark, canvasHex])
 
   return <canvas ref={canvasRef} style={{ display: 'block', cursor: 'crosshair' }} />
 }

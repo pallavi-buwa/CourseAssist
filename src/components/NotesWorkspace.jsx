@@ -44,7 +44,7 @@ export default function NotesWorkspace({ onClose }) {
 
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800">
         <h3 className="text-sm font-medium text-white">Notes Workspace</h3>
-        <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">✕</button>
+        <button type="button" onClick={onClose} aria-label="Close" className="text-gray-500 hover:text-white transition-colors text-xs">Close</button>
       </div>
 
       <div className="flex flex-1 overflow-hidden gap-0">
@@ -85,7 +85,7 @@ export default function NotesWorkspace({ onClose }) {
 
             {/* File upload */}
             <label className="cursor-pointer border border-gray-700 text-gray-400 hover:text-white hover:border-gray-500 rounded-lg px-3 py-1.5 text-xs transition-colors">
-              {uploading ? 'Analyzing…' : uploadedFile ? '✓ Attached' : 'Upload file'}
+              {uploading ? 'Analyzing…' : uploadedFile ? 'Attached' : 'Upload file'}
               <input type="file" accept=".pdf,image/*" className="hidden" onChange={handleFile} />
             </label>
 

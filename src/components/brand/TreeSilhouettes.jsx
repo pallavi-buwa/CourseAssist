@@ -6,7 +6,7 @@ export function TreeSilhouettes({ className = '' }) {
       aria-hidden
     >
       <svg
-        className="tree-sway-left absolute bottom-0 left-[-2%] h-full w-[min(45vw,380px)] text-[#1B4332] opacity-[0.07]"
+        className="tree-sway-left absolute bottom-0 left-[-2%] h-full w-[min(45vw,380px)] text-claro-text opacity-[0.07]"
         viewBox="0 0 200 240"
         preserveAspectRatio="xMinYMax meet"
       >
@@ -17,7 +17,7 @@ export function TreeSilhouettes({ className = '' }) {
         <ellipse cx="100" cy="78" rx="62" ry="58" fill="currentColor" opacity="0.85" />
       </svg>
       <svg
-        className="tree-sway-right absolute bottom-0 right-[-2%] h-full w-[min(42vw,360px)] text-[#2D6A4F] opacity-[0.06]"
+        className="tree-sway-right absolute bottom-0 right-[-2%] h-full w-[min(42vw,360px)] text-claro-indigo opacity-[0.06]"
         viewBox="0 0 200 240"
         preserveAspectRatio="xMaxYMax meet"
       >

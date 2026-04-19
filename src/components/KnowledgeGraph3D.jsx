@@ -3,8 +3,10 @@ import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from 'three'
 import { studentAccuracyColor } from '../data/mockStudentGraph.js'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
+import { useTheme } from '../context/ThemeContext.jsx'
 
 const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height = 500, interactive = true }) => {
+  const { canvasHex, isDark } = useTheme()
   const fgRef = useRef()
   const [hovered, setHovered] = useState(null)
   const hasInteracted = useRef(false)
@@ -42,9 +44,9 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   const nodeColor = useCallback((node) => {
     if (highlightCourse && node.course !== highlightCourse) return 'rgba(100,100,100,0.15)'
     const col = studentAccuracyColor(node, { degree: degreeById[node.id] })
-    if (hovered?.id === node.id) return '#FFFCF7'
+    if (hovered?.id === node.id) return canvasHex
     return col
-  }, [highlightCourse, hovered, degreeById])
+  }, [highlightCourse, hovered, degreeById, canvasHex])
 
   const nodeVal = useCallback((node) => {
     if (hovered?.id === node.id) return 10
@@ -80,8 +82,9 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
   }, [hovered, highlightCourse, degreeById])
 
   const linkColor = useCallback((link) => {
-    return link.crossCourse ? '#a16207' : 'rgba(45,106,79,0.25)'
-  }, [])
+    if (link.crossCourse) return isDark ? '#eab308' : '#ca8a04'
+    return isDark ? 'rgba(34,197,94,0.3)' : 'rgba(34,197,94,0.25)'
+  }, [isDark])
 
   const linkWidth = useCallback((link) => {
     return link.crossCourse ? 2 : 0.5
@@ -122,7 +125,7 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         cooldownTime={3000}
       />
       {hovered && (
-        <div className="absolute bottom-4 left-4 bg-[#FFFCF7]/95 border border-[#2D6A4F]/20 rounded-lg px-3 py-2 text-xs pointer-events-none shadow-sm">
+        <div className="absolute bottom-4 left-4 bg-claro-panel/95 border border-claro-indigo/20 rounded-lg px-3 py-2 text-xs pointer-events-none shadow-sm">
           <div className="text-claro-text font-medium">{hovered.label}</div>
           <div className="text-claro-muted">{hovered.course}</div>
           <div style={{ color: studentAccuracyColor(hovered, { degree: degreeById[hovered.id] }) }}>
@@ -131,10 +134,10 @@ const KnowledgeGraph3D = memo(({ graphData, onNodeClick, highlightCourse, height
         </div>
       )}
       {/* Legend */}
-      <div className="pointer-events-none absolute top-2 right-2 flex max-w-[10.5rem] flex-col gap-0.5 rounded-lg border border-[#2D6A4F]/15 bg-[#FFFCF7]/92 p-1.5 shadow-sm">
+      <div className="pointer-events-none absolute top-2 right-2 flex max-w-[10.5rem] flex-col gap-0.5 rounded-lg border border-claro-indigo/15 bg-claro-panel/92 p-1.5 shadow-sm">
         <div className="text-[9px] font-medium uppercase tracking-wide text-claro-muted">Accuracy</div>
         {SCORE_BANDS.map(b => (
-          <div key={b.range} className="flex items-center gap-1 text-[9px] text-[#5C6B63]">
+          <div key={b.range} className="flex items-center gap-1 text-[9px] text-claro-muted">
             <span className="h-2 w-2 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
             <span>{b.range}</span>
           </div>

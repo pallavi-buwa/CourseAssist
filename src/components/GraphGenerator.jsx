@@ -33,7 +33,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
       <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-xl max-h-[80vh] flex flex-col">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <h2 className="text-white font-medium">Build Knowledge Graph from Syllabus</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white">✕</button>
+          <button type="button" onClick={onClose} aria-label="Close" className="text-gray-500 hover:text-white text-xs">Close</button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -56,7 +56,7 @@ export default function GraphGenerator({ onClose, onGenerated }) {
           {result && (
             <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
               <p className="text-sm text-green-400 font-medium mb-2">
-                ✓ Added {result.nodes?.length || 0} concepts and {result.links?.length || 0} relationships to your graph
+                Added {result.nodes?.length || 0} concepts and {result.links?.length || 0} relationships to your graph
               </p>
               <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
                 {result.nodes?.map((n, i) => (

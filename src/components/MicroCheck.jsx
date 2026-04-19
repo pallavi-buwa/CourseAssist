@@ -41,24 +41,20 @@ export default function MicroCheck({ check, onAnswer }) {
           }
           return (
             <button key={i} className={cls} onClick={() => handleSelect(i)}>
-              <span className="inline-flex items-center gap-2">
-                {selected !== null && i === check.correct && <span>✓</span>}
-                {selected !== null && i === selected && !isCorrect && <span>✗</span>}
-                {opt}
-              </span>
+              {opt}
             </button>
           )
         })}
       </div>
 
       {selected !== null && isCorrect && (
-        <div className="mt-3 flex items-center gap-2 text-green-400 text-sm">
-          <span>✓</span> Great work!
+        <div className="mt-3 text-green-400 text-sm">
+          Great work.
         </div>
       )}
       {selected !== null && !isCorrect && (
         <div className="mt-3 bg-claro-amber/10 border border-claro-amber/30 rounded-lg p-3">
-          <p className="text-claro-amber text-sm font-medium mb-1">Consider re-reading this section. <button className="underline hover:text-claro-amber" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Re-read ↑</button></p>
+          <p className="text-claro-amber text-sm font-medium mb-1">Consider re-reading this section. <button type="button" className="underline hover:text-claro-amber" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Scroll to top</button></p>
           {check.misconception && <p className="text-claro-amber/80 text-xs">{check.misconception}</p>}
           <button className="mt-2 text-xs text-gray-500 hover:text-gray-400 underline" onClick={() => setDismissed(true)}>Dismiss</button>
         </div>

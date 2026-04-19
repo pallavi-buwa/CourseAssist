@@ -1,14 +1,13 @@
 /**
- * Score → fill color. Uses clearly separated hues (not all green) so bands are
- * scannable: emerald / teal / amber / orange / rust (growth metaphor → heat at risk).
+ * Score → fill color. Brand ramp: green (strong) → yellow → red (critical).
  */
 export const SCORE_BANDS = [
-  { min: 0.78, label: 'Strong', range: '≥78%', color: '#047857' },
-  { min: 0.62, label: 'Solid', range: '62–78%', color: '#0d9488' },
-  { min: 0.48, label: 'Fair', range: '48–62%', color: '#ca8a04' },
-  { min: 0.32, label: 'Low', range: '32–48%', color: '#ea580c' },
-  { min: 0.18, label: 'At risk', range: '18–32%', color: '#c2410c' },
-  { min: 0, label: 'Critical', range: '<18%', color: '#7f1d1d' },
+  { min: 0.78, label: 'Strong', range: '≥78%', color: '#22c55e' },
+  { min: 0.62, label: 'Solid', range: '62–78%', color: '#84cc16' },
+  { min: 0.48, label: 'Fair', range: '48–62%', color: '#eab308' },
+  { min: 0.32, label: 'Low', range: '32–48%', color: '#f97316' },
+  { min: 0.18, label: 'At risk', range: '18–32%', color: '#ef4444' },
+  { min: 0, label: 'Critical', range: '<18%', color: '#991b1b' },
 ]
 
 export function scoreToNodeColor(t) {
@@ -30,9 +29,9 @@ export function scoreBandLabel(t) {
 
 /** Distinct greens for subject chips (separate from score ramp) */
 export const SUBJECT_TINT = {
-  python: '#14532d',
-  dsa: '#1a5f45',
-  cn: '#3f5c4d',
+  python: '#22c55e',
+  dsa: '#16a34a',
+  cn: '#15803d',
 }
 
 /**
@@ -48,7 +47,6 @@ export function marketingEffectiveScore(node) {
 
 /**
  * Student graph: accuracy + hub weakness — weak hubs read one band lower.
- * No extra hue mixing so score colors stay interpretable.
  */
 export function smartStudentNodeColor(node, opts = {}) {
   const acc = node.accuracy ?? 0.5

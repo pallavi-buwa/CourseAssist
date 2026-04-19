@@ -35,8 +35,8 @@ export default function StudentReadingView() {
           {/* Header */}
           <div className="mb-8 flex items-start justify-between gap-4">
             <div>
-              <button onClick={() => navigate('/student/home')} className="text-xs text-gray-600 hover:text-gray-400 mb-3 flex items-center gap-1">
-                ← Back to courses
+              <button type="button" onClick={() => navigate('/student/home')} className="text-xs text-gray-600 hover:text-gray-400 mb-3">
+                Back to courses
               </button>
               <h1 className="text-xl font-semibold text-white">{passage.title}</h1>
               <p className="text-gray-500 text-sm mt-1">MBA 601 · AI for Business Decisions · Week 3</p>
@@ -45,7 +45,7 @@ export default function StudentReadingView() {
               onClick={() => setShowNotes(v => !v)}
               className="flex-shrink-0 border border-claro-indigo/40 text-claro-indigo hover:bg-claro-indigo/10 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
             >
-              ✎ Notes
+              Notes
             </button>
           </div>
 
@@ -60,7 +60,7 @@ export default function StudentReadingView() {
                     ? 'bg-red-500/20 border-red-500/50 text-red-400'
                     : 'bg-gray-800 border-gray-700 text-gray-500'
                 }`}>
-                  {answered[s.id]?.correct ? '✓' : i + 1}
+                  {answered[s.id]?.correct ? 'OK' : answered[s.id] ? '–' : i + 1}
                 </div>
                 {i < passage.sections.length - 1 && (
                   <div className="w-8 h-px bg-gray-800" />
@@ -94,7 +94,7 @@ export default function StudentReadingView() {
                     onClick={() => handleSectionRead(section.id)}
                     className="text-xs text-gray-600 hover:text-claro-indigo border border-gray-800 hover:border-claro-indigo/30 rounded-lg px-3 py-1.5 transition-colors"
                   >
-                    I've read this section → check my understanding
+                    I&apos;ve read this section — check my understanding
                   </button>
                 )}
 
@@ -118,7 +118,7 @@ export default function StudentReadingView() {
                       ? 'bg-green-500/10 border-green-500/20 text-green-400'
                       : 'bg-red-500/10 border-red-500/20 text-red-400'
                   }`}>
-                    {answered[section.id].correct ? '✓ Correct — well done!' : '✗ Incorrect — review and re-read this section.'}
+                    {answered[section.id].correct ? 'Correct — well done.' : 'Incorrect — review and re-read this section.'}
                   </div>
                 )}
               </div>
@@ -128,9 +128,6 @@ export default function StudentReadingView() {
           {/* End of reading */}
           {Object.keys(answered).length === passage.sections.length && (
             <div className="mt-12 bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
-              <p className="text-2xl mb-2">
-                {Object.values(answered).filter(a => a.correct).length === passage.sections.length ? '🎉' : '📚'}
-              </p>
               <h3 className="text-white font-medium text-lg mb-2">Reading complete!</h3>
               <p className="text-gray-500 text-sm mb-5">
                 {Object.values(answered).filter(a => a.correct).length}/{passage.sections.length} correct
@@ -140,7 +137,7 @@ export default function StudentReadingView() {
                   onClick={() => navigate('/student/dashboard')}
                   className="bg-claro-indigo hover:brightness-110 text-white rounded-xl px-5 py-2 text-sm font-medium transition-colors"
                 >
-                  View my knowledge graph →
+                  View my knowledge graph
                 </button>
                 <button
                   onClick={() => navigate('/student/home')}

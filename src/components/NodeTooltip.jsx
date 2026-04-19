@@ -2,9 +2,9 @@ import { memo } from 'react'
 import { SUBJECTS } from '../data/graphData.js'
 
 const SUBJECT_BADGE = {
-  python: 'bg-[#2D6A4F]/15 text-[#1B4332] border-[#2D6A4F]/35',
-  dsa:    'bg-[#1a5f45]/18 text-[#1B4332] border-[#1a5f45]/38',
-  cn:     'bg-[#3f5c4d]/20 text-[#1B4332] border-[#3f5c4d]/40',
+  python: 'bg-claro-indigo/15 text-claro-text border-claro-indigo/35',
+  dsa:    'bg-claro-sage/18 text-claro-text border-claro-sage/38',
+  cn:     'bg-claro-muted/22 text-claro-text border-claro-indigo/35',
 }
 
 const STATUS_BADGE = {
@@ -26,7 +26,7 @@ const NodeTooltip = memo(({ node, position }) => {
 
   return (
     <div
-      className="node-tooltip rounded-lg border border-[#2D6A4F]/22 bg-[#FFFCF7]/96 px-3 py-2 shadow-md backdrop-blur-sm"
+      className="node-tooltip rounded-lg border border-claro-indigo/22 bg-claro-panel/96 px-3 py-2 shadow-md backdrop-blur-sm"
       style={{ left, top }}
     >
       {/* Subject badge */}
@@ -35,7 +35,7 @@ const NodeTooltip = memo(({ node, position }) => {
       </div>
 
       {/* Node label */}
-      <div className="font-semibold text-[#1B4332] text-[13px] leading-tight mb-1">
+      <div className="font-semibold text-claro-text text-[13px] leading-tight mb-1">
         {node.label}
       </div>
 
@@ -47,12 +47,12 @@ const NodeTooltip = memo(({ node, position }) => {
       )}
 
       {/* Mini stats */}
-      <div className="flex gap-3 mt-2 text-[10px] text-[#5C6B63]">
-        <span>connections: <span className="text-[#1B4332]">{node.degree}</span></span>
-        <span>weight: <span className="text-[#1B4332]">{node.weight.toFixed(1)}</span></span>
+      <div className="flex gap-3 mt-2 text-[10px] text-claro-muted">
+        <span>connections: <span className="text-claro-text">{node.degree}</span></span>
+        <span>weight: <span className="text-claro-text">{node.weight.toFixed(1)}</span></span>
       </div>
 
-      <div className="text-[10px] text-[#5C6B63]/90 mt-1.5">click to expand →</div>
+      <div className="text-[10px] text-claro-muted/90 mt-1.5">Click to expand</div>
     </div>
   )
 })

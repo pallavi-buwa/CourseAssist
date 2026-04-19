@@ -31,7 +31,7 @@ export default function MicroCheckGenerator({ onClose }) {
       <div className="bg-gray-900 border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <h2 className="text-white font-medium">Generate Micro-Checks</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">✕</button>
+          <button type="button" onClick={onClose} aria-label="Close" className="text-gray-500 hover:text-white transition-colors text-xs">Close</button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -51,7 +51,7 @@ export default function MicroCheckGenerator({ onClose }) {
           {error && <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">{error}</p>}
 
           {published && (
-            <div className="text-center text-green-400 font-medium py-4">✓ 3 questions published to Module 4</div>
+            <div className="text-center text-green-400 font-medium py-4">3 questions published to Module 4</div>
           )}
 
           {questions && !published && (
@@ -62,7 +62,7 @@ export default function MicroCheckGenerator({ onClose }) {
                   <div className="space-y-1.5">
                     {q.options.map((opt, j) => (
                       <div key={j} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs ${j === q.correct ? 'bg-green-500/10 border border-green-500/30 text-green-400' : 'bg-gray-700/50 text-gray-400'}`}>
-                        {j === q.correct && <span>✓</span>}
+                        {j === q.correct && <span className="text-[10px] font-semibold uppercase shrink-0">Key</span>}
                         {opt}
                         {j !== q.correct && q.misconceptions?.[j] && (
                           <span className="ml-auto text-claro-amber/70 italic">{q.misconceptions[j]}</span>

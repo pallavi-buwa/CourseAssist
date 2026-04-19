@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
-import { DecorativeLeaves } from './brand/LeafBackdrop.jsx'
 import { ClaroLogoMark } from './brand/ClaroLogoMark.jsx'
-import { TreeSilhouettes } from './brand/TreeSilhouettes.jsx'
-import { FallingLeavesLayer } from './brand/FallingLeavesLayer.jsx'
 
 // ─── Brain geometry helpers ───────────────────────────────────────────────────
 
@@ -59,7 +56,7 @@ function makeTextTexture(text, opts = {}) {
   canvas.width = 512; canvas.height = 64
   const ctx = canvas.getContext('2d')
   ctx.clearRect(0, 0, 512, 64)
-  ctx.font = `300 ${size}px Lato, sans-serif`
+  ctx.font = `300 ${size}px "Brandon Grotesque", system-ui, sans-serif`
   ctx.fillStyle = color
   ctx.globalAlpha = alpha
   ctx.fillText(text, 4, size + 8)
@@ -91,21 +88,21 @@ export default function BrainIntro({ onEnter }) {
     renderer.setSize(W, H)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.15
-    renderer.setClearColor(0xfdf6ed, 1)
+    renderer.setClearColor(0x000000, 1)
     el.appendChild(renderer.domElement)
 
     // ── Scene / Camera ────────────────────────────────────────────────────
     const scene  = new THREE.Scene()
-    scene.fog    = new THREE.FogExp2(0xf5ebe0, 0.0014)
+    scene.fog    = new THREE.FogExp2(0x050505, 0.0014)
     const camera = new THREE.PerspectiveCamera(55, W / H, 1, 3000)
     camera.position.set(0, 30, 480)
     camera.lookAt(0, 0, 0)
 
     // ── Lights ────────────────────────────────────────────────────────────
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4))
-    const pt1 = new THREE.PointLight(0x2d6a4f, 5.5, 600); pt1.position.set(200, 150, 100); scene.add(pt1)
-    const pt2 = new THREE.PointLight(0x52b788, 4.5, 500); pt2.position.set(-180, -100, -80); scene.add(pt2)
-    const pt3 = new THREE.PointLight(0xc4a574, 3.2, 400); pt3.position.set(0, -200, 200); scene.add(pt3)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.38))
+    const pt1 = new THREE.PointLight(0x22c55e, 5.2, 600); pt1.position.set(200, 150, 100); scene.add(pt1)
+    const pt2 = new THREE.PointLight(0xeab308, 3.8, 500); pt2.position.set(-180, -100, -80); scene.add(pt2)
+    const pt3 = new THREE.PointLight(0xef4444, 2.6, 400); pt3.position.set(0, -200, 200); scene.add(pt3)
 
     // ── Neuron points ─────────────────────────────────────────────────────
     const NEURON_COUNT = 1200
@@ -120,11 +117,11 @@ export default function BrainIntro({ onEnter }) {
       nPositions[i * 3 + 2] = p.z
       nSizes[i] = 2.5 + Math.random() * 3.5
 
-      // Color by hemisphere — forest → sage greens on cream
-      const t = (p.x + 140) / 280   // 0..1 left..right
-      const r = THREE.MathUtils.lerp(0.08, 0.22, t)
-      const g = THREE.MathUtils.lerp(0.35, 0.55, Math.random())
-      const b = THREE.MathUtils.lerp(0.22, 0.38, Math.random())
+      // Color by hemisphere — brand green spectrum on black
+      const t = (p.x + 140) / 280
+      const r = THREE.MathUtils.lerp(0.05, 0.18, t)
+      const g = THREE.MathUtils.lerp(0.55, 0.85, Math.random())
+      const b = THREE.MathUtils.lerp(0.2, 0.45, Math.random())
       nColors[i * 3] = r; nColors[i * 3 + 1] = g; nColors[i * 3 + 2] = b
     })
 
@@ -361,94 +358,92 @@ export default function BrainIntro({ onEnter }) {
 
   return (
     <div
-      className={`absolute inset-0 z-50 transition-opacity duration-700 ${exiting ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-      style={{ background: '#FDF6ED' }}
+      className={`absolute inset-0 z-50 bg-claro-canvas transition-opacity duration-700 ${exiting ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
     >
       {/* Three.js canvas mount */}
       <div ref={mountRef} className="absolute inset-0" />
 
-      <DecorativeLeaves className="z-[5]" />
-      <div className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
-        <TreeSilhouettes />
-      </div>
-      <div className="pointer-events-none absolute inset-0 z-[6] overflow-hidden">
-        <FallingLeavesLayer count={28} />
-      </div>
+      {/* Darken center so title reads over the globe */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[4]"
+        style={{
+          background:
+            'radial-gradient(ellipse 85% 70% at 50% 42%, rgba(10, 14, 12, 0.88) 0%, rgba(10, 14, 12, 0.5) 45%, transparent 72%)',
+        }}
+      />
 
       {/* Overlay UI */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
+      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none px-4">
 
-        {/* Brain label */}
-        <div className={`transition-all duration-1000 ${ready ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-             style={{ textAlign: 'center' }}>
-
-          <div className="mb-5 flex justify-center">
-            <div className="rounded-2xl border border-[#2D6A4F]/18 bg-[#FDF6ED]/90 p-3 shadow-sm backdrop-blur-[2px]">
-              <ClaroLogoMark size={58} />
-            </div>
-          </div>
-
-          <div className="text-[11px] tracking-[0.35em] text-[#5C6B63] uppercase mb-4">
-            Comprehension intelligence
-          </div>
-
-          <h1 className="text-5xl font-light text-[#1B4332] mb-3 tracking-tight"
-              style={{ textShadow: '0 0 48px rgba(45,106,79,0.18), 0 0 90px rgba(82,183,136,0.12)' }}>
-            Claro
-          </h1>
-
-          <p className="text-[#5C6B63] text-sm max-w-md text-center leading-relaxed mb-3 px-2">
-            A score is a number. Claro turns it into a diagnosis—missing concepts, cohort patterns,
-            and how your next assessment lines up with who still needs support.
-          </p>
-          <p className="text-[#1B4332]/95 text-sm font-medium text-center mb-10 px-2 max-w-lg">
-            Canvas gives you the grade. We give you the why.
-          </p>
-
-          {/* Subject previews */}
-          <div className="flex items-center gap-6 mb-12 justify-center">
-            {[
-              { color: '#14532d', label: 'Python Programming', count: 70 },
-              { color: '#1a5f45', label: 'DS & Algorithms',    count: 75 },
-              { color: '#3f5c4d', label: 'Computer Networks',  count: 65 },
-            ].map(({ color, label, count }) => (
-              <div key={label} className="flex items-center gap-2 text-xs text-[#5C6B63]">
-                <span className="w-2 h-2 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}` }} />
-                <span>{label}</span>
-                <span className="text-[#5C6B63]/70">·{count}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <button
-            onClick={handleEnter}
-            disabled={!ready}
-            className={`pointer-events-auto px-10 py-4 rounded-full text-sm font-medium
-              transition-all duration-300 border
-              ${ready
-                ? 'border-[#2D6A4F]/35 text-[#1B4332] hover:border-[#2D6A4F]/55 hover:bg-[#E8F0EB]/80 cursor-pointer'
-                : 'border-[#2D6A4F]/12 text-[#5C6B63]/50 cursor-not-allowed'
-              }`}
-            style={{
-              background: ready ? 'rgba(232,240,235,0.65)' : 'transparent',
-              boxShadow: ready ? '0 0 36px rgba(45,106,79,0.12), inset 0 0 20px rgba(149,213,178,0.15)' : 'none',
-            }}
+        {/* Brain label — high-contrast panel so “Claro” stays readable */}
+        <div
+          className={`pointer-events-none max-w-xl transition-all duration-1000 ${ready ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
+          style={{ textAlign: 'center' }}
+        >
+          <div
+            className="rounded-3xl border border-claro-indigo/25 bg-claro-panel/95 px-8 py-8 shadow-[0_16px_56px_rgba(0,0,0,0.65)] backdrop-blur-md sm:px-10"
           >
-            {ready ? 'Enter the Knowledge Network →' : 'Initializing neurons…'}
-          </button>
+            <h1 className="sr-only">Claro</h1>
+            <div className="mb-6 flex justify-center px-2">
+              <ClaroLogoMark size={56} />
+            </div>
+
+            <div className="mb-5 text-[11px] uppercase tracking-[0.35em] text-claro-muted">
+              Comprehension intelligence
+            </div>
+
+            <p className="mb-3 max-w-md px-1 text-center text-sm leading-relaxed text-claro-muted">
+              A score is a number. Claro turns it into a diagnosis—missing concepts, cohort patterns,
+              and how your next assessment lines up with who still needs support.
+            </p>
+            <p className="mb-8 max-w-lg px-1 text-center text-sm font-medium text-claro-text/95">
+              Canvas gives you the grade. We give you the why.
+            </p>
+
+            {/* Subject previews */}
+            <div className="mb-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              {[
+                { color: '#22c55e', label: 'Python Programming', count: 70 },
+                { color: '#16a34a', label: 'DS & Algorithms', count: 75 },
+                { color: '#15803d', label: 'Computer Networks', count: 65 },
+              ].map(({ color, label, count }) => (
+                <div key={label} className="flex items-center gap-2 text-xs text-claro-muted">
+                  <span className="h-2 w-2 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}` }} />
+                  <span>{label}</span>
+                  <span className="text-claro-muted/70">·{count}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <button
+              onClick={handleEnter}
+              disabled={!ready}
+              className={`pointer-events-auto rounded-full border px-10 py-4 text-sm font-medium transition-all duration-300 ${
+                ready
+                  ? 'cursor-pointer border-claro-indigo/40 text-claro-text hover:border-claro-indigo/60 hover:bg-claro-slate/90'
+                  : 'cursor-not-allowed border-claro-indigo/15 text-claro-muted/50'
+              }`}
+              style={{
+                background: ready ? 'rgb(26 36 31 / 0.92)' : 'transparent',
+                boxShadow: ready ? '0 4px 24px rgba(0,0,0,0.35)' : 'none',
+              }}
+            >
+              {ready ? 'Enter the Knowledge Network' : 'Initializing neurons…'}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Vignette */}
+      {/* Soft edge vignette (behind panel, over globe) */}
       <div
-        className="pointer-events-none absolute inset-0 z-[8]"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 42%, rgba(124,90,60,0.12) 100%)' }}
+        className="pointer-events-none absolute inset-0 z-[6]"
+        style={{ background: 'radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,0.45) 100%)' }}
       />
 
       {/* Corner micro-stats */}
       {ready && (
-        <div className="pointer-events-none absolute bottom-6 left-6 z-[12] space-y-1 text-[10px] text-[#5C6B63]/90">
+        <div className="pointer-events-none absolute bottom-6 left-6 z-[30] space-y-1 text-[10px] text-claro-muted/90">
           <div>neurons: 1,200</div>
           <div>synapses: active</div>
           <div>webgl: enabled</div>

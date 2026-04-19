@@ -13,12 +13,12 @@ const Breadcrumb = memo(({ breadcrumbs, onBack, onReset, level }) => {
                    transition-all"
         style={{ background: 'rgba(253,246,237,0.94)', backdropFilter: 'blur(8px)' }}
       >
-        ⌂ Overview
+        Overview
       </button>
 
       {breadcrumbs.map((crumb, i) => (
         <div key={crumb.id} className="flex items-center gap-1.5">
-          <span className="text-slate-600 text-[10px]">›</span>
+          <span className="text-slate-600 text-[10px]">/</span>
           <span
             className={`px-2.5 py-1.5 rounded-lg text-[11px] border transition-all
               ${i === breadcrumbs.length - 1
@@ -40,7 +40,7 @@ const Breadcrumb = memo(({ breadcrumbs, onBack, onReset, level }) => {
                    transition-all"
         style={{ background: 'rgba(253,246,237,0.94)', backdropFilter: 'blur(8px)' }}
       >
-        ← Back
+        Back
       </button>
     </div>
   )

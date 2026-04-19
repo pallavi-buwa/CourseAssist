@@ -2,50 +2,52 @@ import { memo } from 'react'
 import { SCORE_BANDS } from '../utils/nodeColorScale.js'
 
 const Legend = memo(() => (
-  <div className="absolute bottom-6 left-5 z-20 pointer-events-none"
-       style={{ background: 'rgba(253,246,237,0.94)', backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(45,106,79,0.2)', borderRadius: 10, padding: '12px 16px' }}>
-    <div className="text-[10px] font-semibold uppercase tracking-widest text-claro-muted mb-3">Legend</div>
+  <div
+    className="pointer-events-none absolute bottom-6 left-5 z-20 rounded-[10px] border border-claro-green/25 bg-claro-panel/95 px-4 py-3 backdrop-blur-md"
+  >
+    <div className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-claro-yellow">Legend</div>
 
     {/* Subjects */}
-    <div className="space-y-1.5 mb-3">
+    <div className="mb-3 space-y-1.5">
       {[
-        { color: '#14532d', label: 'Python Programming' },
-        { color: '#1a5f45', label: 'DS & Algorithms' },
-        { color: '#3f5c4d', label: 'Computer Networks' },
+        { color: '#22c55e', label: 'Python Programming' },
+        { color: '#16a34a', label: 'DS & Algorithms' },
+        { color: '#15803d', label: 'Computer Networks' },
       ].map(({ color, label }) => (
         <div key={label} className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full" style={{ background: color }} />
           <span className="text-[11px] text-claro-text/90">{label}</span>
         </div>
       ))}
     </div>
 
-    <div className="border-t border-[#2D6A4F]/15 pt-2.5 space-y-1.5">
+    <div className="space-y-1.5 border-t border-claro-green/20 pt-2.5">
       {[
-        { color: '#ca8a04', label: 'Active' },
-        { color: '#047857', label: 'Mastered' },
-        { color: '#c2410c', label: 'Struggling' },
+        { color: '#eab308', label: 'Active' },
+        { color: '#22c55e', label: 'Mastered' },
+        { color: '#ef4444', label: 'Struggling' },
       ].map(({ color, label }) => (
         <div key={label} className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full" style={{ background: color }} />
           <span className="text-[11px] text-claro-muted">{label}</span>
         </div>
       ))}
     </div>
 
-    {/* Score ramp (comprehension / accuracy views) */}
-    <div className="border-t border-[#2D6A4F]/15 pt-2.5 space-y-1.5">
+    {/* Score ramp */}
+    <div className="mt-2.5 space-y-1.5 border-t border-claro-green/20 pt-2.5">
       <div className="text-[10px] font-semibold uppercase tracking-widest text-claro-muted">Score (when shown)</div>
       {SCORE_BANDS.slice(0, 4).map(b => (
         <div key={b.range} className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 flex-shrink-0 rounded-full ring-1 ring-black/5" style={{ background: b.color }} />
-          <span className="text-[10px] text-claro-muted">{b.range} · {b.label}</span>
+          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full ring-1 ring-white/10" style={{ background: b.color }} />
+          <span className="text-[10px] text-claro-muted">
+            {b.range} · {b.label}
+          </span>
         </div>
       ))}
     </div>
 
-    <div className="border-t border-[#2D6A4F]/15 pt-2.5 mt-2 flex items-center gap-3">
+    <div className="mt-2 flex items-center gap-3 border-t border-claro-green/20 pt-2.5">
       {[5, 10, 16].map(size => (
         <div key={size} className="flex flex-col items-center gap-1">
           <span className="rounded-full bg-claro-muted/35" style={{ width: size, height: size }} />
